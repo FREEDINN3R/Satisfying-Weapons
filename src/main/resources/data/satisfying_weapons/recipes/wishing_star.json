@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "*": {
+      "item": "satisfying_weapons:unfulfilled_wish"
+    }
+  },
+  "pattern": [
+    " * ",
+    "***",
+    " * "
+  ],
+  "result": {
+    "item": "satisfying_weapons:wishing_star"
+  },
+  "show_notification": true
+}

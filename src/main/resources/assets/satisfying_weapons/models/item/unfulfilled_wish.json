@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "satisfying_weapons:item/unfulfilled_wish"
+  }
+}

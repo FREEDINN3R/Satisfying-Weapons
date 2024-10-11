@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.freedinner.satisfying_weapons.item.ModItems;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,6 @@ public class SatisfyingWeapons implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-
+		ModItems.registerItems();
 	}
 }
