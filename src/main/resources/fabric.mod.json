@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "satisfying_weapons",
+	"version": "${version}",
+	"name": "Satisfying Weapons",
+	"description": "Throw black holes, summon explosions, celebrate birthday parties, and other satisfying ways to destroy your enemies",
+	"authors": [
+		"FREEDINNER"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/satisfying_weapons/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.freedinner.satisfying_weapons.SatisfyingWeapons"
+		],
+		"client": [
+			"net.freedinner.satisfying_weapons.SatisfyingWeaponsClient"
+		],
+		"fabric-datagen": [
+			"net.freedinner.satisfying_weapons.SatisfyingWeaponsDataGenerator"
+		]
+	},
+	"mixins": [
+		"satisfying_weapons.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.7",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
