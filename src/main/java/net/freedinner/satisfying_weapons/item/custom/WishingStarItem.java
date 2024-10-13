@@ -8,7 +8,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class WishingStarItem extends UnfulfilledWishItem {
+public class WishingStarItem extends Item {
     public WishingStarItem(Settings settings) {
         super(settings);
     }
