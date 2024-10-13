@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.freedinner.satisfying_weapons.data.ModLootTables;
+import net.freedinner.satisfying_weapons.item.ModItemGroups;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.mixin.LootTableBuilderAccessor;
 import net.freedinner.satisfying_weapons.util.LootTableSearcher;
@@ -35,6 +36,7 @@ public class SatisfyingWeapons implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModItems.registerItems();
+		ModItemGroups.registerItemGroups();
 
 		ModLootTables.modifyLootTables();
 	}
