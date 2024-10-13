@@ -29,7 +29,10 @@ public class WishingStarItem extends Item {
             return TypedActionResult.consume(user.getStackInHand(hand));
         }
 
-        List<Identifier> allLootTables = LootTables.getAll().stream().filter(chest -> chest.getPath().contains("chests/")).toList();
+        List<Identifier> allLootTables = LootTables.getAll()
+                .stream()
+                .filter(id -> id.getPath().contains("chests/"))
+                .toList();
         Identifier randomId = allLootTables.get(world.getRandom().nextInt(allLootTables.size()));
         LootTable lootTable = world.getServer().getLootManager().getLootTable(randomId);
 

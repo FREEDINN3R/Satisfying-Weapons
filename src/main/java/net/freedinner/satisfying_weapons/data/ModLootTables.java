@@ -22,7 +22,7 @@ public class ModLootTables {
 
             LootPool.Builder poolBuilder = LootPool.builder()
                     .conditionally(KilledByPlayerLootCondition.builder())
-                    .conditionally(RandomChanceLootCondition.builder(1f))
+                    .conditionally(RandomChanceLootCondition.builder(0.1f))
                     .with(ItemEntry.builder(ModItems.UNFULFILLED_WISH));
 
             tableBuilder.pool(poolBuilder);
