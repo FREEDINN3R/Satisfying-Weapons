@@ -2,5 +2,35 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "satisfying_weapons:item/wishing_star_0"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "satisfying_weapons:wishing": 1,
+        "satisfying_weapons:wish_progress": 0.0
+      },
+      "model": "satisfying_weapons:item/wishing_star_break_0"
+    },
+    {
+      "predicate": {
+        "satisfying_weapons:wishing": 1,
+        "satisfying_weapons:wish_progress": 0.4
+      },
+      "model": "satisfying_weapons:item/wishing_star_break_1"
+    },
+    {
+      "predicate": {
+        "satisfying_weapons:wishing": 1,
+        "satisfying_weapons:wish_progress": 0.6
+      },
+      "model": "satisfying_weapons:item/wishing_star_break_2"
+    },
+    {
+      "predicate": {
+        "satisfying_weapons:wishing": 1,
+        "satisfying_weapons:wish_progress": 0.8
+      },
+      "model": "satisfying_weapons:item/wishing_star_break_3"
+    }
+  ]
 }

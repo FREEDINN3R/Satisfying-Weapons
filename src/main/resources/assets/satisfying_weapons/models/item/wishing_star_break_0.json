@@ -1,0 +1,6 @@
+{
+  "parent": "satisfying_weapons:item/wishing_star_break",
+  "textures": {
+    "layer0": "satisfying_weapons:item/wishing_star_0"
+  }
+}
