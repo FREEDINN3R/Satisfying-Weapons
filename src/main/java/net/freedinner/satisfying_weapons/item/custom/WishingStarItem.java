@@ -12,6 +12,8 @@ import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
@@ -42,8 +44,26 @@ public class WishingStarItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        ItemStack itemStack = user.getStackInHand(hand);
+
+        if (hand == Hand.OFF_HAND) {
+            return TypedActionResult.pass(itemStack);
+        }
+
         user.setCurrentHand(hand);
-        return TypedActionResult.consume(user.getStackInHand(hand));
+        return TypedActionResult.consume(itemStack);
+    }
+
+    @Override
+    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+        switch (remainingUseTicks) {
+            case 1:
+                world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1f, 1f);
+            case 10:
+            case 20:
+            case 30:
+                world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 0.6f, 1.05f);
+        }
     }
 
     @Override
