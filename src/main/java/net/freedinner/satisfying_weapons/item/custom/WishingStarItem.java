@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons.item.custom;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
@@ -79,7 +80,15 @@ public class WishingStarItem extends Item {
         Identifier randomId = allLootTables.get(world.getRandom().nextInt(allLootTables.size()));
         LootTable lootTable = world.getServer().getLootManager().getLootTable(randomId);
 
+
+
         ObjectArrayList<ItemStack> items = lootTable.generateLoot(new LootContextParameterSet.Builder((ServerWorld) world).add(LootContextParameters.ORIGIN, Vec3d.ZERO).build(LootContextTypes.CHEST));
-        return items.get(world.getRandom().nextInt(items.size()));
+        ItemStack randomStack = items.get(world.getRandom().nextInt(items.size()));
+
+        if (user instanceof PlayerEntity player) {
+            player.getItemCooldownManager().set(randomStack.getItem(), 10);
+        }
+
+        return randomStack;
     }
 }
