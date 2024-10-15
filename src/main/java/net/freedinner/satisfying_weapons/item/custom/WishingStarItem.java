@@ -1,6 +1,10 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,6 +16,8 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -19,8 +25,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -80,8 +88,6 @@ public class WishingStarItem extends Item {
         Identifier randomId = allLootTables.get(world.getRandom().nextInt(allLootTables.size()));
         LootTable lootTable = world.getServer().getLootManager().getLootTable(randomId);
 
-
-
         ObjectArrayList<ItemStack> items = lootTable.generateLoot(new LootContextParameterSet.Builder((ServerWorld) world).add(LootContextParameters.ORIGIN, Vec3d.ZERO).build(LootContextTypes.CHEST));
         ItemStack randomStack = items.get(world.getRandom().nextInt(items.size()));
 
@@ -89,6 +95,19 @@ public class WishingStarItem extends Item {
             player.getItemCooldownManager().set(randomStack.getItem(), 10);
         }
 
+        this.sendParticlesPacket(world, user.getEyePos().toVector3f());
+
         return randomStack;
+    }
+
+    private void sendParticlesPacket(World world, Vector3f pos) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVector3f(pos);
+
+        BlockPos blockPos = new BlockPos(Math.round(pos.x), Math.round(pos.y), Math.round(pos.z));
+
+        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) world, blockPos)) {
+            ServerPlayNetworking.send(player, ModNetworking.WISHING_STAR_PARTICLES_ID, buf);
+        }
     }
 }

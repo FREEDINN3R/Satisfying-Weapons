@@ -6,6 +6,7 @@ import net.freedinner.satisfying_weapons.loot.ModLootConditions;
 import net.freedinner.satisfying_weapons.loot.ModLootTablesModifier;
 import net.freedinner.satisfying_weapons.item.ModItemGroups;
 import net.freedinner.satisfying_weapons.item.ModItems;
+import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,5 +26,7 @@ public class SatisfyingWeapons implements ModInitializer {
 
 		ModLootConditions.registerLootConditions();
 		ModLootTablesModifier.modifyLootTables();
+
+		ModNetworking.registerS2CPackets();
 	}
 }
