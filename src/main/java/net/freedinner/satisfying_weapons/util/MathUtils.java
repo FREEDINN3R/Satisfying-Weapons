@@ -1,5 +1,6 @@
 package net.freedinner.satisfying_weapons.util;
 
+import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
