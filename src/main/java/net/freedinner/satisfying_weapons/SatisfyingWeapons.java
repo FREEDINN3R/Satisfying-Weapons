@@ -27,6 +27,6 @@ public class SatisfyingWeapons implements ModInitializer {
 		ModLootConditions.registerLootConditions();
 		ModLootTablesModifier.modifyLootTables();
 
-		ModNetworking.registerS2CPackets();
+		ModNetworking.registerC2SPackets();
 	}
 }

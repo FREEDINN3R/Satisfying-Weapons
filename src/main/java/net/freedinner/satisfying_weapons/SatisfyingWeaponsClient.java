@@ -13,6 +13,6 @@ public class SatisfyingWeaponsClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		ModItemPredicates.registerItemPredicates();
 
-		ModNetworking.registerC2SPackets();
+		ModNetworking.registerS2CPackets();
 	}
 }
