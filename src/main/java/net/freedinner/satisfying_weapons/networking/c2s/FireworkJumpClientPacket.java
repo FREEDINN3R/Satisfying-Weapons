@@ -21,25 +21,13 @@ import net.minecraft.util.math.Vec3d;
 public class FireworkJumpClientPacket {
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         server.execute(() -> {
-            Vec3d v = player.getVelocity();
-            player.setVelocity(v.x, 1.5, v.z);
-            player.velocityModified = true;
-
-            int currLevel = player.hasStatusEffect(ModEffects.FIREWORK_JUMP) ? player.getStatusEffect(ModEffects.FIREWORK_JUMP).getAmplifier() : -1;
-            player.addStatusEffect(new StatusEffectInstance(ModEffects.FIREWORK_JUMP, -1, currLevel + 1, false, false));
+            // Removing 3 stacks
             FestivityEffect.addStacks(player, -3, 10);
 
-            player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.PLAYERS, 3.0f, 1.0f);
-            sendParticlesPacket(player);
+            // Increasing Firework Jump effect by 1
+            int currLevel = player.hasStatusEffect(ModEffects.FIREWORK_JUMP) ? player.getStatusEffect(ModEffects.FIREWORK_JUMP).getAmplifier() : -1;
+            player.removeStatusEffect(ModEffects.FIREWORK_JUMP);
+            player.addStatusEffect(new StatusEffectInstance(ModEffects.FIREWORK_JUMP, -1, currLevel + 1, false, false));
         });
-    }
-
-    private static void sendParticlesPacket(LivingEntity entity) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(entity.getPos().toVector3f());
-
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
-            ServerPlayNetworking.send(player, ModNetworking.FIREWORK_JUMP_CLIENT_PACKET, buf);
-        }
     }
 }

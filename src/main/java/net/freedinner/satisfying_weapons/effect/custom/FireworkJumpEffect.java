@@ -9,6 +9,7 @@ import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -32,24 +33,43 @@ public class FireworkJumpEffect extends StatusEffect {
     }
 
     @Override
+    public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+        super.onApplied(entity, attributes, amplifier);
+
+        // Propelling the player into the air
+        Vec3d v = entity.getVelocity();
+        entity.setVelocity(v.x, 1.5, v.z);
+        entity.velocityModified = true;
+
+        // TODO: add fall damage resistance
+
+        // Visuals & SFX
+        entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.PLAYERS, 3.0f, 1.0f);
+        sendJumpParticlesPacket(entity);
+    }
+
+    @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         if (entity.getWorld().isClient) {
             return;
         }
 
+        // Remove effect under certain conditions
         if (entity.isOnGround() || entity.isTouchingWater() || !FireworkSwordItem.heldInHand(entity)
                 || entity.isFallFlying() || entity.hasVehicle()
                 || entity.hasStatusEffect(StatusEffects.LEVITATION) || entity.hasStatusEffect(StatusEffects.SLOW_FALLING)) {
             entity.removeStatusEffect(this);
         }
 
+        // Plunge attack when sneaking
         if (entity.isSneaking() && entity.getVelocity().y > -5) {
             entity.addVelocity(0, -0.15, 0);
             entity.velocityModified = true;
         }
 
+        // Visuals & SFX
         if (entity.getVelocity().y > 0 || (entity.isSneaking() && entity.getVelocity().y < 0)) {
-            sendTrailPacket(entity, entity.getVelocity().y);
+            sendTrailParticlesPacket(entity, entity.getVelocity().y);
         }
     }
 
@@ -57,9 +77,9 @@ public class FireworkJumpEffect extends StatusEffect {
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onRemoved(entity, attributes, amplifier);
 
+        // If plunge attack was correctly performed
         if (entity.isOnGround() && entity.isSneaking() && FireworkSwordItem.heldInHand(entity)) {
-            entity.damage(entity.getWorld().getDamageSources().fall(), 0.01f);
-
+            // Search for surrounding entities
             Box box = new Box(entity.getBlockPos()).expand(2.5, 1, 2.5);
             List<LivingEntity> surroundingEntities = entity.getWorld().getOtherEntities(entity, box)
                     .stream()
@@ -67,12 +87,14 @@ public class FireworkJumpEffect extends StatusEffect {
                     .map(e -> (LivingEntity) e)
                     .toList();
 
+            // Calculate damage
             FireworkSwordItem fireworkSword = (FireworkSwordItem) entity.getStackInHand(Hand.MAIN_HAND).getItem();
             float plungeDamage = 2 * fireworkSword.getAttackDamage() * (amplifier + 1);
             DamageSource damageSource = (entity instanceof PlayerEntity player) ?
                     player.getDamageSources().playerAttack(player) :
                     entity.getDamageSources().mobAttack(entity);
 
+            // Damage and knockback entities
             for (LivingEntity otherEntity : surroundingEntities) {
                 otherEntity.damage(damageSource, plungeDamage);
 
@@ -81,14 +103,25 @@ public class FireworkJumpEffect extends StatusEffect {
                 otherEntity.velocityModified = true;
             }
 
+            // Add Festivity stacks
             int entitiesHit = surroundingEntities.size();
             FestivityEffect.addStacks(entity, entitiesHit, 10);
 
+            // Heal and restore hunger
             entity.heal(2);
+            if (entity instanceof PlayerEntity player) {
+                player.getHungerManager().add(2, 0);
+            }
 
+            // TODO: remove fall damage resistance
+
+            // Visuals && SFX
             entity.getWorld().playSound(null, entity.getBlockPos(), ModSounds.PLUNGE_ATTACK, SoundCategory.PLAYERS, 2.0f, PitchUtils.get());
             entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 2.0f, 1.0f);
             sendPlungeParticlesPacket(entity);
+
+            // Hurt sound & screen shake
+            entity.damage(entity.getWorld().getDamageSources().fall(), 0.01f);
         }
     }
 
@@ -97,7 +130,16 @@ public class FireworkJumpEffect extends StatusEffect {
         return true;
     }
 
-    private void sendTrailPacket(LivingEntity entity, double yv) {
+    private static void sendJumpParticlesPacket(LivingEntity entity) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVector3f(entity.getPos().toVector3f());
+
+        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
+            ServerPlayNetworking.send(player, ModNetworking.FIREWORK_JUMP_CLIENT_PACKET, buf);
+        }
+    }
+
+    private void sendTrailParticlesPacket(LivingEntity entity, double yv) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVector3f(entity.getPos().toVector3f());
         buf.writeDouble(yv);

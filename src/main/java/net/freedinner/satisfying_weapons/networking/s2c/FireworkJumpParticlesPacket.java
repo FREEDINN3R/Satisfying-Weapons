@@ -20,7 +20,9 @@ public class FireworkJumpParticlesPacket {
                 return;
             }
 
-            int count = 80;
+            // Starter ring
+
+            int count = 90;
             for (int i = 0; i < count; i++) {
                 double angle = Math.toRadians(360.0 / count * i);
 

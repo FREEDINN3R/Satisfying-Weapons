@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 public class FireworkTrailParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
         Vec3d entityPos = new Vec3d(buf.readVector3f());
-        double yv = buf.readDouble();
+        double horizontalVelocity = buf.readDouble();
 
         client.execute(() -> {
             World world = client.world;
@@ -21,8 +21,10 @@ public class FireworkTrailParticlesPacket {
                 return;
             }
 
-            double particleVelocity = -0.5 * Math.signum(yv);
-            int count = (particleVelocity < 0) ? 1 : 3;
+            // Firework trail
+
+            int count = (horizontalVelocity > 0) ? 1 : 3;
+            double particleVelocity = -0.5 * Math.signum(horizontalVelocity);
 
             for (int i = 0; i < count; i++) {
                 Vec3d pos = entityPos.add(MathUtils.randomPointInSphere(0.4)).add(0, 0.5, 0);
