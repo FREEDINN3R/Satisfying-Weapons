@@ -23,6 +23,8 @@ public class ModItemGroups {
                         .entries(((displayContext, entries) -> {
                             entries.add(ModItems.UNFULFILLED_WISH);
                             entries.add(ModItems.WISHING_STAR);
+
+                            entries.add(ModItems.FIREWORK_SWORD);
                         }))
                         .build()
         );

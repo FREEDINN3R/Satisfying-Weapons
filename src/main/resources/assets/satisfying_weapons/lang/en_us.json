@@ -3,5 +3,11 @@
 
   "item.satisfying_weapons.item_group_name": "Satisfying Weapons",
   "item.satisfying_weapons.unfulfilled_wish": "Unfulfilled Wish",
-  "item.satisfying_weapons.wishing_star": "Wishing Star"
+  "item.satisfying_weapons.wishing_star": "Wishing Star",
+  "item.satisfying_weapons.firework_sword": "Firework Sword",
+
+  "effect.satisfying_weapons.festivity": "Festivity",
+  "effect.satisfying_weapons.firework_jump": "Firework Jump",
+
+  "satisfying_weapons.plunge_attack": "Plunge attack"
 }

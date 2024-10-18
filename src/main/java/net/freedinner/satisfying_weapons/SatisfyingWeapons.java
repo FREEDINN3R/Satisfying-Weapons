@@ -2,11 +2,13 @@ package net.freedinner.satisfying_weapons;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.loot.ModLootConditions;
 import net.freedinner.satisfying_weapons.loot.ModLootTablesModifier;
 import net.freedinner.satisfying_weapons.item.ModItemGroups;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
+import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,10 @@ public class SatisfyingWeapons implements ModInitializer {
 	public void onInitialize() {
 		ModItems.registerItems();
 		ModItemGroups.registerItemGroups();
+
+        ModEffects.registerEffects();
+
+		ModSounds.registerSounds();
 
 		ModLootConditions.registerLootConditions();
 		ModLootTablesModifier.modifyLootTables();

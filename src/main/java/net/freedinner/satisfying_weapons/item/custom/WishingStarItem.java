@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
+import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -71,7 +72,7 @@ public class WishingStarItem extends Item {
             case 10:
             case 20:
             case 30:
-                world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 0.6f, 1.05f);
+                world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 0.6f, PitchUtils.get(0.5f));
         }
     }
 
