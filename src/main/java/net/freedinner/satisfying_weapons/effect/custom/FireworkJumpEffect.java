@@ -24,6 +24,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import virtuoel.pehkui.Pehkui;
+import virtuoel.pehkui.api.ScaleData;
+import virtuoel.pehkui.api.ScaleTypes;
 
 import java.util.List;
 
@@ -41,7 +44,9 @@ public class FireworkJumpEffect extends StatusEffect {
         entity.setVelocity(v.x, 1.5, v.z);
         entity.velocityModified = true;
 
-        // TODO: add fall damage resistance
+        // Adding damage resistance
+        ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
+        defenseData.setScale(defenseData.getScale() * 20f);
 
         // Visuals & SFX
         entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.PLAYERS, 3.0f, 1.0f);
@@ -77,9 +82,13 @@ public class FireworkJumpEffect extends StatusEffect {
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onRemoved(entity, attributes, amplifier);
 
+        // Removing damage resistance
+        ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
+        defenseData.setScale(defenseData.getScale() / 20f);
+
         // If plunge attack was correctly performed
         if (entity.isOnGround() && entity.isSneaking() && FireworkSwordItem.heldInHand(entity)) {
-            // Search for surrounding entities
+            // Searching for surrounding entities
             Box box = new Box(entity.getBlockPos()).expand(2.5, 1, 2.5);
             List<LivingEntity> surroundingEntities = entity.getWorld().getOtherEntities(entity, box)
                     .stream()
@@ -87,14 +96,14 @@ public class FireworkJumpEffect extends StatusEffect {
                     .map(e -> (LivingEntity) e)
                     .toList();
 
-            // Calculate damage
+            // Calculating damage
             FireworkSwordItem fireworkSword = (FireworkSwordItem) entity.getStackInHand(Hand.MAIN_HAND).getItem();
             float plungeDamage = 2 * fireworkSword.getAttackDamage() * (amplifier + 1);
             DamageSource damageSource = (entity instanceof PlayerEntity player) ?
                     player.getDamageSources().playerAttack(player) :
                     entity.getDamageSources().mobAttack(entity);
 
-            // Damage and knockback entities
+            // Damaging and knocking back entities
             for (LivingEntity otherEntity : surroundingEntities) {
                 otherEntity.damage(damageSource, plungeDamage);
 
@@ -103,17 +112,15 @@ public class FireworkJumpEffect extends StatusEffect {
                 otherEntity.velocityModified = true;
             }
 
-            // Add Festivity stacks
+            // Adding Festivity stacks
             int entitiesHit = surroundingEntities.size();
             FestivityEffect.addStacks(entity, entitiesHit, 10);
 
-            // Heal and restore hunger
+            // Healing and restoring hunger
             entity.heal(2);
             if (entity instanceof PlayerEntity player) {
                 player.getHungerManager().add(2, 0);
             }
-
-            // TODO: remove fall damage resistance
 
             // Visuals && SFX
             entity.getWorld().playSound(null, entity.getBlockPos(), ModSounds.PLUNGE_ATTACK, SoundCategory.PLAYERS, 2.0f, PitchUtils.get());
@@ -135,7 +142,7 @@ public class FireworkJumpEffect extends StatusEffect {
         buf.writeVector3f(entity.getPos().toVector3f());
 
         for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
-            ServerPlayNetworking.send(player, ModNetworking.FIREWORK_JUMP_CLIENT_PACKET, buf);
+            ServerPlayNetworking.send(player, ModNetworking.FIREWORK_JUMP_PARTICLES_ID, buf);
         }
     }
 

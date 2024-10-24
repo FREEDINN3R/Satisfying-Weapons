@@ -37,6 +37,7 @@ public abstract class ClientPlayerEntityMixin {
         jumpedLastTick = player.input.jumping;
     }
 
+    @Unique
     private boolean canFireworkJump(ClientPlayerEntity player) {
         ItemStack itemStack = player.getEquippedStack(EquipmentSlot.CHEST);
         boolean hasElytra = itemStack.getItem() instanceof ElytraItem && ElytraItem.isUsable(itemStack);

@@ -72,7 +72,7 @@ public class WishingStarItem extends Item {
             case 10:
             case 20:
             case 30:
-                world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 0.6f, PitchUtils.get(0.5f));
+                world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 0.6f, PitchUtils.get(0.05f));
         }
     }
 
