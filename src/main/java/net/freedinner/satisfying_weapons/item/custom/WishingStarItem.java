@@ -66,9 +66,9 @@ public class WishingStarItem extends Item {
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+        // Play glass break sound every 0.5 seconds
         switch (remainingUseTicks) {
             case 1:
-                world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1f, 1f);
             case 10:
             case 20:
             case 30:
@@ -82,21 +82,28 @@ public class WishingStarItem extends Item {
             return stack;
         }
 
+        // Get all existing chest loot tables
         List<Identifier> allLootTables = LootTables.getAll()
                 .stream()
                 .filter(id -> id.getPath().contains("chests/"))
                 .toList();
+
+        // Pick random chest loot table
         Identifier randomId = allLootTables.get(world.getRandom().nextInt(allLootTables.size()));
         LootTable lootTable = world.getServer().getLootManager().getLootTable(randomId);
 
+        // Generate a random item stack from that chest
         ObjectArrayList<ItemStack> items = lootTable.generateLoot(new LootContextParameterSet.Builder((ServerWorld) world).add(LootContextParameters.ORIGIN, Vec3d.ZERO).build(LootContextTypes.CHEST));
         ItemStack randomStack = items.get(world.getRandom().nextInt(items.size()));
 
+        // Prevent accidentally using the new item
         if (user instanceof PlayerEntity player) {
             player.getItemCooldownManager().set(randomStack.getItem(), 10);
         }
 
+        // Visuals & SFX
         this.sendParticlesPacket(world, user.getEyePos().toVector3f());
+        world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1f, 1f);
 
         return randomStack;
     }

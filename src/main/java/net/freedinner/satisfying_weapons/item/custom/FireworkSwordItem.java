@@ -17,6 +17,7 @@ public class FireworkSwordItem extends SwordItem {
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         FestivityEffect.addStacks(attacker, 1, 10);
+
         return super.postHit(stack, target, attacker);
     }
 

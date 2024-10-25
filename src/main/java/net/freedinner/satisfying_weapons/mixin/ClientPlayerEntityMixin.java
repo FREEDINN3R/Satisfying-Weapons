@@ -26,6 +26,7 @@ public abstract class ClientPlayerEntityMixin {
     private void tickMovement(CallbackInfo info) {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
 
+        // If eligible player pressed jump
         if (player.input.jumping && !jumpedLastTick && canFireworkJump(player)) {
             Vec3d v = player.getVelocity();
             player.setVelocity(v.x, 1.5, v.z);
@@ -42,9 +43,10 @@ public abstract class ClientPlayerEntityMixin {
         ItemStack itemStack = player.getEquippedStack(EquipmentSlot.CHEST);
         boolean hasElytra = itemStack.getItem() instanceof ElytraItem && ElytraItem.isUsable(itemStack);
 
+        // If falling, has enough Festivity, and there are no exceptional circumstances
         return !player.isOnGround() && player.getVelocity().y < 0 && !player.isTouchingWater() && !player.isFallFlying()
                 && !player.getAbilities().flying && !hasElytra && !player.hasVehicle()
-                && FestivityEffect.getStacks(player) > 1 && FireworkSwordItem.heldInHand(player)
+                && FestivityEffect.getStacks(player) >= 3 && FireworkSwordItem.heldInHand(player)
                 && !player.hasStatusEffect(StatusEffects.LEVITATION) && !player.hasStatusEffect(StatusEffects.SLOW_FALLING);
     }
 }

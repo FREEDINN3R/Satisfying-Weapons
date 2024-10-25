@@ -17,13 +17,16 @@ public class ModLootTablesModifier {
     public static void modifyLootTables() {
         SatisfyingWeapons.LOGGER.info("Modifying loot tables");
 
+        // Add Unfulfilled Wish drop to all hostile entities
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             LootContextType lootType = ((LootTableBuilderAccessor) tableBuilder).getType();
 
+            // If not monster entity, ignore
             if (lootType != LootContextTypes.ENTITY || !LootTableSearcher.isMonsterLoot(id)) {
                 return;
             }
 
+            // Building a new pool with conditions
             LootPool.Builder poolBuilder = LootPool.builder()
                     .conditionally(KilledByPlayerLootCondition.builder())
                     .conditionally(RandomChanceLootCondition.builder(1f))

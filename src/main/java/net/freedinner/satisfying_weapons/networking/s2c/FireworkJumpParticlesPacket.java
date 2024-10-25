@@ -20,7 +20,7 @@ public class FireworkJumpParticlesPacket {
                 return;
             }
 
-            // Starter ring
+            // Particle ring
 
             int count = 90;
             for (int i = 0; i < count; i++) {

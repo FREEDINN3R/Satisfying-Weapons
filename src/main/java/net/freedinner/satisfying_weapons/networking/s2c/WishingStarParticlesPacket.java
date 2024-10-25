@@ -24,6 +24,8 @@ public class WishingStarParticlesPacket {
                 return;
             }
 
+            // Broken star shards
+
             ParticleEffect particle = new ItemStackParticleEffect(ParticleTypes.ITEM, new ItemStack(ModItems.WISHING_STAR));
 
             for (int i = 0; i < 30; i++) {

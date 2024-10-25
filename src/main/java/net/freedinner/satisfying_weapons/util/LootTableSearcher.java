@@ -10,23 +10,28 @@ import java.util.List;
 
 public class LootTableSearcher {
     public static boolean isMonsterLoot(Identifier lootTableId) {
+        // Get all entities with this loot table
         List<EntityType<?>> matchingEntities = reverseSearchEntities(lootTableId);
 
+        // If every entity in list is a monster
         for (EntityType<?> entity : matchingEntities) {
             if (entity.getSpawnGroup() != SpawnGroup.MONSTER) {
                 return false;
             }
         }
 
+        // Safeguard against an empty list
         return !matchingEntities.isEmpty();
     }
 
     public static List<EntityType<?>> reverseSearchEntities(Identifier lootTableId) {
+        // Get all entities with this loot table
         List<EntityType<?>> filteredEntities = Registries.ENTITY_TYPE
                 .stream()
                 .filter(entityType -> entityType.getLootTableId().equals(lootTableId))
                 .toList();
 
+        // If there are multiple entities, send a warning
         if (filteredEntities.size() > 1) {
             SatisfyingWeapons.LOGGER.warn("Found several entities with " + lootTableId + " loot table:");
             for (EntityType<?> entity : filteredEntities) {

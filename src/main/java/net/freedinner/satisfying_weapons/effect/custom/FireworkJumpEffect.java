@@ -39,12 +39,12 @@ public class FireworkJumpEffect extends StatusEffect {
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onApplied(entity, attributes, amplifier);
 
-        // Propelling the player into the air
+        // Propel the player into the air
         Vec3d v = entity.getVelocity();
         entity.setVelocity(v.x, 1.5, v.z);
         entity.velocityModified = true;
 
-        // Adding damage resistance
+        // Add damage resistance
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
         defenseData.setScale(defenseData.getScale() * 20f);
 
@@ -82,13 +82,13 @@ public class FireworkJumpEffect extends StatusEffect {
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onRemoved(entity, attributes, amplifier);
 
-        // Removing damage resistance
+        // Remove damage resistance
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
         defenseData.setScale(defenseData.getScale() / 20f);
 
         // If plunge attack was correctly performed
         if (entity.isOnGround() && entity.isSneaking() && FireworkSwordItem.heldInHand(entity)) {
-            // Searching for surrounding entities
+            // Search for surrounding entities
             Box box = new Box(entity.getBlockPos()).expand(2.5, 1, 2.5);
             List<LivingEntity> surroundingEntities = entity.getWorld().getOtherEntities(entity, box)
                     .stream()
@@ -96,14 +96,14 @@ public class FireworkJumpEffect extends StatusEffect {
                     .map(e -> (LivingEntity) e)
                     .toList();
 
-            // Calculating damage
+            // Calculate damage
             FireworkSwordItem fireworkSword = (FireworkSwordItem) entity.getStackInHand(Hand.MAIN_HAND).getItem();
             float plungeDamage = 2 * fireworkSword.getAttackDamage() * (amplifier + 1);
             DamageSource damageSource = (entity instanceof PlayerEntity player) ?
                     player.getDamageSources().playerAttack(player) :
                     entity.getDamageSources().mobAttack(entity);
 
-            // Damaging and knocking back entities
+            // Damage and knock back entities
             for (LivingEntity otherEntity : surroundingEntities) {
                 otherEntity.damage(damageSource, plungeDamage);
 
@@ -112,17 +112,17 @@ public class FireworkJumpEffect extends StatusEffect {
                 otherEntity.velocityModified = true;
             }
 
-            // Adding Festivity stacks
+            // Add Festivity stacks
             int entitiesHit = surroundingEntities.size();
             FestivityEffect.addStacks(entity, entitiesHit, 10);
 
-            // Healing and restoring hunger
+            // Heal and restoring hunger
             entity.heal(2);
             if (entity instanceof PlayerEntity player) {
                 player.getHungerManager().add(2, 0);
             }
 
-            // Visuals && SFX
+            // Visuals & SFX
             entity.getWorld().playSound(null, entity.getBlockPos(), ModSounds.PLUNGE_ATTACK, SoundCategory.PLAYERS, 2.0f, PitchUtils.get());
             entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 2.0f, 1.0f);
             sendPlungeParticlesPacket(entity);

@@ -24,6 +24,7 @@ public class WishCooldownDropCondition implements LootCondition {
 
     @Override
     public boolean test(LootContext lootContext) {
+        // Get killer player
         PlayerEntity player = lootContext.get(LootContextParameters.LAST_DAMAGE_PLAYER);
 
         if (player == null) {
@@ -31,17 +32,21 @@ public class WishCooldownDropCondition implements LootCondition {
             return false;
         }
 
+        // How many ticks passed since Unfulfilled Wish last dropped
         long lastDropTime = ((IPlayerDataSaver) player).getLastDropTime();
         long currTime = player.getWorld().getTime();
         long timePassed = currTime - lastDropTime;
 
+        // If less than 30 seconds, no drop
         if (timePassed < 600) {
             return false;
         }
 
+        // After 30 seconds, chance is 10%, with linear increase to 20% during next 60 seconds
         float chance = 0.1f + Math.min(timePassed - 600, 1200) / 12000f;
         boolean b = MathUtils.takeChance(chance, player.getWorld());
 
+        // If drop happened, save new last drop time
         if (b) {
             ((IPlayerDataSaver) player).setLastDropTime(currTime);
         }
