@@ -3,6 +3,7 @@
   "package": "net.freedinner.satisfying_weapons.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AnvilScreenHandlerMixin",
     "LootTableBuilderAccessor",
     "PlayerEntityMixin"
   ],
