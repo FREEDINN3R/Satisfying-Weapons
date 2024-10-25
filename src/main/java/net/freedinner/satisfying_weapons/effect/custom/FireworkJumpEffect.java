@@ -1,5 +1,7 @@
 package net.freedinner.satisfying_weapons.effect.custom;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -9,6 +11,8 @@ import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
@@ -24,13 +28,30 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import virtuoel.pehkui.Pehkui;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
 
 import java.util.List;
+import java.util.UUID;
 
 public class FireworkJumpEffect extends StatusEffect {
+    private static final Multimap<EntityAttribute, EntityAttributeModifier> knockbackModifier;
+
+    static {
+        // Multimap with a 1.0 value increase for knockback resistance
+        knockbackModifier = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                .put(
+                        EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE,
+                        new EntityAttributeModifier(
+                                UUID.fromString("bc8a023f-1eff-418b-a6c8-a793940feeed"),
+                                "firework_jump_knockback_modifier",
+                                1.0,
+                                EntityAttributeModifier.Operation.ADDITION
+                        )
+                )
+                .build();
+    }
+
     public FireworkJumpEffect(StatusEffectCategory category, int color) {
         super(category, color);
     }
@@ -44,9 +65,10 @@ public class FireworkJumpEffect extends StatusEffect {
         entity.setVelocity(v.x, 1.5, v.z);
         entity.velocityModified = true;
 
-        // Add damage resistance
+        // Add damage and knockback resistance
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
         defenseData.setScale(defenseData.getScale() * 20f);
+        attributes.addTemporaryModifiers(knockbackModifier);
 
         // Visuals & SFX
         entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.PLAYERS, 3.0f, 1.0f);
@@ -82,9 +104,10 @@ public class FireworkJumpEffect extends StatusEffect {
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onRemoved(entity, attributes, amplifier);
 
-        // Remove damage resistance
+        // Remove damage and knockback resistance
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
         defenseData.setScale(defenseData.getScale() / 20f);
+        attributes.removeModifiers(knockbackModifier);
 
         // If plunge attack was correctly performed
         if (entity.isOnGround() && entity.isSneaking() && FireworkSwordItem.heldInHand(entity)) {
@@ -116,7 +139,7 @@ public class FireworkJumpEffect extends StatusEffect {
             int entitiesHit = surroundingEntities.size();
             FestivityEffect.addStacks(entity, entitiesHit, 10);
 
-            // Heal and restoring hunger
+            // Heal and restore hunger
             entity.heal(2);
             if (entity instanceof PlayerEntity player) {
                 player.getHungerManager().add(2, 0);
@@ -126,9 +149,6 @@ public class FireworkJumpEffect extends StatusEffect {
             entity.getWorld().playSound(null, entity.getBlockPos(), ModSounds.PLUNGE_ATTACK, SoundCategory.PLAYERS, 2.0f, PitchUtils.get());
             entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 2.0f, 1.0f);
             sendPlungeParticlesPacket(entity);
-
-            // Hurt sound & screen shake
-            entity.damage(entity.getWorld().getDamageSources().fall(), 0.01f);
         }
     }
 

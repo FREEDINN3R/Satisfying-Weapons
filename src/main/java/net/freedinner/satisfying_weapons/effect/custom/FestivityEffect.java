@@ -16,7 +16,7 @@ public class FestivityEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        // Clear stacks if sword not in hand
+        // Clear stacks if sword is not in hand
         if (!FireworkSwordItem.heldInHand(entity)) {
             entity.removeStatusEffect(this);
             return;

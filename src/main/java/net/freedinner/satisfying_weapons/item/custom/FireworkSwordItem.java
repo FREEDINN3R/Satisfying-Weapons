@@ -2,8 +2,6 @@ package net.freedinner.satisfying_weapons.item.custom;
 
 import net.freedinner.satisfying_weapons.effect.custom.FestivityEffect;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
