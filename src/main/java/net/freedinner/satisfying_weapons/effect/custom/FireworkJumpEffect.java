@@ -60,14 +60,14 @@ public class FireworkJumpEffect extends StatusEffect {
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onApplied(entity, attributes, amplifier);
 
-        // Propel the player into the air
+        // Launch the player into the air
         Vec3d v = entity.getVelocity();
         entity.setVelocity(v.x, 1.5, v.z);
         entity.velocityModified = true;
 
         // Add damage and knockback resistance
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
-        defenseData.setScale(defenseData.getScale() * 20f);
+        defenseData.setScale(defenseData.getScale() * 10f);
         attributes.addTemporaryModifiers(knockbackModifier);
 
         // Visuals & SFX
@@ -106,7 +106,7 @@ public class FireworkJumpEffect extends StatusEffect {
 
         // Remove damage and knockback resistance
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
-        defenseData.setScale(defenseData.getScale() / 20f);
+        defenseData.setScale(defenseData.getScale() / 10f);
         attributes.removeModifiers(knockbackModifier);
 
         // If plunge attack was correctly performed
@@ -139,11 +139,8 @@ public class FireworkJumpEffect extends StatusEffect {
             int entitiesHit = surroundingEntities.size();
             FestivityEffect.addStacks(entity, entitiesHit, 10);
 
-            // Heal and restore hunger
+            // Restore 1 heart
             entity.heal(2);
-            if (entity instanceof PlayerEntity player) {
-                player.getHungerManager().add(2, 0);
-            }
 
             // Visuals & SFX
             entity.getWorld().playSound(null, entity.getBlockPos(), ModSounds.PLUNGE_ATTACK, SoundCategory.PLAYERS, 2.0f, PitchUtils.get());
