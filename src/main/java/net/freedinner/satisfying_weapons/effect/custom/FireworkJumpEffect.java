@@ -8,7 +8,9 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
+import net.freedinner.satisfying_weapons.util.CombatHelper;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
@@ -126,17 +128,16 @@ public class FireworkJumpEffect extends StatusEffect {
                     .map(e -> (LivingEntity) e)
                     .toList();
 
-            // Calculate damage
-            FireworkSwordItem fireworkSword = (FireworkSwordItem) player.getStackInHand(Hand.MAIN_HAND).getItem();
-            float totalDamage = 2 * fireworkSword.getAttackDamage() * (amplifier + 1);
-            DamageSource damageSource = player.getDamageSources().playerAttack(player);
-
-            // Damage and apply knockback to entities
+            // For every entity hit
             for (LivingEntity otherEntity : surroundingEntities) {
-                otherEntity.damage(damageSource, totalDamage);
+                // Calculate and apply damage
+                float damageMultiplier = 1.5f * (amplifier + 1);
+                CombatHelper.simulatePlayerAttack(player, otherEntity, damageMultiplier);
 
+                // Calculate and apply knockback
                 Vec3d direction = player.getPos().subtract(otherEntity.getPos()).normalize();
-                otherEntity.takeKnockback(0.8, direction.x, direction.z);
+                int knockbackLevel = EnchantmentHelper.getKnockback(player);
+                otherEntity.takeKnockback(0.8 + 0.4 * knockbackLevel, direction.x, direction.z);
                 otherEntity.velocityModified = true;
             }
 
