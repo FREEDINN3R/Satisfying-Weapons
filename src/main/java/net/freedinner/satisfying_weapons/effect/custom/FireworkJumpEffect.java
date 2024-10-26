@@ -9,6 +9,7 @@ import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -19,6 +20,8 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ElytraItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -81,14 +84,13 @@ public class FireworkJumpEffect extends StatusEffect {
             return;
         }
 
-        // Remove effect under certain conditions
-        if (entity.isOnGround() || entity.isTouchingWater() || !FireworkSwordItem.heldInHand(entity)
-                || entity.isFallFlying() || entity.hasVehicle()
-                || entity.hasStatusEffect(StatusEffects.LEVITATION) || entity.hasStatusEffect(StatusEffects.SLOW_FALLING)) {
+        // Remove effect if something has interrupted the Firework Jump
+        if (!isEligible(entity, false)) {
             entity.removeStatusEffect(this);
+            return;
         }
 
-        // Plunge attack when sneaking
+        // Accelerate down when sneaking
         if (entity.isSneaking() && entity.getVelocity().y > -5) {
             entity.addVelocity(0, -0.15, 0);
             entity.velocityModified = true;
@@ -111,47 +113,73 @@ public class FireworkJumpEffect extends StatusEffect {
 
         // If plunge attack was correctly performed
         if (entity.isOnGround() && entity.isSneaking() && FireworkSwordItem.heldInHand(entity)) {
-            // Search for surrounding entities
-            Box box = new Box(entity.getBlockPos()).expand(2.5, 1, 2.5);
-            List<LivingEntity> surroundingEntities = entity.getWorld().getOtherEntities(entity, box)
+            // Double-check that it was a player
+            if (!(entity instanceof PlayerEntity player)) {
+                return;
+            }
+
+            // Search for surrounding LivingEntities
+            Box box = new Box(player.getBlockPos()).expand(2.5, 1, 2.5);
+            List<LivingEntity> surroundingEntities = player.getWorld().getOtherEntities(player, box)
                     .stream()
                     .filter(e -> e instanceof LivingEntity)
                     .map(e -> (LivingEntity) e)
                     .toList();
 
             // Calculate damage
-            FireworkSwordItem fireworkSword = (FireworkSwordItem) entity.getStackInHand(Hand.MAIN_HAND).getItem();
-            float plungeDamage = 2 * fireworkSword.getAttackDamage() * (amplifier + 1);
-            DamageSource damageSource = (entity instanceof PlayerEntity player) ?
-                    player.getDamageSources().playerAttack(player) :
-                    entity.getDamageSources().mobAttack(entity);
+            FireworkSwordItem fireworkSword = (FireworkSwordItem) player.getStackInHand(Hand.MAIN_HAND).getItem();
+            float totalDamage = 2 * fireworkSword.getAttackDamage() * (amplifier + 1);
+            DamageSource damageSource = player.getDamageSources().playerAttack(player);
 
-            // Damage and knock back entities
+            // Damage and apply knockback to entities
             for (LivingEntity otherEntity : surroundingEntities) {
-                otherEntity.damage(damageSource, plungeDamage);
+                otherEntity.damage(damageSource, totalDamage);
 
-                Vec3d direction = entity.getPos().subtract(otherEntity.getPos()).normalize();
+                Vec3d direction = player.getPos().subtract(otherEntity.getPos()).normalize();
                 otherEntity.takeKnockback(0.8, direction.x, direction.z);
                 otherEntity.velocityModified = true;
             }
 
             // Add Festivity stacks
             int entitiesHit = surroundingEntities.size();
-            FestivityEffect.addStacks(entity, entitiesHit, 10);
+            FestivityEffect.addStacks(player, entitiesHit, 10);
 
             // Restore 1 heart
-            entity.heal(2);
+            player.heal(2);
 
             // Visuals & SFX
-            entity.getWorld().playSound(null, entity.getBlockPos(), ModSounds.PLUNGE_ATTACK, SoundCategory.PLAYERS, 2.0f, PitchUtils.get());
-            entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 2.0f, 1.0f);
-            sendPlungeParticlesPacket(entity);
+            player.getWorld().playSound(null, player.getBlockPos(), ModSounds.PLUNGE_ATTACK, SoundCategory.PLAYERS, 2.0f, PitchUtils.get());
+            player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 2.0f, 1.0f);
+            sendPlungeParticlesPacket(player);
         }
     }
 
     @Override
     public boolean canApplyUpdateEffect(int duration, int amplifier) {
         return true;
+    }
+
+    public static boolean isEligible(LivingEntity entity, boolean checkStartingConditions) {
+        // Only players can do a Firework Jump
+        if (!(entity instanceof PlayerEntity player)) {
+            return false;
+        }
+
+        // Check if the player has elytra
+        ItemStack itemStack = player.getEquippedStack(EquipmentSlot.CHEST);
+        boolean hasElytra = itemStack.getItem() instanceof ElytraItem && ElytraItem.isUsable(itemStack);
+
+        // Conditions that apply when the player starts a Firework Jump
+        boolean startingConditions =
+                !player.getAbilities().flying && !hasElytra
+                && player.getVelocity().y < 0 && FestivityEffect.getStacks(player) >= 3;
+
+        // Conditions that apply when the player is already doing a Firework Jump
+        return (!checkStartingConditions || startingConditions)
+                && FireworkSwordItem.heldInHand(player)
+                && !player.isOnGround() && !player.isClimbing() && !player.isFallFlying()
+                && !entity.isTouchingWater() && !entity.isInLava() && !entity.hasVehicle()
+                && !entity.hasStatusEffect(StatusEffects.LEVITATION) && !entity.hasStatusEffect(StatusEffects.SLOW_FALLING);
     }
 
     private static void sendJumpParticlesPacket(LivingEntity entity) {

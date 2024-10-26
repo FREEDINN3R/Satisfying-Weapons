@@ -3,13 +3,11 @@ package net.freedinner.satisfying_weapons.mixin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.freedinner.satisfying_weapons.effect.custom.FestivityEffect;
+import net.freedinner.satisfying_weapons.effect.custom.FireworkJumpEffect;
 import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.ElytraItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -27,7 +25,7 @@ public abstract class ClientPlayerEntityMixin {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
 
         // If eligible player pressed jump
-        if (player.input.jumping && !jumpedLastTick && canFireworkJump(player)) {
+        if (player.input.jumping && !jumpedLastTick && FireworkJumpEffect.isEligible(player, true)) {
             Vec3d v = player.getVelocity();
             player.setVelocity(v.x, 1.5, v.z);
             player.velocityModified = true;
@@ -36,17 +34,5 @@ public abstract class ClientPlayerEntityMixin {
         }
 
         jumpedLastTick = player.input.jumping;
-    }
-
-    @Unique
-    private boolean canFireworkJump(ClientPlayerEntity player) {
-        ItemStack itemStack = player.getEquippedStack(EquipmentSlot.CHEST);
-        boolean hasElytra = itemStack.getItem() instanceof ElytraItem && ElytraItem.isUsable(itemStack);
-
-        // If falling, has enough Festivity, and there are no exceptional circumstances
-        return !player.isOnGround() && player.getVelocity().y < 0 && !player.isTouchingWater() && !player.isFallFlying()
-                && !player.getAbilities().flying && !hasElytra && !player.hasVehicle()
-                && FestivityEffect.getStacks(player) >= 3 && FireworkSwordItem.heldInHand(player)
-                && !player.hasStatusEffect(StatusEffects.LEVITATION) && !player.hasStatusEffect(StatusEffects.SLOW_FALLING);
     }
 }
