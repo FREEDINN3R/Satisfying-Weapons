@@ -4,12 +4,13 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
+import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ItemCooldownManager;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
@@ -18,6 +19,7 @@ import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -27,13 +29,18 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class WishingStarItem extends Item {
+    public static final double WEAPON_DROP_CHANCE = 0.25;
+
     public WishingStarItem(Settings settings) {
         super(settings);
     }
@@ -82,6 +89,28 @@ public class WishingStarItem extends Item {
             return stack;
         }
 
+        // Roll either a weapon or chest loot
+        boolean hasRolledWeapon = MathUtils.takeChance(WEAPON_DROP_CHANCE, world);
+        ItemStack rolledStack = (hasRolledWeapon) ? rollRandomWeapon(world) : rollRandomChestLoot(world);
+
+        // Prevent accidentally using the new item
+        if (user instanceof PlayerEntity player) {
+            player.getItemCooldownManager().set(rolledStack.getItem(), 10);
+        }
+
+        // Visuals & SFX
+        this.sendParticlesPacket(world, user.getEyePos().toVector3f(), hasRolledWeapon);
+        if (hasRolledWeapon){
+            world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 1f, 1f);
+        }
+        else {
+            world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1f, 1f);
+        }
+
+        return rolledStack;
+    }
+
+    private ItemStack rollRandomChestLoot(World world) {
         // Get all existing chest loot tables
         List<Identifier> allLootTables = LootTables.getAll()
                 .stream()
@@ -94,23 +123,24 @@ public class WishingStarItem extends Item {
 
         // Generate a random item stack from that chest
         ObjectArrayList<ItemStack> items = lootTable.generateLoot(new LootContextParameterSet.Builder((ServerWorld) world).add(LootContextParameters.ORIGIN, Vec3d.ZERO).build(LootContextTypes.CHEST));
-        ItemStack randomStack = items.get(world.getRandom().nextInt(items.size()));
-
-        // Prevent accidentally using the new item
-        if (user instanceof PlayerEntity player) {
-            player.getItemCooldownManager().set(randomStack.getItem(), 10);
-        }
-
-        // Visuals & SFX
-        this.sendParticlesPacket(world, user.getEyePos().toVector3f());
-        world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1f, 1f);
-
-        return randomStack;
+        return items.get(world.getRandom().nextInt(items.size()));
     }
 
-    private void sendParticlesPacket(World world, Vector3f pos) {
+    private ItemStack rollRandomWeapon(World world) {
+        // TODO: properly implement chances based on weapon rarity
+
+        List<Item> allWeapons = Arrays.asList(
+                ModItems.FIREWORK_SWORD
+        );
+
+        Item randomWeapon = allWeapons.get(world.getRandom().nextInt(allWeapons.size()));
+        return new ItemStack(randomWeapon);
+    }
+
+    private void sendParticlesPacket(World world, Vector3f pos, boolean hasRolledWeapon) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVector3f(pos);
+        buf.writeBoolean(hasRolledWeapon);
 
         BlockPos blockPos = new BlockPos(Math.round(pos.x), Math.round(pos.y), Math.round(pos.z));
 
