@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "satisfying_weapons:wishing_star"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_unfulfilled_wish": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "satisfying_weapons:unfulfilled_wish"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_unfulfilled_wish",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "satisfying_weapons:wishing_star"
+    ]
+  },
+  "sends_telemetry_event": false
+}

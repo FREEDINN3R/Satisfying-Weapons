@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:satisfying_weapons/root",
+  "criteria": {
+    "got_unfulfilled_wish": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "satisfying_weapons:unfulfilled_wish"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.satisfying_weapons.glimmer_of_hope.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "satisfying_weapons:unfulfilled_wish"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.satisfying_weapons.glimmer_of_hope.title"
+    }
+  },
+  "requirements": [
+    [
+      "got_unfulfilled_wish"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

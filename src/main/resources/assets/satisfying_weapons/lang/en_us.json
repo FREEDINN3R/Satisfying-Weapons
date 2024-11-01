@@ -9,5 +9,12 @@
   "effect.satisfying_weapons.festivity": "Festivity",
   "effect.satisfying_weapons.firework_jump": "Firework Jump",
 
+  "advancement.satisfying_weapons.root.title": "Satisfying Weapons",
+  "advancement.satisfying_weapons.root.description": "Kill monsters, craft wishes, collect weapons",
+  "advancement.satisfying_weapons.glimmer_of_hope.title": "Glimmer of Hope",
+  "advancement.satisfying_weapons.glimmer_of_hope.description": "Obtain your first Unfulfilled Wish",
+  "advancement.satisfying_weapons.gotta_collect_em_all.title": "Gotta Collect 'Em All!",
+  "advancement.satisfying_weapons.gotta_collect_em_all.description": "Start collecting Satisfying Weapons",
+
   "satisfying_weapons.plunge_attack": "Plunge attack"
 }

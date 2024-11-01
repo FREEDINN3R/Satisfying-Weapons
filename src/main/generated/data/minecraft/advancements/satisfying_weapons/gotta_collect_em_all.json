@@ -1,0 +1,37 @@
+{
+  "parent": "minecraft:satisfying_weapons/root",
+  "criteria": {
+    "rolled_weapon": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "satisfying_weapons:mod_weapons"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.satisfying_weapons.gotta_collect_em_all.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "satisfying_weapons:firework_sword",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.satisfying_weapons.gotta_collect_em_all.title"
+    }
+  },
+  "requirements": [
+    [
+      "rolled_weapon"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "killed_any_entity": {
+      "conditions": {},
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "satisfying_weapons:textures/gui/advancements/background.png",
+    "description": {
+      "translate": "advancement.satisfying_weapons.root.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "satisfying_weapons:wishing_star"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancement.satisfying_weapons.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "killed_any_entity"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

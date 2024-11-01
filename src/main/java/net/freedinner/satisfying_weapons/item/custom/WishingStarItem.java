@@ -9,7 +9,6 @@ import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,7 +18,6 @@ import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -29,17 +27,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class WishingStarItem extends Item {
-    public static final double WEAPON_DROP_CHANCE = 0.25;
+    public static final double WEAPON_DROP_CHANCE = 0.1;
 
     public WishingStarItem(Settings settings) {
         super(settings);
@@ -129,7 +124,7 @@ public class WishingStarItem extends Item {
     private ItemStack rollRandomWeapon(World world) {
         // TODO: properly implement chances based on weapon rarity
 
-        List<Item> allWeapons = Arrays.asList(
+        List<Item> allWeapons = List.of(
                 ModItems.FIREWORK_SWORD
         );
 
