@@ -4,10 +4,13 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.freedinner.satisfying_weapons.datagen.ModAdvancements;
+import net.freedinner.satisfying_weapons.datagen.ModTags;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -80,22 +83,33 @@ public class WishingStarItem extends Item {
 
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-        if (world.isClient) {
+        if (!(user instanceof ServerPlayerEntity serverPlayer)) {
             return stack;
         }
 
-        // Roll either a weapon or chest loot
-        boolean hasRolledWeapon = MathUtils.takeChance(WEAPON_DROP_CHANCE, world);
-        ItemStack rolledStack = (hasRolledWeapon) ? rollRandomWeapon(world) : rollRandomChestLoot(world);
+        // Based on a set chance, determine if a weapon will be rolled
+        boolean shouldRollWeapon = MathUtils.takeChance(WEAPON_DROP_CHANCE, world);
+        boolean starterWeapon = false;
 
-        // Prevent accidentally using the new item
-        if (user instanceof PlayerEntity player) {
-            player.getItemCooldownManager().set(rolledStack.getItem(), 10);
+        // Check if the player has ever rolled a weapon before
+        Advancement weaponAdvancement = serverPlayer.server.getAdvancementLoader().get(ModAdvancements.GOTTA_COLLECT_EM_ALL);
+        boolean hasWeaponAdvancement = serverPlayer.getAdvancementTracker().getProgress(weaponAdvancement).isDone();
+
+        // If never rolled a weapon before, should roll a starter weapon
+        if (!hasWeaponAdvancement) {
+            shouldRollWeapon = true;
+            starterWeapon = true;
         }
 
+        // The actual rolling part
+        ItemStack rolledStack = (shouldRollWeapon) ? rollRandomWeapon(world, starterWeapon) : rollRandomChestLoot(world);
+
+        // Prevent accidentally using the new item
+        serverPlayer.getItemCooldownManager().set(rolledStack.getItem(), 10);
+
         // Visuals & SFX
-        this.sendParticlesPacket(world, user.getEyePos().toVector3f(), hasRolledWeapon);
-        if (hasRolledWeapon){
+        this.sendParticlesPacket(world, user.getEyePos().toVector3f(), rolledStack.isIn(ModTags.MOD_WEAPONS));
+        if (rolledStack.isIn(ModTags.MOD_WEAPONS)){
             world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 1f, 1f);
         }
         else {
@@ -121,7 +135,7 @@ public class WishingStarItem extends Item {
         return items.get(world.getRandom().nextInt(items.size()));
     }
 
-    private ItemStack rollRandomWeapon(World world) {
+    private ItemStack rollRandomWeapon(World world, boolean starterWeapon) {
         // TODO: properly implement chances based on weapon rarity
 
         List<Item> allWeapons = List.of(

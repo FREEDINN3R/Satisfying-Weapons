@@ -16,14 +16,18 @@ import net.minecraft.util.Identifier;
 import java.util.function.Consumer;
 
 public class ModAdvancements {
-    public static Advancement ROOT_ADVANCEMENT;
-    public static Advancement GLIMMER_OF_HOPE;
-    public static Advancement GOTTA_COLLECT_EM_ALL;
+    public static final Identifier ROOT_ADVANCEMENT = getAdvancementId("root");
+    public static final Identifier GLIMMER_OF_HOPE = getAdvancementId("glimmer_of_hope");
+    public static final Identifier GOTTA_COLLECT_EM_ALL = getAdvancementId("gotta_collect_em_all");
 
     public static void generateAdvancements(FabricDataGenerator.Pack pack) {
         SatisfyingWeapons.LOGGER.info("Generating advancements");
 
         pack.addProvider(AdvancementsProvider::new);
+    }
+
+    private static Identifier getAdvancementId(String name) {
+        return Identifier.of("minecraft", SatisfyingWeapons.MOD_ID + "/" + name);
     }
 
     static class AdvancementsProvider extends FabricAdvancementProvider {
@@ -33,7 +37,7 @@ public class ModAdvancements {
 
         @Override
         public void generateAdvancement(Consumer<Advancement> consumer) {
-            ROOT_ADVANCEMENT = Advancement.Builder.create()
+            Advancement root = Advancement.Builder.create()
                     .display(
                             ModItems.WISHING_STAR,
                             Text.translatable("advancement.satisfying_weapons.root.title"),
@@ -45,9 +49,9 @@ public class ModAdvancements {
                             false
                     )
                     .criterion("killed_any_entity", OnKilledCriterion.Conditions.createPlayerKilledEntity())
-                    .build(consumer, SatisfyingWeapons.MOD_ID + "/root");
+                    .build(consumer, ROOT_ADVANCEMENT.getPath());
 
-            GLIMMER_OF_HOPE = Advancement.Builder.create().parent(ROOT_ADVANCEMENT)
+            Advancement.Builder.create().parent(root)
                     .display(
                             ModItems.UNFULFILLED_WISH,
                             Text.translatable("advancement.satisfying_weapons.glimmer_of_hope.title"),
@@ -59,11 +63,11 @@ public class ModAdvancements {
                             false
                     )
                     .criterion("got_unfulfilled_wish", InventoryChangedCriterion.Conditions.items(ModItems.UNFULFILLED_WISH))
-                    .build(consumer, SatisfyingWeapons.MOD_ID + "/glimmer_of_hope");
+                    .build(consumer, GLIMMER_OF_HOPE.getPath());
 
             ItemPredicate anyModWeapon = ItemPredicate.Builder.create().tag(ModTags.MOD_WEAPONS).build();
 
-            GOTTA_COLLECT_EM_ALL = Advancement.Builder.create().parent(ROOT_ADVANCEMENT)
+            Advancement.Builder.create().parent(root)
                     .display(
                             ModItems.FIREWORK_SWORD,
                             Text.translatable("advancement.satisfying_weapons.gotta_collect_em_all.title"),
@@ -75,7 +79,7 @@ public class ModAdvancements {
                             false
                     )
                     .criterion("rolled_weapon", InventoryChangedCriterion.Conditions.items(anyModWeapon))
-                    .build(consumer, SatisfyingWeapons.MOD_ID + "/gotta_collect_em_all");
+                    .build(consumer, GOTTA_COLLECT_EM_ALL.getPath());
         }
     }
 }
