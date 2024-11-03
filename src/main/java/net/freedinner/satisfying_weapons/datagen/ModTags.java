@@ -17,6 +17,10 @@ import java.util.concurrent.CompletableFuture;
 public class ModTags {
     public static final TagKey<Item> MOD_WEAPONS = TagKey.of(RegistryKeys.ITEM, SatisfyingWeapons.id("mod_weapons"));
 
+    public static void registerTags() {
+        SatisfyingWeapons.LOGGER.info("Registering tags");
+    }
+
     public static void generateTags(FabricDataGenerator.Pack pack) {
         SatisfyingWeapons.LOGGER.info("Generating tags");
 

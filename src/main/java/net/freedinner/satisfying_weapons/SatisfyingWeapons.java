@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.freedinner.satisfying_weapons.datagen.ModTags;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.loot.ModLootConditions;
 import net.freedinner.satisfying_weapons.loot.ModLootTablesModifier;
@@ -28,6 +29,8 @@ public class SatisfyingWeapons implements ModInitializer {
 		ModItemGroups.registerItemGroups();
 
         ModEffects.registerEffects();
+
+		ModTags.registerTags();
 
 		ModParticles.registerParticles();
 		ModSounds.registerSounds();
