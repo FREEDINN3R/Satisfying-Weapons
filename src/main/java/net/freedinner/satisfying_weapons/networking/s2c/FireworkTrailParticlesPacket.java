@@ -30,6 +30,11 @@ public class FireworkTrailParticlesPacket {
                 Vec3d pos = entityPos.add(MathUtils.randomPointInSphere(0.4)).add(0, 0.5, 0);
                 world.addParticle(ParticleTypes.FIREWORK, pos.x, pos.y, pos.z, 0, particleVelocity, 0);
             }
+
+            // Smoke
+
+            Vec3d pos = entityPos.add(MathUtils.randomPointInSphere(0.4)).add(0, 0.5, 0);
+            world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 0, particleVelocity, 0);
         });
     }
 }

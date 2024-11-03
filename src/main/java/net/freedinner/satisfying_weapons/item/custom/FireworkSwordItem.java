@@ -1,10 +1,18 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.effect.custom.FestivityEffect;
+import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 
 public class FireworkSwordItem extends SwordItem {
@@ -14,12 +22,27 @@ public class FireworkSwordItem extends SwordItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        FestivityEffect.addStacks(attacker, 1, 10);
+        boolean stacksUpdated = FestivityEffect.addStacks(attacker, 1, 10);
+
+        if (stacksUpdated && attacker instanceof PlayerEntity playerAttacker) {
+            sendParticlesPacket(playerAttacker, target);
+        }
 
         return super.postHit(stack, target, attacker);
     }
 
     public static boolean heldInHand(LivingEntity entity) {
         return entity.getStackInHand(Hand.MAIN_HAND).getItem() instanceof FireworkSwordItem;
+    }
+
+    private static void sendParticlesPacket(PlayerEntity playerAttacker, LivingEntity target) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVector3f(target.getPos().toVector3f());
+        buf.writeVector3f(target.getPos().subtract(playerAttacker.getPos()).toVector3f());
+        buf.writeFloat(target.getWidth());
+        buf.writeFloat(target.getHeight());
+        buf.writeInt(FestivityEffect.getStacks(playerAttacker));
+
+        ServerPlayNetworking.send((ServerPlayerEntity) playerAttacker, ModNetworking.FESTIVITY_GAINED_PARTICLES_ID, buf);
     }
 }

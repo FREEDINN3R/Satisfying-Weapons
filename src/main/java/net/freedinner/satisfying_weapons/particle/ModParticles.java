@@ -1,0 +1,44 @@
+package net.freedinner.satisfying_weapons.particle;
+
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.freedinner.satisfying_weapons.SatisfyingWeapons;
+import net.freedinner.satisfying_weapons.particle.custom.FestivityCountParticle;
+import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ModParticles {
+    public static final List<DefaultParticleType> FESTIVITY_COUNT = registerMany("festivity_count", 10);
+
+    private static DefaultParticleType register(String name) {
+        DefaultParticleType particleType = FabricParticleTypes.simple();
+        Registry.register(Registries.PARTICLE_TYPE, SatisfyingWeapons.id(name), particleType);
+        return particleType;
+    }
+
+    private static List<DefaultParticleType> registerMany(String name, int count) {
+        List<DefaultParticleType> list = new ArrayList<>();
+
+        for (int i = 1; i <= count; i++) {
+            list.add(register(name + "_" + i));
+        }
+
+        return list;
+    }
+
+    public static void registerParticles() {
+        SatisfyingWeapons.LOGGER.info("Registering server-side particles");
+    }
+
+    public static void registerParticlesClient() {
+        SatisfyingWeapons.LOGGER.info("Registering client-side particles");
+
+        for (DefaultParticleType particle : FESTIVITY_COUNT) {
+            ParticleFactoryRegistry.getInstance().register(particle, FestivityCountParticle.Factory::new);
+        }
+    }
+}

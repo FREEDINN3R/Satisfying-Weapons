@@ -41,12 +41,15 @@ public class FestivityEffect extends StatusEffect {
         return 0;
     }
 
-    public static void addStacks(LivingEntity livingEntity, int amount, int maxStacks) {
-        int newStacks = MathHelper.clamp(getStacks(livingEntity) + amount, 0, maxStacks);
+    public static boolean addStacks(LivingEntity livingEntity, int amount, int maxStacks) {
+        int oldStacks = getStacks(livingEntity);
+        int newStacks = MathHelper.clamp(oldStacks + amount, 0, maxStacks);
 
         livingEntity.removeStatusEffect(ModEffects.FESTIVITY);
         if (newStacks > 0) {
             livingEntity.addStatusEffect(new StatusEffectInstance(ModEffects.FESTIVITY, -1, newStacks - 1, false, false));
         }
+
+        return newStacks != oldStacks;
     }
 }

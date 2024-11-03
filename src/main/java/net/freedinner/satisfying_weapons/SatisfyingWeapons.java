@@ -8,6 +8,7 @@ import net.freedinner.satisfying_weapons.loot.ModLootTablesModifier;
 import net.freedinner.satisfying_weapons.item.ModItemGroups;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
+import net.freedinner.satisfying_weapons.particle.ModParticles;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ public class SatisfyingWeapons implements ModInitializer {
 
         ModEffects.registerEffects();
 
+		ModParticles.registerParticles();
 		ModSounds.registerSounds();
 
 		ModLootConditions.registerLootConditions();
