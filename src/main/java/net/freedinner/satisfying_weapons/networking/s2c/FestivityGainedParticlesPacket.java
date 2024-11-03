@@ -16,8 +16,8 @@ public class FestivityGainedParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
         Vec3d pos = new Vec3d(buf.readVector3f());
         Vec3d direction = new Vec3d(buf.readVector3f());
-        float width = buf.readFloat();
-        float height = buf.readFloat();
+        double width = buf.readDouble();
+        double height = buf.readDouble();
         int festivityStacks = buf.readInt();
 
         client.execute(() -> {
@@ -33,11 +33,11 @@ public class FestivityGainedParticlesPacket {
             int flameCount = totalCount / 4;
 
             for (int i = 0; i < totalCount; i++) {
-                double dx = 0.5 * (width / 2 - MathUtils.randomDouble(width));
-                double dy = 0.3 + 0.6 * MathUtils.randomDouble(height);
-                double dz = 0.5 * (width / 2 - MathUtils.randomDouble(width));
+                double dx = 0.5 * (width / 2 - MathUtils.randomNumber(width));
+                double dy = 0.3 + 0.6 * MathUtils.randomNumber(height);
+                double dz = 0.5 * (width / 2 - MathUtils.randomNumber(width));
 
-                Vec3d v = MathUtils.randomPointInSphere().multiply(1, 0, 1).normalize().multiply(MathUtils.randomDouble(0.07, 0.03));
+                Vec3d v = MathUtils.randomPointInSphere().multiply(1, 0, 1).normalize().multiply(MathUtils.randomNumber(0.06, 0.1));
 
                 // If 3/6/9 Festivity stacks, add flame particles
                 ParticleEffect particle = (festivityStacks % 3 == 0 && i < flameCount) ? ParticleTypes.FLAME : ParticleTypes.SMOKE;

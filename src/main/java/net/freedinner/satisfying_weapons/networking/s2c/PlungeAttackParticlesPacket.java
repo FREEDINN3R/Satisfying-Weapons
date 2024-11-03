@@ -36,7 +36,7 @@ public class PlungeAttackParticlesPacket {
 
             for (int i = 0; i < 100; i++) {
                 Vec3d v = MathUtils.randomPointInSphere();
-                v = v.normalize().multiply(MathUtils.randomDouble(0.5, 0.5));
+                v = v.normalize().multiply(MathUtils.randomNumber(0.4, 1.0));
 
                 world.addParticle(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, v.x, v.y * 0.8, v.z);
             }
@@ -62,7 +62,7 @@ public class PlungeAttackParticlesPacket {
 
             for (int i = 0; i < 200; i++) {
                 Vec3d v = MathUtils.randomPointInSphere();
-                v = v.normalize().multiply(MathUtils.randomDouble(0.3, 0.5));
+                v = v.normalize().multiply(MathUtils.randomNumber(0.3, 0.8));
 
                 world.addParticle(particle, pos.x, pos.y + 0.5, pos.z, v.x, Math.abs(v.y) * 0.2, v.z);
             }

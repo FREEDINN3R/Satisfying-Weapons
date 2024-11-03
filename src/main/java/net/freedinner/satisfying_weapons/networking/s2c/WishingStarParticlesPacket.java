@@ -31,7 +31,7 @@ public class WishingStarParticlesPacket {
 
             for (int i = 0; i < 30; i++) {
                 Vec3d v = MathUtils.randomPointInSphere();
-                v = v.normalize().multiply(MathUtils.randomDouble(0.5, 0.2));
+                v = v.normalize().multiply(MathUtils.randomNumber(0.5, 0.7));
 
                 world.addParticle(particle, eyePos.x, eyePos.y - 0.3, eyePos.z, v.x, v.y * 0.3, v.z);
             }
@@ -44,7 +44,7 @@ public class WishingStarParticlesPacket {
 
             for (int i = 0; i < 15; i++) {
                 Vec3d delta = MathUtils.randomPointInSphere(2);
-                delta = delta.normalize().multiply(Math.pow(MathUtils.randomDouble(0.9, 0.1), 2)).multiply(1, 0.75, 1);
+                delta = delta.normalize().multiply(Math.pow(MathUtils.randomNumber(0.8, 1.0), 2)).multiply(1, 0.75, 1);
                 Vec3d particlePos = eyePos.add(delta);
 
                 world.addParticle(ParticleTypes.HAPPY_VILLAGER, particlePos.x, particlePos.y, particlePos.z, 0, 0, 0);

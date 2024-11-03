@@ -1,6 +1,5 @@
 package net.freedinner.satisfying_weapons.util;
 
-import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -25,20 +24,20 @@ public class MathUtils {
         return new Vec3d(x, y, z);
     }
 
-    public static double randomDouble(double bound) {
-        return randomDouble(0, bound);
+    public static double randomNumber(double bound) {
+        return random.nextDouble(bound);
     }
 
-    public static double randomDouble(double base, double flex) {
-        return base + random.nextDouble(flex);
+    public static double randomNumber(double min, double max) {
+        return min + random.nextDouble(max - min);
     }
 
-    public static int randomInt(int bound) {
-        return randomInt(0, bound);
+    public static int randomNumber(int bound) {
+        return random.nextInt(bound);
     }
 
-    public static int randomInt(int base, int flex) {
-        return base + random.nextInt(flex);
+    public static int randomNumber(int min, int max) {
+        return min + random.nextInt(max - min + 1);
     }
 
     public static boolean takeChance(double chance) {

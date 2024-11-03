@@ -39,8 +39,8 @@ public class FireworkSwordItem extends SwordItem {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVector3f(target.getPos().toVector3f());
         buf.writeVector3f(target.getPos().subtract(playerAttacker.getPos()).toVector3f());
-        buf.writeFloat(target.getWidth());
-        buf.writeFloat(target.getHeight());
+        buf.writeDouble(target.getWidth());
+        buf.writeDouble(target.getHeight());
         buf.writeInt(FestivityEffect.getStacks(playerAttacker));
 
         ServerPlayNetworking.send((ServerPlayerEntity) playerAttacker, ModNetworking.FESTIVITY_GAINED_PARTICLES_ID, buf);
