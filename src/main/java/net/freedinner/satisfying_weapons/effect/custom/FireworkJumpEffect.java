@@ -9,6 +9,7 @@ import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
+import net.freedinner.satisfying_weapons.util.IPlayerDataSaver;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
@@ -40,6 +41,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class FireworkJumpEffect extends StatusEffect {
+    private static final int MAX_ON_GROUND_TIME = 1;
     private static final Multimap<EntityAttribute, EntityAttributeModifier> knockbackModifier;
 
     static {
@@ -65,19 +67,26 @@ public class FireworkJumpEffect extends StatusEffect {
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onApplied(entity, attributes, amplifier);
 
+        if (!(entity instanceof PlayerEntity player)) {
+            return;
+        }
+
         // Launch the player into the air
-        Vec3d v = entity.getVelocity();
-        entity.setVelocity(v.x, 1.5, v.z);
-        entity.velocityModified = true;
+        Vec3d v = player.getVelocity();
+        player.setVelocity(v.x, 1.5, v.z);
+        player.velocityModified = true;
 
         // Add damage and knockback resistance
-        ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
+        ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(player);
         defenseData.setScale(defenseData.getScale() * 10f);
         attributes.addTemporaryModifiers(knockbackModifier);
 
+        // Reset onGroundTime counter
+        setOnGroundTime(player, 0);
+
         // Visuals & SFX
-        entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.PLAYERS, 3.0f, 1.0f);
-        sendJumpParticlesPacket(entity);
+        player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.PLAYERS, 3.0f, 1.0f);
+        sendJumpParticlesPacket(player);
     }
 
     @Override
@@ -86,21 +95,33 @@ public class FireworkJumpEffect extends StatusEffect {
             return;
         }
 
-        // Remove effect if something has interrupted the Firework Jump
-        if (!isEligible(entity, false)) {
-            entity.removeStatusEffect(this);
+        if (!(entity instanceof PlayerEntity player)) {
+            return;
+        }
+
+        // Update onGroundTime counter
+        if (player.isOnGround()) {
+            setOnGroundTime(player, getOnGroundTime(player) + 1);
+        }
+        else {
+            setOnGroundTime(player, 0);
+        }
+
+        // Remove this effect if something has interrupted the Firework Jump
+        if (!isEligible(player, false)) {
+            player.removeStatusEffect(this);
             return;
         }
 
         // Accelerate down when sneaking
-        if (entity.isSneaking() && entity.getVelocity().y > -5) {
-            entity.addVelocity(0, -0.15, 0);
-            entity.velocityModified = true;
+        if (player.isSneaking() && player.getVelocity().y > -5) {
+            player.addVelocity(0, -0.15, 0);
+            player.velocityModified = true;
         }
 
         // Visuals & SFX
-        if (entity.getVelocity().y > 0 || (entity.isSneaking() && entity.getVelocity().y < 0)) {
-            sendTrailParticlesPacket(entity, entity.getVelocity().y);
+        if (player.getVelocity().y > 0 || (player.isSneaking() && player.getVelocity().y < 0)) {
+            sendTrailParticlesPacket(player, player.getVelocity().y);
         }
     }
 
@@ -108,17 +129,18 @@ public class FireworkJumpEffect extends StatusEffect {
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onRemoved(entity, attributes, amplifier);
 
+        if (!(entity instanceof PlayerEntity player)) {
+            return;
+        }
+
         // Remove damage and knockback resistance
-        ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
+        ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(player);
         defenseData.setScale(defenseData.getScale() / 10f);
         attributes.removeModifiers(knockbackModifier);
 
         // If plunge attack was correctly performed
-        if (entity.isOnGround() && entity.isSneaking() && FireworkSwordItem.heldInHand(entity)) {
+        if (getOnGroundTime(player) > MAX_ON_GROUND_TIME && player.isSneaking() && FireworkSwordItem.heldInHand(player)) {
             // Double-check that it was a player
-            if (!(entity instanceof PlayerEntity player)) {
-                return;
-            }
 
             // Search for surrounding LivingEntities
             Box box = new Box(player.getBlockPos()).expand(2.5, 1, 2.5);
@@ -178,9 +200,17 @@ public class FireworkJumpEffect extends StatusEffect {
         // Conditions that apply when the player is already doing a Firework Jump
         return (!checkStartingConditions || startingConditions)
                 && FireworkSwordItem.heldInHand(player)
-                && !player.isOnGround() && !player.isClimbing() && !player.isFallFlying()
+                && getOnGroundTime(player) <= MAX_ON_GROUND_TIME && !player.isClimbing() && !player.isFallFlying()
                 && !entity.isTouchingWater() && !entity.isInLava() && !entity.hasVehicle()
                 && !entity.hasStatusEffect(StatusEffects.LEVITATION) && !entity.hasStatusEffect(StatusEffects.SLOW_FALLING);
+    }
+
+    private static int getOnGroundTime(PlayerEntity player) {
+        return ((IPlayerDataSaver) player).satisfyingWeapons$getOnGroundTimeFS();
+    }
+
+    private static void setOnGroundTime(PlayerEntity player, int time) {
+        ((IPlayerDataSaver) player).satisfyingWeapons$setOnGroundTimeFS(time);
     }
 
     private static void sendJumpParticlesPacket(LivingEntity entity) {

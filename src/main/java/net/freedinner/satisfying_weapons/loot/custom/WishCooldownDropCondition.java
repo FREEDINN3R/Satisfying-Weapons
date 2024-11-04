@@ -33,7 +33,7 @@ public class WishCooldownDropCondition implements LootCondition {
         }
 
         // How many ticks passed since Unfulfilled Wish last dropped
-        long lastDropTime = ((IPlayerDataSaver) player).getLastDropTime();
+        long lastDropTime = ((IPlayerDataSaver) player).satisfyingWeapons$getLastDropTime();
         long currTime = player.getWorld().getTime();
         long timePassed = currTime - lastDropTime;
 
@@ -48,7 +48,7 @@ public class WishCooldownDropCondition implements LootCondition {
 
         // If drop happened, save new last drop time
         if (b) {
-            ((IPlayerDataSaver) player).setLastDropTime(currTime);
+            ((IPlayerDataSaver) player).satisfyingWeapons$setLastDropTime(currTime);
         }
 
         return b;

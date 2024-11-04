@@ -15,35 +15,55 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin implements IPlayerDataSaver {
     @Unique
-    private final static String LAST_DROP_TIME_NBT_KEY = "sw_last_drop_time";
+    private final static String LAST_DROP_TIME_NBT_KEY = "satisfying_weapons_last_drop_time";
+    @Unique
+    private final static String ON_GROUND_TIME_FS_NBT_KEY = "satisfying_weapons_on_ground_time_fs";
 
     @Unique
     private long lastDropTime;
+    @Unique
+    private int onGroundTimeFS;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onConstructor(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
         lastDropTime = world.getTime();
+        onGroundTimeFS = 0;
     }
 
     @Override
-    public long getLastDropTime() {
+    public long satisfyingWeapons$getLastDropTime() {
         return lastDropTime;
     }
 
     @Override
-    public void setLastDropTime(long worldTick) {
+    public void satisfyingWeapons$setLastDropTime(long worldTick) {
         lastDropTime = worldTick;
+    }
+
+    @Override
+    public int satisfyingWeapons$getOnGroundTimeFS() {
+        return onGroundTimeFS;
+    }
+
+    @Override
+    public void satisfyingWeapons$setOnGroundTimeFS(int time) {
+        onGroundTimeFS = time;
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))
     private void onWriteCustomDataToNbt(NbtCompound nbt, CallbackInfo info) {
         nbt.putLong(LAST_DROP_TIME_NBT_KEY, lastDropTime);
+        nbt.putInt(ON_GROUND_TIME_FS_NBT_KEY, onGroundTimeFS);
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("HEAD"))
     private void onReadCustomDataFromNbt(NbtCompound nbt, CallbackInfo info) {
         if (nbt.contains(LAST_DROP_TIME_NBT_KEY)) {
             lastDropTime = nbt.getLong(LAST_DROP_TIME_NBT_KEY);
+        }
+
+        if (nbt.contains(ON_GROUND_TIME_FS_NBT_KEY)) {
+            onGroundTimeFS = nbt.getInt(ON_GROUND_TIME_FS_NBT_KEY);
         }
     }
 }
