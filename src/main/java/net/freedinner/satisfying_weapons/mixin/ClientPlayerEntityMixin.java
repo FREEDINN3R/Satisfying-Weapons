@@ -2,12 +2,9 @@ package net.freedinner.satisfying_weapons.mixin;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.freedinner.satisfying_weapons.effect.custom.FestivityEffect;
 import net.freedinner.satisfying_weapons.effect.custom.FireworkJumpEffect;
-import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
+import net.freedinner.satisfying_weapons.item.custom.FireworkSword;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
@@ -18,7 +18,6 @@ import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffects;
@@ -30,7 +29,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -139,7 +137,7 @@ public class FireworkJumpEffect extends StatusEffect {
         attributes.removeModifiers(knockbackModifier);
 
         // If plunge attack was correctly performed
-        if (getOnGroundTime(player) > MAX_ON_GROUND_TIME && player.isSneaking() && FireworkSwordItem.heldInHand(player)) {
+        if (getOnGroundTime(player) > MAX_ON_GROUND_TIME && player.isSneaking() && FireworkSword.heldInHand(player)) {
             // Double-check that it was a player
 
             // Search for surrounding LivingEntities
@@ -199,7 +197,7 @@ public class FireworkJumpEffect extends StatusEffect {
 
         // Conditions that apply when the player is already doing a Firework Jump
         return (!checkStartingConditions || startingConditions)
-                && FireworkSwordItem.heldInHand(player)
+                && FireworkSword.heldInHand(player)
                 && getOnGroundTime(player) <= MAX_ON_GROUND_TIME && !player.isClimbing() && !player.isFallFlying()
                 && !entity.isTouchingWater() && !entity.isInLava() && !entity.hasVehicle()
                 && !entity.hasStatusEffect(StatusEffects.LEVITATION) && !entity.hasStatusEffect(StatusEffects.SLOW_FALLING);

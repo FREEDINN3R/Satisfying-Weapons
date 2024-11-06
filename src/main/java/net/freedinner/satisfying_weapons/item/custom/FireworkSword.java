@@ -1,23 +1,20 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.effect.custom.FestivityEffect;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 
-public class FireworkSwordItem extends SwordItem {
-    public FireworkSwordItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings) {
-        super(toolMaterial, attackDamage, attackSpeed, settings);
+public class FireworkSword extends UpgradeableSwordItem {
+    public FireworkSword(ToolMaterial toolMaterial, Settings settings, int level) {
+        super(toolMaterial, settings, level);
     }
 
     @Override
@@ -32,7 +29,7 @@ public class FireworkSwordItem extends SwordItem {
     }
 
     public static boolean heldInHand(LivingEntity entity) {
-        return entity.getStackInHand(Hand.MAIN_HAND).getItem() instanceof FireworkSwordItem;
+        return entity.getStackInHand(Hand.MAIN_HAND).getItem() instanceof FireworkSword;
     }
 
     private static void sendParticlesPacket(PlayerEntity playerAttacker, LivingEntity target) {

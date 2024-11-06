@@ -1,12 +1,11 @@
 package net.freedinner.satisfying_weapons.effect.custom;
 
 import net.freedinner.satisfying_weapons.effect.ModEffects;
-import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
+import net.freedinner.satisfying_weapons.item.custom.FireworkSword;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 
 public class FestivityEffect extends StatusEffect {
@@ -17,7 +16,7 @@ public class FestivityEffect extends StatusEffect {
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         // Clear stacks if sword is not in hand
-        if (!FireworkSwordItem.heldInHand(entity)) {
+        if (!FireworkSword.heldInHand(entity)) {
             entity.removeStatusEffect(this);
             return;
         }

@@ -139,7 +139,7 @@ public class WishingStarItem extends Item {
         // TODO: properly implement chances based on weapon rarity
 
         List<Item> allWeapons = List.of(
-                ModItems.FIREWORK_SWORD
+                ModItems.FIREWORK_SWORD.get(0)
         );
 
         Item randomWeapon = allWeapons.get(world.getRandom().nextInt(allWeapons.size()));

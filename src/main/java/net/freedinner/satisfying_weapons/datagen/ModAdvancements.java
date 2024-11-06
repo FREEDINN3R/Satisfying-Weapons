@@ -69,7 +69,7 @@ public class ModAdvancements {
 
             Advancement.Builder.create().parent(root)
                     .display(
-                            ModItems.FIREWORK_SWORD,
+                            ModItems.FIREWORK_SWORD.get(0),
                             Text.translatable("advancement.satisfying_weapons.gotta_collect_em_all.title"),
                             Text.translatable("advancement.satisfying_weapons.gotta_collect_em_all.description"),
                             null,

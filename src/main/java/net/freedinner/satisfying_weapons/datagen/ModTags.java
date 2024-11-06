@@ -34,8 +34,11 @@ public class ModTags {
 
         @Override
         protected void configure(RegistryWrapper.WrapperLookup arg) {
-            this.getOrCreateTagBuilder(MOD_WEAPONS)
-                    .add(ModItems.FIREWORK_SWORD);
+            FabricTagBuilder builder = this.getOrCreateTagBuilder(MOD_WEAPONS);
+
+            for (Item item : ModItems.FIREWORK_SWORD) {
+                builder.add(item);
+            }
         }
     }
 }
