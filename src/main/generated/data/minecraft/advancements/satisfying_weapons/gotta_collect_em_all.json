@@ -20,7 +20,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "satisfying_weapons:firework_sword",
+      "item": "satisfying_weapons:firework_sword_l1",
       "nbt": "{Damage:0}"
     },
     "show_toast": true,

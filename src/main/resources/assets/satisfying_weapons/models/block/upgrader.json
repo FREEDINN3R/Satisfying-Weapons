@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "satisfying_weapons:block/upgrader_bottom",
+    "east": "satisfying_weapons:block/upgrader_side",
+    "north": "satisfying_weapons:block/upgrader_front",
+    "particle": "satisfying_weapons:block/upgrader_front",
+    "south": "satisfying_weapons:block/upgrader_side",
+    "up": "satisfying_weapons:block/upgrader_top",
+    "west": "satisfying_weapons:block/upgrader_front"
+  }
+}

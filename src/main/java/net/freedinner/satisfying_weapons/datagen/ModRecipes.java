@@ -5,7 +5,9 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
+import net.freedinner.satisfying_weapons.block.ModBlocks;
 import net.freedinner.satisfying_weapons.item.ModItems;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item;
@@ -38,6 +40,17 @@ public class ModRecipes {
                     .input('*', ModItems.UNFULFILLED_WISH)
                     .criterion(FabricRecipeProvider.hasItem(ModItems.UNFULFILLED_WISH),
                             FabricRecipeProvider.conditionsFromItem(ModItems.UNFULFILLED_WISH))
+                    .offerTo(exporter);
+
+            ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.UPGRADER)
+                    .pattern("*")
+                    .pattern("#")
+                    .input('*', ModItems.UNFULFILLED_WISH)
+                    .input('#', Blocks.CRAFTING_TABLE)
+                    .criterion(FabricRecipeProvider.hasItem(ModItems.UNFULFILLED_WISH),
+                            FabricRecipeProvider.conditionsFromItem(ModItems.UNFULFILLED_WISH))
+                    .criterion(FabricRecipeProvider.hasItem(Blocks.CRAFTING_TABLE),
+                            FabricRecipeProvider.conditionsFromItem(Blocks.CRAFTING_TABLE))
                     .offerTo(exporter);
         }
     }

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "minecraft:crafting_table"
+    },
+    "*": {
+      "item": "satisfying_weapons:unfulfilled_wish"
+    }
+  },
+  "pattern": [
+    "*",
+    "#"
+  ],
+  "result": {
+    "item": "satisfying_weapons:upgrader"
+  },
+  "show_notification": true
+}

@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons.item;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
+import net.freedinner.satisfying_weapons.block.ModBlocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
@@ -24,6 +25,7 @@ public class ModItemGroups {
                         .entries(((displayContext, entries) -> {
                             entries.add(ModItems.UNFULFILLED_WISH);
                             entries.add(ModItems.WISHING_STAR);
+                            entries.add(ModBlocks.UPGRADER);
 
                             for (Item item : ModItems.FIREWORK_SWORD) {
                                 entries.add(item);
