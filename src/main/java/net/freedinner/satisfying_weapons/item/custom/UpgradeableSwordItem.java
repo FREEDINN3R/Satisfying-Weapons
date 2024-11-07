@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +34,6 @@ public abstract class UpgradeableSwordItem extends SwordItem implements IUpgrade
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(Text.literal("Level " + this.getLevel()));
+        tooltip.add(Text.literal("Level " + this.getLevel()).formatted(Formatting.YELLOW));
     }
 }

@@ -29,6 +29,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -138,7 +139,8 @@ public class FireworkJumpEffect extends StatusEffect {
 
         // If plunge attack was correctly performed
         if (getOnGroundTime(player) > MAX_ON_GROUND_TIME && player.isSneaking() && FireworkSword.heldInHand(player)) {
-            // Double-check that it was a player
+            // Get Firework Sword level
+            int level = ((FireworkSword) player.getStackInHand(Hand.MAIN_HAND).getItem()).getLevel();
 
             // Search for surrounding LivingEntities
             Box box = new Box(player.getBlockPos()).expand(2.5, 1, 2.5);
@@ -148,25 +150,36 @@ public class FireworkJumpEffect extends StatusEffect {
                     .map(e -> (LivingEntity) e)
                     .toList();
 
+            // Calculate damage and knockback
+            int entitiesHit = surroundingEntities.size();
+            float damageMultiplier = 1.0f * (amplifier + 1);
+            float knockbackStrength = 0.8f + 0.4f * EnchantmentHelper.getKnockback(player);
+
+            if (level >= 3) {
+                damageMultiplier *= 1.25f + 0.15f * Math.min(entitiesHit, 5);
+            }
+
             // For every entity hit
             for (LivingEntity otherEntity : surroundingEntities) {
-                // Calculate and apply damage
-                float damageMultiplier = 1.5f * (amplifier + 1);
+                // Apply damage
                 CombatHelper.simulatePlayerAttack(player, otherEntity, damageMultiplier);
 
-                // Calculate and apply knockback
+                // Apply knockback
                 Vec3d direction = player.getPos().subtract(otherEntity.getPos()).normalize();
-                int knockbackLevel = EnchantmentHelper.getKnockback(player);
-                otherEntity.takeKnockback(0.8 + 0.4 * knockbackLevel, direction.x, direction.z);
+                otherEntity.takeKnockback(knockbackStrength, direction.x, direction.z);
                 otherEntity.velocityModified = true;
             }
 
-            // Add Festivity stacks
-            int entitiesHit = surroundingEntities.size();
-            FestivityEffect.addStacks(player, entitiesHit, 10);
+            // Recover Festivity stacks
+            if (level >= 2) {
+                int maxRecovery = (level == 5) ? 99 : 2;
+                FestivityEffect.addStacks(player, Math.min(entitiesHit, maxRecovery));
+            }
 
-            // Restore 1 heart
-            player.heal(2);
+            // Recover HP
+            if (level >= 4) {
+                player.heal(Math.min(entitiesHit, 10.0f));
+            }
 
             // Visuals & SFX
             player.getWorld().playSound(null, player.getBlockPos(), ModSounds.PLUNGE_ATTACK, SoundCategory.PLAYERS, 2.0f, PitchUtils.get());

@@ -12,8 +12,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class FireworkJumpClientPacket {
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         server.execute(() -> {
-            // Remove 3 stacks
-            FestivityEffect.addStacks(player, -3, 10);
+            // Consume 3 stacks
+            FestivityEffect.addStacks(player, -3);
 
             // Increase Firework Jump effect by 1
             int currLevel = player.hasStatusEffect(ModEffects.FIREWORK_JUMP) ? player.getStatusEffect(ModEffects.FIREWORK_JUMP).getAmplifier() : -1;

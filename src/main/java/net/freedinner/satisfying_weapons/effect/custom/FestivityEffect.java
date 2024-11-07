@@ -15,15 +15,15 @@ public class FestivityEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        // Clear stacks if sword is not in hand
+        // Clear all stacks if sword is not in hand
         if (!FireworkSword.heldInHand(entity)) {
             entity.removeStatusEffect(this);
             return;
         }
 
         // If more than 10 stacks, reset stacks
-        if (getStacks(entity) > 10) {
-            addStacks(entity, 0, 10);
+        if (getStacks(entity) > getMaxStacks(entity)) {
+            resetStacks(entity);
         }
     }
 
@@ -40,13 +40,25 @@ public class FestivityEffect extends StatusEffect {
         return 0;
     }
 
-    public static boolean addStacks(LivingEntity livingEntity, int amount, int maxStacks) {
-        int oldStacks = getStacks(livingEntity);
-        int newStacks = MathHelper.clamp(oldStacks + amount, 0, maxStacks);
+    public static int getMaxStacks(LivingEntity entity) {
+        return switch (FireworkSword.getLevel(entity)) {
+            case 1, 2, 3, 4 -> 5;
+            case 5 -> 10;
+            default -> 0;
+        };
+    }
 
-        livingEntity.removeStatusEffect(ModEffects.FESTIVITY);
+    public static void resetStacks(LivingEntity entity) {
+        addStacks(entity, 0);
+    }
+
+    public static boolean addStacks(LivingEntity entity, int amount) {
+        int oldStacks = getStacks(entity);
+        int newStacks = MathHelper.clamp(oldStacks + amount, 0, getMaxStacks(entity));
+
+        entity.removeStatusEffect(ModEffects.FESTIVITY);
         if (newStacks > 0) {
-            livingEntity.addStatusEffect(new StatusEffectInstance(ModEffects.FESTIVITY, -1, newStacks - 1, false, false));
+            entity.addStatusEffect(new StatusEffectInstance(ModEffects.FESTIVITY, -1, newStacks - 1, false, false));
         }
 
         return newStacks != oldStacks;
