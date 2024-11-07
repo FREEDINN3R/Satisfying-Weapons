@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.freedinner.satisfying_weapons.block.ModBlocks;
 import net.freedinner.satisfying_weapons.datagen.ModTags;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
+import net.freedinner.satisfying_weapons.gui.ModScreenHandlers;
 import net.freedinner.satisfying_weapons.loot.ModLootConditions;
 import net.freedinner.satisfying_weapons.loot.ModLootTablesModifier;
 import net.freedinner.satisfying_weapons.item.ModItemGroups;
@@ -41,5 +42,7 @@ public class SatisfyingWeapons implements ModInitializer {
 		ModLootTablesModifier.modifyLootTables();
 
 		ModNetworking.registerC2SPackets();
+
+		ModScreenHandlers.registerScreenHandlers();
 	}
 }

@@ -4,6 +4,7 @@ import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.item.custom.FireworkSword;
 import net.freedinner.satisfying_weapons.item.custom.IUpgradeableWeapon;
 import net.freedinner.satisfying_weapons.item.custom.WishingStarItem;
+import net.minecraft.data.client.BlockStateVariantMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.registry.Registries;
@@ -12,6 +13,7 @@ import net.minecraft.util.Rarity;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ModItems {
@@ -21,24 +23,28 @@ public class ModItems {
             new WishingStarItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC).fireproof()));
 
     public static final List<Item> FIREWORK_SWORD = registerUpgradeableWeapon("firework_sword",
-            FireworkSword::new, ModToolMaterial.RARE, new Item.Settings());
+            FireworkSword::new, ModToolMaterial.RARE, 5, new Item.Settings());
 
     @SuppressWarnings("unchecked")
     private static <T extends Item & IUpgradeableWeapon> List<Item> registerUpgradeableWeapon(
-            String name, TriFunction<ToolMaterial, Item.Settings, Integer, T> constructor,
-            ToolMaterial material, Item.Settings settings
+            String name, BlockStateVariantMap.QuadFunction<ToolMaterial, Item.Settings, Integer, T, T> constructor,
+            ToolMaterial material, int maxLevel, Item.Settings settings
     ) {
         List<Item> list = new ArrayList<>();
-        T newInstance;
-        int i = 0;
+
+        T nextLevelWeapon = null;
+        int i = maxLevel;
 
         do {
-            i++;
-            newInstance = (T) register(name + "_l" + i, constructor.apply(material, settings, i));
-            list.add(newInstance);
-        }
-        while (i < newInstance.getMaxLevel());
+            T currentInstance = (T) register(name + "_l" + i, constructor.apply(material, settings, i, nextLevelWeapon));
+            list.add(currentInstance);
+            nextLevelWeapon = currentInstance;
 
+            i--;
+        }
+        while (i > 0);
+
+        Collections.reverse(list);
         return list;
     }
 

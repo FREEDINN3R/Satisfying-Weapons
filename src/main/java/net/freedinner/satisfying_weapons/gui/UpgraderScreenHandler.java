@@ -1,0 +1,75 @@
+package net.freedinner.satisfying_weapons.gui;
+
+import net.freedinner.satisfying_weapons.datagen.ModTags;
+import net.freedinner.satisfying_weapons.item.custom.IUpgradeableWeapon;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ForgingScreenHandler;
+import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.screen.slot.ForgingSlotsManager;
+
+public class UpgraderScreenHandler extends ForgingScreenHandler {
+    public static final int INPUT_1_ID = 0;
+    public static final int INPUT_2_ID = 1;
+    public static final int OUTPUT_ID = 2;
+
+    public UpgraderScreenHandler(int syncId, PlayerInventory inventory) {
+        this(syncId, inventory, ScreenHandlerContext.EMPTY);
+    }
+
+    public UpgraderScreenHandler(int syncId, PlayerInventory inventory, ScreenHandlerContext context) {
+        super(ModScreenHandlers.UPGRADER_SCREEN_HANDLER, syncId, inventory, context);
+    }
+
+    @Override
+    protected ForgingSlotsManager getForgingSlotsManager() {
+        return ForgingSlotsManager.create().input(0, 27, 47, stack -> true).input(1, 76, 47, stack -> true).output(2, 134, 47).build();
+    }
+
+    @Override
+    protected boolean canUse(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected boolean canTakeOutput(PlayerEntity player, boolean present) {
+        return true;
+    }
+
+    @Override
+    protected void onTakeOutput(PlayerEntity player, ItemStack stack) {
+        this.input.setStack(0, ItemStack.EMPTY);
+        this.input.setStack(1, ItemStack.EMPTY);
+    }
+
+    @Override
+    public void updateResult() {
+        ItemStack primaryStack = this.input.getStack(0);
+        ItemStack secondaryStack = this.input.getStack(1);
+
+        if (primaryStack.isEmpty() || secondaryStack.isEmpty() || !primaryStack.isIn(ModTags.MOD_WEAPONS)) {
+            this.output.setStack(0, ItemStack.EMPTY);
+            return;
+        }
+
+        IUpgradeableWeapon weapon = (IUpgradeableWeapon) primaryStack.getItem();
+
+        if (weapon.isAtMaxLevel() || !secondaryStack.getItem().getClass().equals(weapon.getClass())) {
+            this.output.setStack(0, ItemStack.EMPTY);
+            return;
+        }
+
+        Item nextLevelWeapon = (Item) weapon.getNextLevel();
+        assert nextLevelWeapon != null;
+        ItemStack outputStack = new ItemStack(nextLevelWeapon);
+
+        outputStack.setNbt(primaryStack.getNbt());
+
+        this.output.setStack(0, outputStack);
+        this.sendContentUpdates();
+    }
+}
+

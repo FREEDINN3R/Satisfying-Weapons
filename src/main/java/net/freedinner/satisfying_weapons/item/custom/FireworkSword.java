@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class FireworkSword extends UpgradeableSwordItem {
-    public FireworkSword(ToolMaterial toolMaterial, Settings settings, int level) {
-        super(toolMaterial, settings, level);
+    public FireworkSword(ToolMaterial toolMaterial, Settings settings, int level, @Nullable FireworkSword nextLevelWeapon) {
+        super(toolMaterial, settings, level, nextLevelWeapon);
     }
 
     @Override

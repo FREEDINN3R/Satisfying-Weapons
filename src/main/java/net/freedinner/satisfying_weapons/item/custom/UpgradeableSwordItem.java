@@ -13,16 +13,24 @@ import java.util.List;
 
 public abstract class UpgradeableSwordItem extends SwordItem implements IUpgradeableWeapon {
     protected final int level;
+    @Nullable
+    protected final UpgradeableSwordItem nextLevelWeapon;
 
-    public UpgradeableSwordItem(ToolMaterial toolMaterial, Settings settings, int level) {
+    public UpgradeableSwordItem(ToolMaterial toolMaterial, Settings settings, int level, @Nullable UpgradeableSwordItem nextLevelWeapon) {
         super(toolMaterial, 3, -2.4f, settings);
 
         this.level = level;
+        this.nextLevelWeapon = nextLevelWeapon;
     }
 
     @Override
     public int getLevel() {
         return level;
+    }
+
+    @Override
+    public @Nullable IUpgradeableWeapon getNextLevel() {
+        return nextLevelWeapon;
     }
 
     @Override

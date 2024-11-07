@@ -1,6 +1,7 @@
 package net.freedinner.satisfying_weapons.block;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
+import net.freedinner.satisfying_weapons.block.custom.UpgraderBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
@@ -13,7 +14,7 @@ import net.minecraft.sound.BlockSoundGroup;
 
 public class ModBlocks {
     public static final Block UPGRADER = registerBlock("upgrader",
-            new Block(AbstractBlock.Settings
+            new UpgraderBlock(AbstractBlock.Settings
                     .create()
                     .mapColor(MapColor.BLUE)
                     .instrument(Instrument.BASS)
