@@ -152,7 +152,7 @@ public class FireworkJumpEffect extends StatusEffect {
 
             // Calculate damage and knockback
             int entitiesHit = surroundingEntities.size();
-            float damageMultiplier = 1.0f * (amplifier + 1);
+            float damageMultiplier = 1.5f * (amplifier + 1);
             float knockbackStrength = 0.8f + 0.4f * EnchantmentHelper.getKnockback(player);
 
             if (level >= 3) {
