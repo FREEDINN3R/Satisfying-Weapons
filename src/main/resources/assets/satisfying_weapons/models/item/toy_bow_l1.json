@@ -1,0 +1,28 @@
+{
+  "parent": "item/bow",
+  "textures": {
+    "layer0": "satisfying_weapons:item/toy_bow"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "satisfying_weapons:pulling": 1
+      },
+      "model": "satisfying_weapons:item/toy_bow_pulling_0"
+    },
+    {
+      "predicate": {
+        "satisfying_weapons:pull": 0.65,
+        "satisfying_weapons:pulling": 1
+      },
+      "model": "satisfying_weapons:item/toy_bow_pulling_1"
+    },
+    {
+      "predicate": {
+        "satisfying_weapons:pull": 0.9,
+        "satisfying_weapons:pulling": 1
+      },
+      "model": "satisfying_weapons:item/toy_bow_pulling_2"
+    }
+  ]
+}

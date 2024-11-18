@@ -2,13 +2,20 @@
   "satisfying_weapons.credit": "Translation made by FREEDINNER",
 
   "item.satisfying_weapons.item_group_name": "Satisfying Weapons",
+
   "item.satisfying_weapons.unfulfilled_wish": "Unfulfilled Wish",
   "item.satisfying_weapons.wishing_star": "Wishing Star",
-  "item.satisfying_weapons.firework_sword": "Firework Sword",
   "block.satisfying_weapons.upgrader": "Upgrader",
+
+  "item.satisfying_weapons.firework_sword": "Firework Sword",
+  "item.satisfying_weapons.toy_bow": "Toy Bow",
+
+  "entity.satisfying_weapons.birthday_gift": "Birthday Gift",
+  "entity.satisfying_weapons.toy_arrow": "Toy Arrow",
 
   "effect.satisfying_weapons.festivity": "Festivity",
   "effect.satisfying_weapons.firework_jump": "Firework Jump",
+  "effect.satisfying_weapons.birthday_party": "Birthday Party",
 
   "advancement.satisfying_weapons.root.title": "Satisfying Weapons",
   "advancement.satisfying_weapons.root.description": "Kill monsters, craft wishes, collect weapons",
@@ -17,5 +24,8 @@
   "advancement.satisfying_weapons.gotta_collect_em_all.title": "Gotta Collect 'Em All!",
   "advancement.satisfying_weapons.gotta_collect_em_all.description": "Start collecting Satisfying Weapons",
 
-  "sound.satisfying_weapons.plunge_attack": "Plunge attack"
+  "sound.satisfying_weapons.plunge_attack": "Plunge attack",
+  "sound.satisfying_weapons.party_horn": "Party horn blown",
+  "sound.satisfying_weapons.birthday_gift_primed": "Birthday gift primed",
+  "sound.satisfying_weapons.birthday_gift_explosion": "Birthday gift explodes"
 }

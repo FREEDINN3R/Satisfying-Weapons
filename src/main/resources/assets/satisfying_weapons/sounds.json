@@ -4,5 +4,26 @@
     "sounds": [
       "satisfying_weapons:plunge_attack"
     ]
+  },
+
+  "party_horn": {
+    "subtitle": "sound.satisfying_weapons.party_horn",
+    "sounds": [
+      "satisfying_weapons:party_horn"
+    ]
+  },
+
+  "birthday_gift_primed": {
+    "sound.subtitle": "satisfying_weapons.birthday_gift_primed",
+    "sounds": [
+      "satisfying_weapons:birthday_gift_primed"
+    ]
+  },
+
+  "birthday_gift_explosion": {
+    "sound.subtitle": "satisfying_weapons.birthday_gift_explosion",
+    "sounds": [
+      "satisfying_weapons:birthday_gift_explosion"
+    ]
   }
 }
