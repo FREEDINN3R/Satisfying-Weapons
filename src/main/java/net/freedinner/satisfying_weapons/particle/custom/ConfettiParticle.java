@@ -18,7 +18,7 @@ public class ConfettiParticle extends SpriteBillboardParticle {
         this.velocityY = dy;
         this.velocityZ = dz;
         this.scale = 0.2f;
-        this.maxAge = MathUtils.randomNumber(40, 60);
+        this.maxAge = MathUtils.randomNumber(20, 60);
         this.setSpriteForAge(spriteSet);
 
         int i = 1 + MathUtils.randomNumber(6);

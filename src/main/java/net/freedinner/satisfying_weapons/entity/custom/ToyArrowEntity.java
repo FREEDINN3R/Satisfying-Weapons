@@ -1,9 +1,11 @@
 package net.freedinner.satisfying_weapons.entity.custom;
 
+import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -32,15 +34,10 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
     protected void onHit(LivingEntity target) {
         super.onHit(target);
 
-        /*if (target.isAlive() && !target.hasStatusEffect(ModEffects.BIRTHDAY_PARTY)) {
-            applyEffectsFor(target, ModConstants.BIRTHDAY_PARTY_EFFECT_DURATION);
-
-            if (!this.getWorld().isClient) {
-                BirthdayGiftEntity birthdayGift = new BirthdayGiftEntity(world);
-                birthdayGift.setTarget(target);
-                world.spawnEntity(birthdayGift);
-            }
-        }*/
+        if (target.isAlive() && !target.hasStatusEffect(ModEffects.BIRTHDAY_PARTY)) {
+            StatusEffectInstance birthdayPartyEffect = new StatusEffectInstance(ModEffects.BIRTHDAY_PARTY, 200, 0, false, false);
+            target.addStatusEffect(birthdayPartyEffect, this.getEffectCause());
+        }
     }
 
     @Override
@@ -80,12 +77,4 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
     protected ItemStack asItemStack() {
         return new ItemStack(Items.ARROW);
     }
-
-    /*protected void applyEffectsFor(LivingEntity target, int duration) {
-        StatusEffectInstance birthdayPartyEffect = new StatusEffectInstance(ModEffects.BIRTHDAY_PARTY, duration, 0, false, false);
-        target.addStatusEffect(birthdayPartyEffect, this.getEffectCause());
-
-        world.playSound(null, target.getBlockPos(), ModSounds.PARTY_HORN, SoundCategory.PLAYERS, 3.0f, PitchHelper.get());
-        world.playSound(null, target.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2.0f, 1.0f);
-    }*/
 }

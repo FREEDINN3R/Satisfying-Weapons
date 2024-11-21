@@ -15,6 +15,8 @@ public class ModNetworking {
     public static final Identifier FIREWORK_TRAIL_PARTICLES_ID = SatisfyingWeapons.id("firework_trail_particles");
     public static final Identifier PLUNGE_ATTACK_PARTICLES_ID = SatisfyingWeapons.id("plunge_attack_particles");
 
+    public static final Identifier CONFETTI_PARTICLES_ID = SatisfyingWeapons.id("confetti_particles");
+
     public static void registerS2CPackets() {
         SatisfyingWeapons.LOGGER.info("Registering S2C packets");
 
@@ -24,6 +26,8 @@ public class ModNetworking {
         ClientPlayNetworking.registerGlobalReceiver(FIREWORK_JUMP_PARTICLES_ID, FireworkJumpParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(FIREWORK_TRAIL_PARTICLES_ID, FireworkTrailParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(PLUNGE_ATTACK_PARTICLES_ID, PlungeAttackParticlesPacket::receive);
+
+        ClientPlayNetworking.registerGlobalReceiver(CONFETTI_PARTICLES_ID, ConfettiParticlesPacket::receive);
     }
 
     public static final Identifier FIREWORK_JUMP_CLIENT_PACKET = SatisfyingWeapons.id("firework_jump_client");
