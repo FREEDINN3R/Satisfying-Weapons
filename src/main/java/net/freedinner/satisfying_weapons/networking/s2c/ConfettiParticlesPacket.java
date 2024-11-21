@@ -21,6 +21,8 @@ public class ConfettiParticlesPacket {
                 return;
             }
 
+            // Colorful confetti
+
             for (int i = 0; i < particleCount; i++) {
                 Vec3d v = MathUtils.randomPointInSphere().normalize().multiply(MathUtils.randomNumber(0.1, 0.5));
                 Vec3d particlePos = pos.add(MathUtils.randomPointInSphere(0.25));

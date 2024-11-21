@@ -29,24 +29,29 @@ public class BirthdayPartyEffect extends StatusEffect {
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onApplied(entity, attributes, amplifier);
 
+        // TODO summon Birthday Gift
         /* if (!this.getWorld().isClient) {
             BirthdayGiftEntity birthdayGift = new BirthdayGiftEntity(world);
             birthdayGift.setTarget(target);
             world.spawnEntity(birthdayGift);
         } */
 
+        // Visuals & SFX
         entity.getWorld().playSound(null, entity.getBlockPos(), ModSounds.PARTY_HORN, SoundCategory.PLAYERS, 3.0f, PitchUtils.get());
         entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2.0f, 1.0f);
     }
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        if (!entity.isAlive() || entity.isRemoved()) {
+        // After dying, stop taunting mobs
+        if (!entity.isAlive()) {
             clearAffectedEntities(entity);
             return;
         }
 
+        // Every 0.5 seconds
         if (entity.age % 10 == 0) {
+            // Find all nearby mobs
             Box box = new Box(entity.getBlockPos()).expand(16, 8, 16);
             List<MobEntity> otherEntities = entity.getWorld().getOtherEntities(entity, box)
                     .stream()
@@ -54,11 +59,13 @@ public class BirthdayPartyEffect extends StatusEffect {
                     .map(e -> (MobEntity) e)
                     .toList();
 
+            // And taunt them
             for (MobEntity otherEntity : otherEntities) {
                 otherEntity.setTarget(entity);
             }
         }
 
+        // Visuals & SFX
         if (entity.isAlive() && !entity.getWorld().isClient) {
             sendConfettiParticlesPacket(entity, entity.getStatusEffect(this).getDuration());
         }
@@ -68,6 +75,7 @@ public class BirthdayPartyEffect extends StatusEffect {
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onRemoved(entity, attributes, amplifier);
 
+        // After effect runs out, stop taunting mobs
         clearAffectedEntities(entity);
     }
 
@@ -77,6 +85,7 @@ public class BirthdayPartyEffect extends StatusEffect {
     }
 
     private void clearAffectedEntities(LivingEntity target) {
+        // Find all nearby mobs
         Box box = new Box(target.getBlockPos()).expand(32, 16, 32);
         List<MobEntity> otherEntities = target.getWorld().getOtherEntities(target, box)
                 .stream()
@@ -84,6 +93,7 @@ public class BirthdayPartyEffect extends StatusEffect {
                 .map(e -> (MobEntity) e)
                 .toList();
 
+        // Make them forget this target
         for (MobEntity otherEntity : otherEntities) {
             if (otherEntity.getTarget() == target) {
                 otherEntity.setTarget(null);
@@ -92,6 +102,7 @@ public class BirthdayPartyEffect extends StatusEffect {
     }
 
     private void sendConfettiParticlesPacket(LivingEntity entity, int duration) {
+        // The amount of particles to spawn this tick
         int roundedRatio = (int) Math.floor(10.0f * (duration - 1) / 200);
         int count = switch (roundedRatio) {
             case 9 -> 8;

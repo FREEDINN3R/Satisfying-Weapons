@@ -34,6 +34,7 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
     protected void onHit(LivingEntity target) {
         super.onHit(target);
 
+        // If no Birthday Party, apply Birthday Party
         if (target.isAlive() && !target.hasStatusEffect(ModEffects.BIRTHDAY_PARTY)) {
             StatusEffectInstance birthdayPartyEffect = new StatusEffectInstance(ModEffects.BIRTHDAY_PARTY, 200, 0, false, false);
             target.addStatusEffect(birthdayPartyEffect, this.getEffectCause());
@@ -44,6 +45,7 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
     protected void onEntityHit(EntityHitResult entityHitResult) {
         Entity hitEntity = entityHitResult.getEntity();
 
+        // Can only hit owner if this is the original arrow
         if (!canHitOwner && hitEntity == this.getOwner()) {
             this.setVelocity(this.getVelocity().multiply(-0.1));
             this.setYaw(this.getYaw() + 180.0f);

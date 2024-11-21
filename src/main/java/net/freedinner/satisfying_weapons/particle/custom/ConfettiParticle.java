@@ -21,6 +21,7 @@ public class ConfettiParticle extends SpriteBillboardParticle {
         this.maxAge = MathUtils.randomNumber(20, 60);
         this.setSpriteForAge(spriteSet);
 
+        // Random color chosen with math (6 possible colors)
         int i = 1 + MathUtils.randomNumber(6);
         this.red = (i / 4 == 1) ? 0.9f : 0.3f;
         this.green = (i % 4 / 2 == 1) ? 0.9f : 0.3f;

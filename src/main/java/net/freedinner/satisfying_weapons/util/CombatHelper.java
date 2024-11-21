@@ -40,7 +40,7 @@ public class CombatHelper {
         // Save original health for stat increase
         float targetOriginalHealth = target.getHealth();
 
-        // The actual damage happens here
+        // The actual damage part
         boolean damageSuccessful = target.damage(player.getDamageSources().playerAttack(player), totalDamage);
 
         if (!damageSuccessful) {
@@ -59,7 +59,7 @@ public class CombatHelper {
 
         // Increase damage stat
         float actualDamage = targetOriginalHealth - target.getHealth();
-        player.increaseStat(Stats.DAMAGE_DEALT, Math.round(actualDamage * 10.0f));
+        player.increaseStat(Stats.DAMAGE_DEALT, Math.round(actualDamage * 10.0f)); // Minecraft code wants it multiplied
 
         // If fire aspect, set on fire
         int fireAspectLevel = EnchantmentHelper.getFireAspect(player);
