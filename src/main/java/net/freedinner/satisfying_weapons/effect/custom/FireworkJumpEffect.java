@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.freedinner.satisfying_weapons.item.custom.FireworkSword;
+import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
@@ -138,9 +138,9 @@ public class FireworkJumpEffect extends StatusEffect {
         attributes.removeModifiers(knockbackModifier);
 
         // If plunge attack was correctly performed
-        if (getOnGroundTime(player) > MAX_ON_GROUND_TIME && player.isSneaking() && FireworkSword.heldInHand(player)) {
+        if (getOnGroundTime(player) > MAX_ON_GROUND_TIME && player.isSneaking() && FireworkSwordItem.heldInHand(player)) {
             // Get Firework Sword level
-            int level = ((FireworkSword) player.getStackInHand(Hand.MAIN_HAND).getItem()).getLevel();
+            int level = ((FireworkSwordItem) player.getStackInHand(Hand.MAIN_HAND).getItem()).getLevel();
 
             // Search for surrounding LivingEntities
             Box box = new Box(player.getBlockPos()).expand(2.5, 1, 2.5);
@@ -210,7 +210,7 @@ public class FireworkJumpEffect extends StatusEffect {
 
         // Conditions that apply when the player is already doing a Firework Jump
         return (!checkStartingConditions || startingConditions)
-                && FireworkSword.heldInHand(player)
+                && FireworkSwordItem.heldInHand(player)
                 && getOnGroundTime(player) <= MAX_ON_GROUND_TIME && !player.isClimbing() && !player.isFallFlying()
                 && !entity.isTouchingWater() && !entity.isInLava() && !entity.hasVehicle()
                 && !entity.hasStatusEffect(StatusEffects.LEVITATION) && !entity.hasStatusEffect(StatusEffects.SLOW_FALLING);

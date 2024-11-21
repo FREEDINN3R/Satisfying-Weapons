@@ -12,6 +12,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 
+import java.util.List;
+
 public class ModItemGroups {
     public static ItemGroup SATISFYING_WEAPONS;
 
@@ -27,9 +29,8 @@ public class ModItemGroups {
                             entries.add(ModItems.WISHING_STAR);
                             entries.add(ModBlocks.UPGRADER);
 
-                            for (Item item : ModItems.FIREWORK_SWORD) {
-                                entries.add(item);
-                            }
+                            addAll(entries, ModItems.FIREWORK_SWORD);
+                            addAll(entries, ModItems.TOY_BOW);
                         }))
                         .build()
         );
@@ -41,5 +42,11 @@ public class ModItemGroups {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register((entries -> {
             entries.add(ModItems.UNFULFILLED_WISH);
         }));
+    }
+
+    private static void addAll(ItemGroup.Entries entries, List<Item> items) {
+        for (Item item : items) {
+            entries.add(item);
+        }
     }
 }

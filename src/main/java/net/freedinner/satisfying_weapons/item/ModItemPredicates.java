@@ -4,7 +4,10 @@ import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.item.custom.WishingStarItem;
 import net.minecraft.client.item.ClampedModelPredicateProvider;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
+
+import java.util.List;
 
 public class ModItemPredicates {
     static {
@@ -23,6 +26,30 @@ public class ModItemPredicates {
 
             return 0;
         });
+
+        ClampedModelPredicateProvider pulling = (itemStack, world, entity, seed) -> {
+            if (entity != null && entity.isUsingItem() && entity.getActiveItem() == itemStack) {
+                return 1;
+            }
+
+            return 0;
+        };
+        ClampedModelPredicateProvider pull = (itemsStack, world, entity, seed) -> {
+            if (entity != null && entity.getActiveItem() == itemsStack) {
+                return BowItem.getPullProgress(entity.getItemUseTime());
+            }
+
+            return 0;
+        };
+
+        registerItemPredicate(ModItems.TOY_BOW, "pulling", pulling);
+        registerItemPredicate(ModItems.TOY_BOW,"pull", pull);
+    }
+
+    private static void registerItemPredicate(List<Item> items, String name, ClampedModelPredicateProvider provider) {
+        for (Item item : items) {
+            registerItemPredicate(item, name, provider);
+        }
     }
 
     private static void registerItemPredicate(Item item, String name, ClampedModelPredicateProvider provider) {

@@ -1,7 +1,7 @@
 package net.freedinner.satisfying_weapons.effect.custom;
 
 import net.freedinner.satisfying_weapons.effect.ModEffects;
-import net.freedinner.satisfying_weapons.item.custom.FireworkSword;
+import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -16,7 +16,7 @@ public class FestivityEffect extends StatusEffect {
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         // Clear all stacks if sword is not in hand
-        if (!FireworkSword.heldInHand(entity)) {
+        if (!FireworkSwordItem.heldInHand(entity)) {
             entity.removeStatusEffect(this);
             return;
         }
@@ -41,7 +41,7 @@ public class FestivityEffect extends StatusEffect {
     }
 
     public static int getMaxStacks(LivingEntity entity) {
-        return switch (FireworkSword.getLevel(entity)) {
+        return switch (FireworkSwordItem.getLevel(entity)) {
             case 1, 2, 3, 4 -> 5;
             case 5 -> 10;
             default -> 0;

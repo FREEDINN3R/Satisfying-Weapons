@@ -12,6 +12,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.TagKey;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class ModTags {
@@ -36,7 +37,12 @@ public class ModTags {
         protected void configure(RegistryWrapper.WrapperLookup arg) {
             FabricTagBuilder builder = this.getOrCreateTagBuilder(MOD_WEAPONS);
 
-            for (Item item : ModItems.FIREWORK_SWORD) {
+            addAll(ModItems.FIREWORK_SWORD, builder);
+            addAll(ModItems.TOY_BOW, builder);
+        }
+
+        private static void addAll(List<Item> items, FabricTagBuilder builder) {
+            for (Item item : items) {
                 builder.add(item);
             }
         }

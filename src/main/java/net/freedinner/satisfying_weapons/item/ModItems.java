@@ -1,8 +1,9 @@
 package net.freedinner.satisfying_weapons.item;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
-import net.freedinner.satisfying_weapons.item.custom.FireworkSword;
+import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.item.custom.IUpgradeableWeapon;
+import net.freedinner.satisfying_weapons.item.custom.ToyBowItem;
 import net.freedinner.satisfying_weapons.item.custom.WishingStarItem;
 import net.minecraft.data.client.BlockStateVariantMap;
 import net.minecraft.item.Item;
@@ -10,7 +11,6 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Rarity;
-import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +23,10 @@ public class ModItems {
             new WishingStarItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC).fireproof()));
 
     public static final List<Item> FIREWORK_SWORD = registerUpgradeableWeapon("firework_sword",
-            FireworkSword::new, ModToolMaterial.RARE, 5, new Item.Settings());
+            FireworkSwordItem::new, ModToolMaterial.RARE, 5, new Item.Settings());
+    public static final List<Item> TOY_BOW = registerUpgradeableWeapon("toy_bow",
+            ToyBowItem::new, ModToolMaterial.RARE, 5, new Item.Settings());
+
 
     @SuppressWarnings("unchecked")
     private static <T extends Item & IUpgradeableWeapon> List<Item> registerUpgradeableWeapon(
@@ -36,6 +39,7 @@ public class ModItems {
         int i = maxLevel;
 
         do {
+            // Recursively adding weapon levels, in order to properly assign nextLevelWeapon
             T currentInstance = (T) register(name + "_l" + i, constructor.apply(material, settings, i, nextLevelWeapon));
             list.add(currentInstance);
             nextLevelWeapon = currentInstance;
@@ -47,6 +51,7 @@ public class ModItems {
         Collections.reverse(list);
         return list;
     }
+
 
     private static Item register(String name, Item item) {
         return Registry.register(Registries.ITEM, SatisfyingWeapons.id(name), item);

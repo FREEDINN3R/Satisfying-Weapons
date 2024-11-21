@@ -20,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FireworkSword extends UpgradeableSwordItem {
-    public FireworkSword(ToolMaterial toolMaterial, Settings settings, int level, @Nullable FireworkSword nextLevelWeapon) {
+public class FireworkSwordItem extends UpgradeableSwordItem {
+    public FireworkSwordItem(ToolMaterial toolMaterial, Settings settings, int level, @Nullable FireworkSwordItem nextLevelWeapon) {
         super(toolMaterial, settings, level, nextLevelWeapon);
     }
 
@@ -67,7 +67,7 @@ public class FireworkSword extends UpgradeableSwordItem {
     }
 
     public static boolean heldInHand(LivingEntity entity) {
-        return entity.getStackInHand(Hand.MAIN_HAND).getItem() instanceof FireworkSword;
+        return entity.getStackInHand(Hand.MAIN_HAND).getItem() instanceof FireworkSwordItem;
     }
 
     public static int getLevel(LivingEntity entity) {
@@ -75,7 +75,7 @@ public class FireworkSword extends UpgradeableSwordItem {
             return 0;
         }
 
-        return ((FireworkSword) entity.getStackInHand(Hand.MAIN_HAND).getItem()).getLevel();
+        return ((FireworkSwordItem) entity.getStackInHand(Hand.MAIN_HAND).getItem()).getLevel();
     }
 
     private static void sendParticlesPacket(PlayerEntity playerAttacker, LivingEntity target) {

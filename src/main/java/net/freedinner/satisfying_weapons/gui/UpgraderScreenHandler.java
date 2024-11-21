@@ -12,10 +12,6 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.ForgingSlotsManager;
 
 public class UpgraderScreenHandler extends ForgingScreenHandler {
-    public static final int INPUT_1_ID = 0;
-    public static final int INPUT_2_ID = 1;
-    public static final int OUTPUT_ID = 2;
-
     public UpgraderScreenHandler(int syncId, PlayerInventory inventory) {
         this(syncId, inventory, ScreenHandlerContext.EMPTY);
     }
@@ -50,12 +46,10 @@ public class UpgraderScreenHandler extends ForgingScreenHandler {
         ItemStack primaryStack = this.input.getStack(0);
         ItemStack secondaryStack = this.input.getStack(1);
 
-        if (primaryStack.isEmpty() || secondaryStack.isEmpty() || !primaryStack.isIn(ModTags.MOD_WEAPONS)) {
+        if (primaryStack.isEmpty() || secondaryStack.isEmpty() || !(primaryStack.getItem() instanceof IUpgradeableWeapon weapon)) {
             this.output.setStack(0, ItemStack.EMPTY);
             return;
         }
-
-        IUpgradeableWeapon weapon = (IUpgradeableWeapon) primaryStack.getItem();
 
         if (weapon.isAtMaxLevel() || !secondaryStack.getItem().getClass().equals(weapon.getClass())) {
             this.output.setStack(0, ItemStack.EMPTY);
