@@ -1,6 +1,7 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
 import net.freedinner.satisfying_weapons.entity.custom.ToyArrowEntity;
+import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
@@ -23,67 +24,64 @@ public class ToyBowItem extends UpgradeableBowItem {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (user instanceof PlayerEntity playerEntity) {
-            boolean bl = playerEntity.getAbilities().creativeMode || EnchantmentHelper.getLevel(Enchantments.INFINITY, stack) > 0;
-            ItemStack itemStack = playerEntity.getProjectileType(stack);
-            if (!itemStack.isEmpty() || bl) {
-                if (itemStack.isEmpty()) {
-                    itemStack = new ItemStack(Items.ARROW);
-                }
+        if (!(user instanceof PlayerEntity player)) {
+            return;
+        }
 
-                int i = this.getMaxUseTime(stack) - remainingUseTicks;
-                float f = getPullProgress(i);
-                if (!((double)f < 0.1)) {
-                    boolean bl2 = bl && itemStack.isOf(Items.ARROW);
-                    if (!world.isClient) {
-                        PersistentProjectileEntity toyArrow = new ToyArrowEntity(playerEntity, world);
-                        toyArrow.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, f * 3.0F, 1.0F);
-                        if (f == 1.0F) {
-                            toyArrow.setCritical(true);
-                        }
+        ItemStack projectileStack = player.getProjectileType(stack);
+        if (projectileStack.isEmpty() && !player.getAbilities().creativeMode) {
+            return;
+        }
 
-                        int j = EnchantmentHelper.getLevel(Enchantments.POWER, stack);
-                        if (j > 0) {
-                            toyArrow.setDamage(toyArrow.getDamage() + (double)j * 0.5 + 0.5);
-                        }
+        if (projectileStack.isEmpty()) {
+            projectileStack = new ItemStack(Items.ARROW);
+        }
 
-                        int k = EnchantmentHelper.getLevel(Enchantments.PUNCH, stack);
-                        if (k > 0) {
-                            toyArrow.setPunch(k);
-                        }
+        int useTime = this.getMaxUseTime(stack) - remainingUseTicks;
+        float pullProgress = getPullProgress(useTime);
 
-                        if (EnchantmentHelper.getLevel(Enchantments.FLAME, stack) > 0) {
-                            toyArrow.setOnFireFor(100);
-                        }
+        if (pullProgress < 0.1) {
+            return;
+        }
 
-                        stack.damage(1, playerEntity, p -> p.sendToolBreakStatus(playerEntity.getActiveHand()));
-                        if (bl2 || playerEntity.getAbilities().creativeMode && (itemStack.isOf(Items.SPECTRAL_ARROW) || itemStack.isOf(Items.TIPPED_ARROW))) {
-                            toyArrow.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
-                        }
+        if (!world.isClient) {
+            PersistentProjectileEntity toyArrow = new ToyArrowEntity(player, world);
+            toyArrow.setVelocity(player, player.getPitch(), player.getYaw(), 0.0F, pullProgress * 2.0F, 1.0F);
+            if (pullProgress == 1.0f) {
+                toyArrow.setCritical(true);
+            }
 
-                        world.spawnEntity(toyArrow);
-                    }
+            int powerLevel = EnchantmentHelper.getLevel(Enchantments.POWER, stack);
+            if (powerLevel > 0) {
+                toyArrow.setDamage(toyArrow.getDamage() + powerLevel * 0.5 + 0.5);
+            }
 
-                    world.playSound(
-                            null,
-                            playerEntity.getX(),
-                            playerEntity.getY(),
-                            playerEntity.getZ(),
-                            SoundEvents.ENTITY_ARROW_SHOOT,
-                            SoundCategory.PLAYERS,
-                            1.0F,
-                            1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F) + f * 0.5F
-                    );
-                    if (!bl2 && !playerEntity.getAbilities().creativeMode) {
-                        itemStack.decrement(1);
-                        if (itemStack.isEmpty()) {
-                            playerEntity.getInventory().removeOne(itemStack);
-                        }
-                    }
+            int punchLevel = EnchantmentHelper.getLevel(Enchantments.PUNCH, stack);
+            if (punchLevel > 0) {
+                toyArrow.setPunch(punchLevel);
+            }
 
-                    playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
-                }
+            if (EnchantmentHelper.getLevel(Enchantments.FLAME, stack) > 0) {
+                toyArrow.setOnFireFor(100);
+            }
+
+            toyArrow.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
+
+            world.spawnEntity(toyArrow);
+            stack.damage(1, player, p -> p.sendToolBreakStatus(player.getActiveHand()));
+        }
+
+        float pitch = PitchUtils.get() - 0.3f + pullProgress * 0.5f;
+        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0f, pitch);
+
+        if (EnchantmentHelper.getLevel(Enchantments.INFINITY, stack) < 1 && !player.getAbilities().creativeMode) {
+            projectileStack.decrement(1);
+
+            if (projectileStack.isEmpty()) {
+                player.getInventory().removeOne(projectileStack);
             }
         }
+
+        player.incrementStat(Stats.USED.getOrCreateStat(this));
     }
 }
