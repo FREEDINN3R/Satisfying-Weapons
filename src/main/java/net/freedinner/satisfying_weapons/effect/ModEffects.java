@@ -1,6 +1,7 @@
 package net.freedinner.satisfying_weapons.effect;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
+import net.freedinner.satisfying_weapons.effect.custom.BirthdayPartyEffect;
 import net.freedinner.satisfying_weapons.effect.custom.FestivityEffect;
 import net.freedinner.satisfying_weapons.effect.custom.FireworkJumpEffect;
 import net.minecraft.entity.effect.StatusEffect;
@@ -13,13 +14,17 @@ import java.util.function.BiFunction;
 
 public class ModEffects {
     public static StatusEffect FESTIVITY = registerStatusEffect("festivity",
-            new Color(255, 0, 0),
+            new Color(255, 255, 255),
             StatusEffectCategory.NEUTRAL,
             FestivityEffect::new);
     public static StatusEffect FIREWORK_JUMP = registerStatusEffect("firework_jump",
             new Color(255, 255, 255),
             StatusEffectCategory.NEUTRAL,
             FireworkJumpEffect::new);
+    public static StatusEffect BIRTHDAY_PARTY = registerStatusEffect("birthday_party",
+            new Color(255, 255, 255),
+            StatusEffectCategory.HARMFUL,
+            BirthdayPartyEffect::new);
 
     private static StatusEffect registerStatusEffect(
             String name, Color color, StatusEffectCategory category,

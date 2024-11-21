@@ -8,6 +8,9 @@ import net.minecraft.util.Identifier;
 
 public class ModSounds {
     public static SoundEvent PLUNGE_ATTACK = register("plunge_attack");
+    public static SoundEvent PARTY_HORN = register("party_horn");
+    public static SoundEvent BIRTHDAY_GIFT_PRIMED = register("birthday_gift_primed");
+    public static SoundEvent BIRTHDAY_GIFT_EXPLOSION = register("birthday_gift_explosion");
 
     private static SoundEvent register(String name) {
         Identifier id = SatisfyingWeapons.id(name);

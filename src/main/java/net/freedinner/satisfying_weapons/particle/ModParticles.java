@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons.particle;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
+import net.freedinner.satisfying_weapons.particle.custom.ConfettiParticle;
 import net.freedinner.satisfying_weapons.particle.custom.FestivityCountParticle;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class ModParticles {
     public static final List<DefaultParticleType> FESTIVITY_COUNT = registerMany("festivity_count", 10);
+    public static final DefaultParticleType CONFETTI = register("confetti");
 
     private static DefaultParticleType register(String name) {
         DefaultParticleType particleType = FabricParticleTypes.simple();
@@ -40,5 +42,7 @@ public class ModParticles {
         for (DefaultParticleType particle : FESTIVITY_COUNT) {
             ParticleFactoryRegistry.getInstance().register(particle, FestivityCountParticle.Factory::new);
         }
+
+        ParticleFactoryRegistry.getInstance().register(CONFETTI, ConfettiParticle.Factory::new);
     }
 }
