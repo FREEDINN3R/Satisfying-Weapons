@@ -2,6 +2,8 @@ package net.freedinner.satisfying_weapons.entity.custom;
 
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
+import net.freedinner.satisfying_weapons.sound.ModSounds;
+import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -10,6 +12,8 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -36,8 +40,7 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
 
         // If no Birthday Party, apply Birthday Party
         if (target.isAlive() && !target.hasStatusEffect(ModEffects.BIRTHDAY_PARTY)) {
-            StatusEffectInstance birthdayPartyEffect = new StatusEffectInstance(ModEffects.BIRTHDAY_PARTY, 200, 0, false, false);
-            target.addStatusEffect(birthdayPartyEffect, this.getEffectCause());
+            applyBirthdayParty(target);
         }
     }
 
@@ -78,5 +81,28 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
     @Override
     protected ItemStack asItemStack() {
         return new ItemStack(Items.ARROW);
+    }
+
+    private void applyBirthdayParty(LivingEntity target) {
+        // Apply Birthday Party for 10 seconds
+        StatusEffectInstance birthdayPartyEffect = new StatusEffectInstance(ModEffects.BIRTHDAY_PARTY, 200, 0, false, false);
+        boolean success = target.addStatusEffect(birthdayPartyEffect, this.getEffectCause());
+
+        if (!success) {
+            return;
+        }
+
+        // TODO summon Birthday Gift
+        /* if (!this.getWorld().isClient) {
+            BirthdayGiftEntity birthdayGift = new BirthdayGiftEntity(world);
+            birthdayGift.setTarget(target);
+            world.spawnEntity(birthdayGift);
+        } */
+
+        // Visuals & SFX
+        target.getWorld().playSound(null, target.getBlockPos(), ModSounds.PARTY_HORN, SoundCategory.PLAYERS, 3.0f, PitchUtils.get());
+        target.getWorld().playSound(null, target.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2.0f, 1.0f);
+
+        // Note to self: these parts are here because they should happen only when Toy Arrow successfully hits a mob
     }
 }

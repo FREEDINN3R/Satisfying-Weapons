@@ -29,16 +29,7 @@ public class BirthdayPartyEffect extends StatusEffect {
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onApplied(entity, attributes, amplifier);
 
-        // TODO summon Birthday Gift
-        /* if (!this.getWorld().isClient) {
-            BirthdayGiftEntity birthdayGift = new BirthdayGiftEntity(world);
-            birthdayGift.setTarget(target);
-            world.spawnEntity(birthdayGift);
-        } */
 
-        // Visuals & SFX
-        entity.getWorld().playSound(null, entity.getBlockPos(), ModSounds.PARTY_HORN, SoundCategory.PLAYERS, 3.0f, PitchUtils.get());
-        entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2.0f, 1.0f);
     }
 
     @Override
