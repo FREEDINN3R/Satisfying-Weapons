@@ -48,20 +48,20 @@ public class FireworkSwordItem extends UpgradeableSwordItem {
                 tooltip.add(Text.literal("Then press shift to plunge and do AoE damage").formatted(Formatting.GRAY));
                 break;
             case 2:
-                tooltip.add(Text.literal("When plunge, recover 1 Festivity per entity hit").formatted(Formatting.GRAY));
-                tooltip.add(Text.literal("Max 2 Festivity stacks recovered per plunge").formatted(Formatting.GRAY));
-                break;
-            case 3:
                 tooltip.add(Text.literal("Plunge damage increased by 25%, and is").formatted(Formatting.GRAY));
                 tooltip.add(Text.literal("further increased by 15% for each mob hit by it").formatted(Formatting.GRAY));
                 tooltip.add(Text.literal("Max increase is 100%").formatted(Formatting.GRAY));
+                break;
+            case 3:
+                tooltip.add(Text.literal("When plunge, recover 1 Festivity per entity hit").formatted(Formatting.GRAY));
+                tooltip.add(Text.literal("Max 2 Festivity stacks recovered per plunge").formatted(Formatting.GRAY));
                 break;
             case 4:
                 tooltip.add(Text.literal("For each mob hit by plunge, restore 1 HP").formatted(Formatting.GRAY));
                 break;
             case 5:
                 tooltip.add(Text.literal("Festivity cap increased to 10 stacks").formatted(Formatting.GRAY));
-                tooltip.add(Text.literal("Also, Level 2 stack recovery is no longer limited").formatted(Formatting.GRAY));
+                tooltip.add(Text.literal("Also, Level 3 stack recovery is no longer limited").formatted(Formatting.GRAY));
                 break;
         }
     }

@@ -155,7 +155,7 @@ public class FireworkJumpEffect extends StatusEffect {
             float damageMultiplier = 1.5f * (amplifier + 1);
             float knockbackStrength = 0.8f + 0.4f * EnchantmentHelper.getKnockback(player);
 
-            if (level >= 3) {
+            if (level >= 2) {
                 damageMultiplier *= 1.25f + 0.15f * Math.min(entitiesHit, 5);
             }
 
@@ -171,7 +171,7 @@ public class FireworkJumpEffect extends StatusEffect {
             }
 
             // Recover Festivity stacks
-            if (level >= 2) {
+            if (level >= 3) {
                 int maxRecovery = (level == 5) ? 99 : 2;
                 FestivityEffect.addStacks(player, Math.min(entitiesHit, maxRecovery));
             }
