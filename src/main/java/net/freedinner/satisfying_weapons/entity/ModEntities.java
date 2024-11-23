@@ -24,7 +24,7 @@ public class ModEntities {
             SatisfyingWeapons.id("toy_arrow"),
             FabricEntityTypeBuilder.<ToyArrowEntity>create(SpawnGroup.MISC, ToyArrowEntity::new)
                     .dimensions(EntityDimensions.fixed(0.5f, 0.5f))
-                    .trackRangeChunks(4).trackedUpdateRate(20)
+                    .trackRangeChunks(4).trackedUpdateRate(10)
                     .build()
     );
 

@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class UpgradeableBowItem extends BowItem implements IUpgradeableWeapon {
-    protected final int level;
+    private final int level;
     @Nullable
     protected final UpgradeableBowItem nextLevelWeapon;
 

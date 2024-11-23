@@ -1,6 +1,7 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
 import net.freedinner.satisfying_weapons.entity.custom.ToyArrowEntity;
+import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
@@ -40,7 +41,7 @@ public class ToyBowItem extends UpgradeableBowItem {
                 break;
             case 2:
                 tooltip.add(Text.literal("Greatly increases accuracy and range of this bow.").formatted(Formatting.GRAY));
-                tooltip.add(Text.literal("Also, entities with Birthday Party are now slowed down.").formatted(Formatting.GRAY));
+                tooltip.add(Text.literal("Also, 50% chance to not waste an arrow while shooting.").formatted(Formatting.GRAY));
                 break;
             case 3:
                 tooltip.add(Text.literal("When applying Birthday Party with Toy Arrow, summon").formatted(Formatting.GRAY));
@@ -62,7 +63,7 @@ public class ToyBowItem extends UpgradeableBowItem {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        // Bro saw the bow and was like "absolutely not"
+        // Only players can use this bow
         if (!(user instanceof PlayerEntity player)) {
             return;
         }
@@ -71,11 +72,6 @@ public class ToyBowItem extends UpgradeableBowItem {
         ItemStack projectileStack = player.getProjectileType(stack);
         if (projectileStack.isEmpty() && !player.getAbilities().creativeMode) {
             return;
-        }
-
-        if (projectileStack.isEmpty()) {
-            // If you're here, you're in creative
-            projectileStack = new ItemStack(Items.ARROW);
         }
 
         int useTime = this.getMaxUseTime(stack) - remainingUseTicks;
@@ -87,8 +83,20 @@ public class ToyBowItem extends UpgradeableBowItem {
         }
 
         if (!world.isClient) {
+            // If level 2 or higher, increase speed and accuracy
+            float speed, divergence;
+            if (this.getLevel() < 2) {
+                speed = 2.4f;
+                divergence = 1.0f;
+            }
+            else {
+                speed = 3.6f;
+                divergence = 0.0f;
+            }
+
+            // Create Toy Arrow and set velocity
             PersistentProjectileEntity toyArrow = new ToyArrowEntity(player, world);
-            toyArrow.setVelocity(player, player.getPitch(), player.getYaw(), 0.0F, pullProgress * 2.0F, 1.0F);
+            toyArrow.setVelocity(player, player.getPitch(), player.getYaw(), 0.0f, speed * pullProgress, divergence);
 
             // If 100% pull then crit
             // Honestly I have no idea why am I leaving so many comments
@@ -124,8 +132,11 @@ public class ToyBowItem extends UpgradeableBowItem {
         float pitch = PitchUtils.get() - 0.3f + pullProgress * 0.5f;
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0f, pitch);
 
+        // If level 2 or higher, 50% chance to not waste an arrow
+        boolean keepArrow = this.getLevel() >= 2 && MathUtils.takeChance(0.5, player.getWorld());
+
         // Remove 1 arrow if necessary
-        if (EnchantmentHelper.getLevel(Enchantments.INFINITY, stack) < 1 && !player.getAbilities().creativeMode) {
+        if (!keepArrow && EnchantmentHelper.getLevel(Enchantments.INFINITY, stack) < 1 && !player.getAbilities().creativeMode) {
             projectileStack.decrement(1);
 
             if (projectileStack.isEmpty()) {

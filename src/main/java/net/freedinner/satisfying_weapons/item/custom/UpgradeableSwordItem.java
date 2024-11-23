@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class UpgradeableSwordItem extends SwordItem implements IUpgradeableWeapon {
-    protected final int level;
+    private final int level;
     @Nullable
     protected final UpgradeableSwordItem nextLevelWeapon;
 
