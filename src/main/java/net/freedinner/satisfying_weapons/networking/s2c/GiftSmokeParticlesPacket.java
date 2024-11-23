@@ -1,18 +1,16 @@
 package net.freedinner.satisfying_weapons.networking.s2c;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.freedinner.satisfying_weapons.particle.ModParticles;
-import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ConfettiParticlesPacket {
+public class GiftSmokeParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
         Vec3d pos = new Vec3d(buf.readVector3f());
-        int particleCount = buf.readInt();
 
         client.execute(() -> {
             World world = client.world;
@@ -21,13 +19,7 @@ public class ConfettiParticlesPacket {
                 return;
             }
 
-            // Colorful confetti
-
-            for (int i = 0; i < particleCount; i++) {
-                Vec3d v = MathUtils.randomPointInSphere().normalize().multiply(MathUtils.randomNumber(0.2, 0.5));
-                Vec3d particlePos = pos.add(MathUtils.randomPointInSphere(0.25));
-                world.addParticle(ModParticles.CONFETTI, particlePos.x, particlePos.y, particlePos.z, v.x, v.y, v.z);
-            }
+            world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 0, 0, 0);
         });
     }
 }

@@ -39,22 +39,23 @@ public class ToyBowItem extends UpgradeableBowItem {
                 tooltip.add(Text.literal("continuously taunt surrounding mobs to attack them").formatted(Formatting.GRAY));
                 break;
             case 2:
-                tooltip.add(Text.literal("TODO 2").formatted(Formatting.GRAY));
+                tooltip.add(Text.literal("Greatly increases accuracy and range of this bow.").formatted(Formatting.GRAY));
+                tooltip.add(Text.literal("Also, entities with Birthday Party are now slowed down.").formatted(Formatting.GRAY));
                 break;
             case 3:
                 tooltip.add(Text.literal("When applying Birthday Party with Toy Arrow, summon").formatted(Formatting.GRAY));
                 tooltip.add(Text.literal("Birthday Gift above the entity's head. After Birthday").formatted(Formatting.GRAY));
-                tooltip.add(Text.literal("Party ends, or entity dies, Birthday Gift falls on the").formatted(Formatting.GRAY));
-                tooltip.add(Text.literal("ground and explodes, damaging surrounding entities").formatted(Formatting.GRAY));
+                tooltip.add(Text.literal("Party ends, or entity dies, Birthday Gift falls down").formatted(Formatting.GRAY));
+                tooltip.add(Text.literal("and explodes, damaging entities around it").formatted(Formatting.GRAY));
                 break;
             case 4:
                 tooltip.add(Text.literal("TODO 4").formatted(Formatting.GRAY));
                 break;
             case 5:
                 tooltip.add(Text.literal("Hitting a Birthday Gift with a Toy Arrow will detonate").formatted(Formatting.GRAY));
-                tooltip.add(Text.literal("it, causing it to explode and fire off 5 identical").formatted(Formatting.GRAY));
-                tooltip.add(Text.literal("Toy Arrows randomly. These arrows will prioritize hitting").formatted(Formatting.GRAY));
-                tooltip.add(Text.literal("other Gifts, and other mobs without Birthday Party.").formatted(Formatting.GRAY));
+                tooltip.add(Text.literal("it, causing it to explode and fire 5 identical Toy Arrows").formatted(Formatting.GRAY));
+                tooltip.add(Text.literal("in random directions. These arrows will prioritize hitting").formatted(Formatting.GRAY));
+                tooltip.add(Text.literal("other Birthday Gifts, and mobs without Birthday Party.").formatted(Formatting.GRAY));
                 break;
         }
     }

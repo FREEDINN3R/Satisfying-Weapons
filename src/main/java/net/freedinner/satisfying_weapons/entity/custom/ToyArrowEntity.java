@@ -92,12 +92,11 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
             return;
         }
 
-        // TODO summon Birthday Gift
-        /* if (!this.getWorld().isClient) {
-            BirthdayGiftEntity birthdayGift = new BirthdayGiftEntity(world);
+        if (!this.getWorld().isClient) {
+            BirthdayGiftEntity birthdayGift = new BirthdayGiftEntity(this.getWorld());
             birthdayGift.setTarget(target);
-            world.spawnEntity(birthdayGift);
-        } */
+            this.getWorld().spawnEntity(birthdayGift);
+        }
 
         // Visuals & SFX
         target.getWorld().playSound(null, target.getBlockPos(), ModSounds.PARTY_HORN, SoundCategory.PLAYERS, 3.0f, PitchUtils.get());
