@@ -55,6 +55,13 @@ public class BirthdayGiftEntity extends Entity {
     }
 
     @Override
+    protected void initDataTracker() {
+        this.dataTracker.startTracking(STATE, GiftState.EMERGING.ordinal());
+        this.dataTracker.startTracking(LAST_CHANGED_STATE, 0);
+    }
+
+
+    @Override
     public void tick() {
         super.tick();
 
@@ -211,12 +218,6 @@ public class BirthdayGiftEntity extends Entity {
     @Override
     public boolean collidesWith(Entity other) {
         return super.collidesWith(other) && other instanceof ToyArrowEntity;
-    }
-
-    @Override
-    protected void initDataTracker() {
-        this.dataTracker.startTracking(STATE, GiftState.EMERGING.ordinal());
-        this.dataTracker.startTracking(LAST_CHANGED_STATE, 0);
     }
 
     @Override

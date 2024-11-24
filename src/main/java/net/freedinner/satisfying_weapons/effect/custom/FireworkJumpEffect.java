@@ -44,14 +44,14 @@ public class FireworkJumpEffect extends StatusEffect {
     private static final Multimap<EntityAttribute, EntityAttributeModifier> knockbackModifier;
 
     static {
-        // Multimap with a 1.0 value increase for knockback resistance
+        // Multimap with a 0.95 value increase for knockback resistance
         knockbackModifier = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
                 .put(
                         EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE,
                         new EntityAttributeModifier(
                                 UUID.fromString("bc8a023f-1eff-418b-a6c8-a793940feeed"),
                                 "firework_jump_knockback_modifier",
-                                1.0,
+                                0.95,
                                 EntityAttributeModifier.Operation.ADDITION
                         )
                 )
@@ -78,6 +78,7 @@ public class FireworkJumpEffect extends StatusEffect {
         // Add damage and knockback resistance
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(player);
         defenseData.setScale(defenseData.getScale() * 10f);
+
         attributes.addTemporaryModifiers(knockbackModifier);
 
         // Reset onGroundTime counter
@@ -135,6 +136,7 @@ public class FireworkJumpEffect extends StatusEffect {
         // Remove damage and knockback resistance
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(player);
         defenseData.setScale(defenseData.getScale() / 10f);
+
         attributes.removeModifiers(knockbackModifier);
 
         // If plunge attack was correctly performed

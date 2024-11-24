@@ -10,10 +10,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.*;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
@@ -50,7 +47,8 @@ public class ToyBowItem extends UpgradeableBowItem {
                 tooltip.add(Text.literal("and explodes, damaging entities around it").formatted(Formatting.GRAY));
                 break;
             case 4:
-                tooltip.add(Text.literal("TODO 4").formatted(Formatting.GRAY));
+                tooltip.add(Text.literal("Entities with Birthday Party are slowed down,").formatted(Formatting.GRAY));
+                tooltip.add(Text.literal("and receive 15% increased damage.").formatted(Formatting.GRAY));
                 break;
             case 5:
                 tooltip.add(Text.literal("Hitting a Birthday Gift with a Toy Arrow will detonate").formatted(Formatting.GRAY));
@@ -77,30 +75,26 @@ public class ToyBowItem extends UpgradeableBowItem {
         int useTime = this.getMaxUseTime(stack) - remainingUseTicks;
         float pullProgress = getPullProgress(useTime);
 
-        // Not enough pull = no shooting
-        if (pullProgress < 0.1) {
+        if (pullProgress < 0.1f) {
             return;
         }
 
         if (!world.isClient) {
             // If level 2 or higher, increase speed and accuracy
             float speed, divergence;
-            if (this.getLevel() < 2) {
-                speed = 2.4f;
-                divergence = 1.0f;
+            if (this.getLevel() >= 2) {
+                speed = 3.5f;
+                divergence = 0.0f;
             }
             else {
-                speed = 3.6f;
-                divergence = 0.0f;
+                speed = 2.5f;
+                divergence = 1.0f;
             }
 
             // Create Toy Arrow and set velocity
-            PersistentProjectileEntity toyArrow = new ToyArrowEntity(player, world);
+            ToyArrowEntity toyArrow = new ToyArrowEntity(player, world);
             toyArrow.setVelocity(player, player.getPitch(), player.getYaw(), 0.0f, speed * pullProgress, divergence);
 
-            // If 100% pull then crit
-            // Honestly I have no idea why am I leaving so many comments
-            // Hi future me how is 2025
             if (pullProgress == 1.0f) {
                 toyArrow.setCritical(true);
             }
@@ -122,27 +116,31 @@ public class ToyBowItem extends UpgradeableBowItem {
                 toyArrow.setOnFireFor(100);
             }
 
+            toyArrow.setToyBowLevel(this.getLevel());
             toyArrow.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
 
             world.spawnEntity(toyArrow);
             stack.damage(1, player, p -> p.sendToolBreakStatus(player.getActiveHand()));
+
+            // If level 2 or higher, 50% chance to not waste an arrow
+            boolean keepArrow = this.getLevel() >= 2 && MathUtils.takeChance(0.5, player.getWorld());
+
+            // Remove 1 arrow if necessary
+            if (!keepArrow && EnchantmentHelper.getLevel(Enchantments.INFINITY, stack) < 1 && !player.getAbilities().creativeMode) {
+                projectileStack.decrement(1);
+
+                if (projectileStack.isEmpty()) {
+                    player.getInventory().removeOne(projectileStack);
+                }
+
+                // Server client sync
+                player.getInventory().markDirty();
+            }
         }
 
         // Arrow shoot sound
         float pitch = PitchUtils.get() - 0.3f + pullProgress * 0.5f;
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0f, pitch);
-
-        // If level 2 or higher, 50% chance to not waste an arrow
-        boolean keepArrow = this.getLevel() >= 2 && MathUtils.takeChance(0.5, player.getWorld());
-
-        // Remove 1 arrow if necessary
-        if (!keepArrow && EnchantmentHelper.getLevel(Enchantments.INFINITY, stack) < 1 && !player.getAbilities().creativeMode) {
-            projectileStack.decrement(1);
-
-            if (projectileStack.isEmpty()) {
-                player.getInventory().removeOne(projectileStack);
-            }
-        }
 
         // Arrow used stat
         player.incrementStat(Stats.USED.getOrCreateStat(this));

@@ -1,5 +1,7 @@
 package net.freedinner.satisfying_weapons.effect.custom;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -8,6 +10,9 @@ import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.mob.MobEntity;
@@ -17,19 +22,45 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
+import virtuoel.pehkui.api.ScaleData;
+import virtuoel.pehkui.api.ScaleTypes;
 
 import java.util.List;
+import java.util.UUID;
 
 public class BirthdayPartyEffect extends StatusEffect {
     public BirthdayPartyEffect(StatusEffectCategory category, int color) {
         super(category, color);
     }
 
+    private static final Multimap<EntityAttribute, EntityAttributeModifier> movementSpeedModifier;
+
+    static {
+        // Multimap with a 20% value reduction for movement speed
+        movementSpeedModifier = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                .put(
+                        EntityAttributes.GENERIC_MOVEMENT_SPEED,
+                        new EntityAttributeModifier(
+                                UUID.fromString("6ccef6c6-2f61-4839-a9ce-339f737a3f36"),
+                                "birthday_party_movement_speed_modifier",
+                                -0.2,
+                                EntityAttributeModifier.Operation.MULTIPLY_TOTAL
+                        )
+                )
+                .build();
+    }
+
     @Override
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onApplied(entity, attributes, amplifier);
 
+        // If Toy Bow level 4 or higher, reduce movement speed and defence
+        if (amplifier > 0) {
+            attributes.addTemporaryModifiers(movementSpeedModifier);
 
+            ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
+            defenseData.setScale(defenseData.getScale() * 0.85f);
+        }
     }
 
     @Override
@@ -68,6 +99,14 @@ public class BirthdayPartyEffect extends StatusEffect {
 
         // After effect runs out, stop taunting mobs
         clearAffectedEntities(entity);
+
+        // Reset movement speed and defence
+        if (amplifier > 0) {
+            attributes.removeModifiers(movementSpeedModifier);
+
+            ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
+            defenseData.setScale(defenseData.getScale() / 0.85f);
+        }
     }
 
     @Override
