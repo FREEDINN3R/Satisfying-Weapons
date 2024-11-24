@@ -3,7 +3,6 @@ package net.freedinner.satisfying_weapons.entity.custom;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
@@ -39,10 +38,12 @@ public class BirthdayGiftEntity extends Entity {
     private static final String GIFT_DETONATOR_NBT_KEY = "gift_detonator";
     private static final String GIFT_STATE_NBT_KEY = "gift_state";
     private static final String LAST_CHANGED_STATE_NBT_KEY = "last_changed_state";
+    private static final String DETONATOR_ARROW_DATA_NBT_KEY = "detonator_arrow_data";
     private LivingEntity target;
     private UUID targetUUID;
     private LivingEntity detonator;
     private UUID detonatorUUID;
+    private ToyArrowEntityData detonatorArrowData;
 
     public BirthdayGiftEntity(EntityType<? extends Entity> entityType, World world) {
         super(entityType, world);
@@ -64,13 +65,6 @@ public class BirthdayGiftEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-
-        if (this.getWorld().isClient) {
-            SatisfyingWeapons.LOGGER.info("C" + (this.getBlockPos().getX() + "" + this.getBlockPos().getZ()) + ":  " + this.getDetonationProgress());
-        }
-        else {
-            SatisfyingWeapons.LOGGER.info("S" + (this.getBlockPos().getX() + "" + this.getBlockPos().getZ()) + ":  " + this.getDetonationProgress());
-        }
 
         if (this.getWorld().isClient) {
             return;
@@ -148,6 +142,13 @@ public class BirthdayGiftEntity extends Entity {
                             toyArrow = new ToyArrowEntity(this.getPos(), this.getWorld());
                         }
 
+                        if (detonatorArrowData != null) {
+                            detonatorArrowData.pasteDataTo(toyArrow);
+                        }
+                        else {
+                            toyArrow.setToyBowLevel(5);
+                        }
+
                         Vec3d v;
                         if (i < surroundingEntities.size() && i < 4) {
                             Entity currEntity = surroundingEntities.get(i);
@@ -164,9 +165,8 @@ public class BirthdayGiftEntity extends Entity {
                         toyArrow.setPosition(this.getPos());
                         toyArrow.setVelocity(v);
                         toyArrow.canHitOwner = false;
-                        toyArrow.setDamage(toyArrow.getDamage() * 0.4);
                         toyArrow.setCritical(true);
-                        toyArrow.pickupType = PersistentProjectileEntity.PickupPermission.DISALLOWED;
+                        toyArrow.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
 
                         this.getWorld().spawnEntity(toyArrow);
                     }
@@ -194,13 +194,15 @@ public class BirthdayGiftEntity extends Entity {
             return false;
         }
 
-        if (source.getSource() instanceof ToyArrowEntity toyArrow) {
+        if (source.getSource() instanceof ToyArrowEntity toyArrow && toyArrow.getToyBowLevel() >= 5) {
             this.setState(GiftState.DETONATED);
             this.markStateModified();
 
             if (toyArrow.getOwner() instanceof LivingEntity livingDetonator) {
                 this.setDetonator(livingDetonator);
             }
+
+            this.detonatorArrowData = ToyArrowEntityData.copyDataFrom(toyArrow);
 
             getWorld().playSound(null, this.getBlockPos(), ModSounds.BIRTHDAY_GIFT_PRIMED, SoundCategory.MASTER, 1.0f, 1.0f);
 
@@ -217,7 +219,7 @@ public class BirthdayGiftEntity extends Entity {
 
     @Override
     public boolean collidesWith(Entity other) {
-        return super.collidesWith(other) && other instanceof ToyArrowEntity;
+        return super.collidesWith(other) && other instanceof ToyArrowEntity toyArrow && toyArrow.getToyBowLevel() >= 5;
     }
 
     @Override
@@ -232,6 +234,10 @@ public class BirthdayGiftEntity extends Entity {
 
         nbt.putInt(GIFT_STATE_NBT_KEY, this.dataTracker.get(STATE));
         nbt.putInt(LAST_CHANGED_STATE_NBT_KEY, this.dataTracker.get(LAST_CHANGED_STATE));
+
+        if (detonatorArrowData != null) {
+            detonatorArrowData.saveDataTo(nbt);
+        }
     }
 
     @Override
@@ -246,6 +252,10 @@ public class BirthdayGiftEntity extends Entity {
 
         this.dataTracker.set(STATE, nbt.getInt(GIFT_STATE_NBT_KEY));
         this.dataTracker.set(LAST_CHANGED_STATE, nbt.getInt(LAST_CHANGED_STATE_NBT_KEY));
+
+        if (nbt.contains(DETONATOR_ARROW_DATA_NBT_KEY)) {
+            detonatorArrowData = ToyArrowEntityData.loadDataFrom(nbt);
+        }
     }
 
     private void moveTo(Vec3d pos) {
