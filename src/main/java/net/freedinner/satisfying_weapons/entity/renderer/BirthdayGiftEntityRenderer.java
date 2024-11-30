@@ -22,7 +22,7 @@ public class BirthdayGiftEntityRenderer extends EntityRenderer<BirthdayGiftEntit
     }
 
     @Override
-    public void render(BirthdayGiftEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(BirthdayGiftEntity gift, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         matrices.push();
 
         // Setup proper scaling and position
@@ -30,35 +30,37 @@ public class BirthdayGiftEntityRenderer extends EntityRenderer<BirthdayGiftEntit
         matrices.translate(0.0f, -1.5f, 0.0f);
 
         // Slow rotation around the Y axis
-        float angle = (entity.age + tickDelta) / 20f;
+        float angle = (gift.age + tickDelta) / 20f;
         matrices.multiply(RotationAxis.POSITIVE_Y.rotation(angle));
 
         // Slow movement up and down
-        double offset = Math.sin((entity.age + tickDelta) * 0.1f) / 6;
+        double offset = Math.sin((gift.age + tickDelta) * 0.1f) / 6;
         matrices.translate(0.0f, offset, 0.0f);
 
-        // If detonated, add visual effects
         int overlay = 10 << 16;
-        int detonationProgress = entity.getDetonationProgress();
-        if (detonationProgress != -1) {
+
+        // If detonated, add visual effects
+        if (gift.isDetonated()) {
+            int stateAge = gift.getStateAge();
+
             // Rapid blinking with white
-            overlay = (detonationProgress / 3 % 2 == 0) ? 15 | 10 << 16 : overlay;
+            overlay = (stateAge / 3 % 2 == 0) ? 15 | 10 << 16 : overlay;
 
             // Expand in size
-            float scaleFactor = 1.0f + detonationProgress * 0.04f;
+            float scaleFactor = 1.0f + stateAge * 0.04f;
             matrices.scale(scaleFactor, scaleFactor, scaleFactor);
-            matrices.translate(0.0f, -0.04f * detonationProgress, 0.0f);
+            matrices.translate(0.0f, -0.04f * stateAge, 0.0f);
         }
 
         // Render the base texture, with white overlay if needed
-        Identifier texture = this.getTexture(entity);
+        Identifier texture = this.getTexture(gift);
         RenderLayer renderLayer = this.model.getLayer(texture);
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(renderLayer);
         this.model.render(matrices, vertexConsumer, light, overlay, 1.0f, 1.0f, 1.0f, 1.0f);
 
         matrices.pop();
 
-        super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
+        super.render(gift, yaw, tickDelta, matrices, vertexConsumers, light);
     }
 
     @Override

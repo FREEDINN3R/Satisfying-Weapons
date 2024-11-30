@@ -32,6 +32,14 @@ public class MathUtils {
         return min + random.nextDouble(max - min);
     }
 
+    public static float randomNumber(float bound) {
+        return random.nextFloat(bound);
+    }
+
+    public static float randomNumber(float min, float max) {
+        return min + random.nextFloat(max - min);
+    }
+
     public static int randomNumber(int bound) {
         return random.nextInt(bound);
     }

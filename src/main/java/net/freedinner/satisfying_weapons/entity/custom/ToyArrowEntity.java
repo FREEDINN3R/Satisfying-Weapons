@@ -139,8 +139,8 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
         }
 
         // Visuals & SFX
-        target.getWorld().playSound(null, target.getBlockPos(), ModSounds.PARTY_HORN, SoundCategory.PLAYERS, 3.0f, PitchUtils.get());
-        target.getWorld().playSound(null, target.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 2.0f, 1.0f);
+        target.getWorld().playSound(null, target.getBlockPos(), ModSounds.PARTY_HORN, SoundCategory.PLAYERS, 2.0f, PitchUtils.get());
+        target.getWorld().playSound(null, target.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.5f, 1.0f);
     }
 
     private boolean changeBirthdayPartyLevel(LivingEntity target, int level) {
