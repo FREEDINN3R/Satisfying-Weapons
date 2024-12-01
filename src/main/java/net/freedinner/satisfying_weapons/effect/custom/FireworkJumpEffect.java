@@ -1,7 +1,5 @@
 package net.freedinner.satisfying_weapons.effect.custom;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -14,10 +12,7 @@ import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.AttributeContainer;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.attribute.*;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffects;
@@ -41,22 +36,14 @@ import java.util.UUID;
 
 public class FireworkJumpEffect extends StatusEffect {
     private static final int MAX_ON_GROUND_TIME = 1;
-    private static final Multimap<EntityAttribute, EntityAttributeModifier> knockbackModifier;
 
-    static {
-        // Multimap with a 0.95 value increase for knockback resistance
-        knockbackModifier = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                .put(
-                        EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE,
-                        new EntityAttributeModifier(
-                                UUID.fromString("bc8a023f-1eff-418b-a6c8-a793940feeed"),
-                                "firework_jump_knockback_modifier",
-                                0.95,
-                                EntityAttributeModifier.Operation.ADDITION
-                        )
-                )
-                .build();
-    }
+    // Attribute modifier with a 0.95 value increase for knockback resistance
+    private static final EntityAttributeModifier knockbackResModifier = new EntityAttributeModifier(
+            UUID.fromString("bc8a023f-1eff-418b-a6c8-a793940f4eed"),
+            "firework_jump_knockback_resistance_modifier",
+            0.95,
+            EntityAttributeModifier.Operation.ADDITION
+    );
 
     public FireworkJumpEffect(StatusEffectCategory category, int color) {
         super(category, color);
@@ -75,11 +62,15 @@ public class FireworkJumpEffect extends StatusEffect {
         player.setVelocity(v.x, 1.5, v.z);
         player.velocityModified = true;
 
-        // Add damage and knockback resistance
+        // Add damage resistance
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(player);
         defenseData.setScale(defenseData.getScale() * 10f);
 
-        attributes.addTemporaryModifiers(knockbackModifier);
+        // Add knockback resistance
+        EntityAttributeInstance knockbackResAttribute = entity.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
+        if (knockbackResAttribute != null) {
+            knockbackResAttribute.addPersistentModifier(knockbackResModifier);
+        }
 
         // Reset onGroundTime counter
         setOnGroundTime(player, 0);
@@ -133,11 +124,15 @@ public class FireworkJumpEffect extends StatusEffect {
             return;
         }
 
-        // Remove damage and knockback resistance
+        // Remove damage resistance
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(player);
         defenseData.setScale(defenseData.getScale() / 10f);
 
-        attributes.removeModifiers(knockbackModifier);
+        // Remove knockback resistance
+        EntityAttributeInstance knockbackResAttribute = entity.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
+        if (knockbackResAttribute != null) {
+            knockbackResAttribute.removeModifier(knockbackResModifier);
+        }
 
         // If plunge attack was correctly performed
         if (getOnGroundTime(player) > MAX_ON_GROUND_TIME && player.isSneaking() && FireworkSwordItem.heldInHand(player)) {
