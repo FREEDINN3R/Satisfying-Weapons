@@ -34,12 +34,12 @@ public class BirthdayGiftEntityRenderer extends EntityRenderer<BirthdayGiftEntit
         matrices.multiply(RotationAxis.POSITIVE_Y.rotation(angle));
 
         // Slow movement up and down
-        double offset = Math.sin((gift.age + tickDelta) * 0.1f) / 6;
-        matrices.translate(0.0f, offset, 0.0f);
+        double hoverOffset = Math.sin((gift.age + tickDelta) * 0.05f) / 6;
+        matrices.translate(0.0f, hoverOffset, 0.0f);
 
         int overlay = 10 << 16;
 
-        // If detonated, add visual effects
+        // If detonated, add corresponding visual effects
         if (gift.isDetonated()) {
             int stateAge = gift.getStateAge();
 

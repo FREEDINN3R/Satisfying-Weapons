@@ -3,6 +3,8 @@ package net.freedinner.satisfying_weapons.entity.custom;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
+import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
@@ -24,6 +26,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -86,12 +89,11 @@ public class BirthdayGiftEntity extends Entity {
             case EMERGING:
                 assert currTarget != null; // Because it was processed before switch
 
-                if (this.getStateAge() <= 50) {
+                if (this.getStateAge() <= 10) {
                     double halfHeight = 0.5 * currTarget.getHeight();
 
-                    // Logarithmically rises to 0.5 blocks above the targets head, in 20 ticks
-                    double progress = Math.sqrt(this.getStateAge() / 50.0);
-                    double offset = halfHeight + (halfHeight + 0.5) * progress;
+                    // Linearly rise 0.5 blocks above the target's head
+                    double offset = halfHeight + (halfHeight + 0.5) / 10 * this.getStateAge();
                     Vec3d newPos = currTarget.getPos().add(0, offset, 0);
 
                     this.moveTo(newPos);
@@ -209,7 +211,7 @@ public class BirthdayGiftEntity extends Entity {
                 break;
         }
 
-        // If emerged, emit smoke
+        // If already emerged, emit smoke
         if (this.getState() != GiftState.EMERGING) {
             sendSmokeParticlesPacket();
         }
@@ -217,7 +219,7 @@ public class BirthdayGiftEntity extends Entity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        // This one handles gift detonation by Toy Arrows
+        // This method handles gift detonation by Toy Arrows
 
         if (this.getWorld().isClient || this.isInvulnerableTo(source)) {
             return false;
@@ -282,7 +284,8 @@ public class BirthdayGiftEntity extends Entity {
     }
 
     private void moveTo(Vec3d pos) {
-        this.move(MovementType.SELF, pos.subtract(this.getPos()));
+        Vec3d movement = pos.subtract(this.getPos());
+        this.move(MovementType.SELF, movement);
     }
 
     public void setTarget(@NotNull LivingEntity target) {
@@ -304,6 +307,10 @@ public class BirthdayGiftEntity extends Entity {
         }
 
         return null;
+    }
+
+    public boolean isEmerging() {
+        return this.getState() == GiftState.EMERGING;
     }
 
     public boolean isDetonated() {

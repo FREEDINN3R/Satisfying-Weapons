@@ -1,16 +1,12 @@
 package net.freedinner.satisfying_weapons.effect.custom;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
-import net.freedinner.satisfying_weapons.sound.ModSounds;
-import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
-import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
@@ -19,8 +15,6 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
@@ -33,22 +27,13 @@ public class BirthdayPartyEffect extends StatusEffect {
         super(category, color);
     }
 
-    private static final Multimap<EntityAttribute, EntityAttributeModifier> movementSpeedModifier;
-
-    static {
-        // Multimap with a 20% value reduction for movement speed
-        movementSpeedModifier = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                .put(
-                        EntityAttributes.GENERIC_MOVEMENT_SPEED,
-                        new EntityAttributeModifier(
-                                UUID.fromString("6ccef6c6-2f61-4839-a9ce-339f737a3f36"),
-                                "birthday_party_movement_speed_modifier",
-                                -0.2,
-                                EntityAttributeModifier.Operation.MULTIPLY_TOTAL
-                        )
-                )
-                .build();
-    }
+    // Attribute modifier with a 15% value reduction for movement speed
+    private static final EntityAttributeModifier movementSpeedModifier = new EntityAttributeModifier(
+            UUID.fromString("1c9fe7e4-8088-494a-892c-fb1bd366b4ea"),
+            "birthday_party_movement_speed_modifier",
+            -0.15,
+            EntityAttributeModifier.Operation.MULTIPLY_TOTAL
+    );
 
     @Override
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
@@ -56,7 +41,10 @@ public class BirthdayPartyEffect extends StatusEffect {
 
         // If Toy Bow level 4 or higher, reduce movement speed and defence
         if (amplifier > 0) {
-            attributes.addTemporaryModifiers(movementSpeedModifier);
+            EntityAttributeInstance movementSpeedAttribute = entity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+            if (movementSpeedAttribute != null) {
+                movementSpeedAttribute.addPersistentModifier(movementSpeedModifier);
+            }
 
             ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
             defenseData.setScale(defenseData.getScale() * 0.85f);
@@ -95,18 +83,21 @@ public class BirthdayPartyEffect extends StatusEffect {
 
     @Override
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        super.onRemoved(entity, attributes, amplifier);
-
         // After effect runs out, stop taunting mobs
         clearAffectedEntities(entity);
 
         // Reset movement speed and defence
         if (amplifier > 0) {
-            attributes.removeModifiers(movementSpeedModifier);
+            EntityAttributeInstance movementSpeedAttribute = entity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+            if (movementSpeedAttribute != null) {
+                movementSpeedAttribute.removeModifier(movementSpeedModifier);
+            }
 
             ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
             defenseData.setScale(defenseData.getScale() / 0.85f);
         }
+
+        super.onRemoved(entity, attributes, amplifier);
     }
 
     @Override

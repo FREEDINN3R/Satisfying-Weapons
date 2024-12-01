@@ -16,8 +16,8 @@ public class ModNetworking {
     public static final Identifier PLUNGE_ATTACK_PARTICLES_ID = SatisfyingWeapons.id("plunge_attack_particles");
 
     public static final Identifier CONFETTI_PARTICLES_ID = SatisfyingWeapons.id("confetti_particles");
-    public static final Identifier GIFT_SMOKE_PARTICLES_ID = new Identifier(SatisfyingWeapons.MOD_ID, "gift_smoke_particles");
-    public static final Identifier GIFT_EXPLOSION_PARTICLES_ID = new Identifier(SatisfyingWeapons.MOD_ID, "gift_explosion_particles");
+    public static final Identifier GIFT_SMOKE_PARTICLES_ID = SatisfyingWeapons.id("gift_smoke_particles");
+    public static final Identifier GIFT_EXPLOSION_PARTICLES_ID = SatisfyingWeapons.id("gift_explosion_particles");
 
     public static void registerS2CPackets() {
         SatisfyingWeapons.LOGGER.info("Registering S2C packets");
