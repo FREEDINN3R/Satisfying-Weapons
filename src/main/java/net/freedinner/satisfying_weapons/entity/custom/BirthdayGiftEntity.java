@@ -3,8 +3,6 @@ package net.freedinner.satisfying_weapons.entity.custom;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
-import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
@@ -26,7 +24,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -263,8 +260,8 @@ public class BirthdayGiftEntity extends Entity {
             nbt.putUuid(GIFT_TARGET_NBT_KEY, targetUUID);
         }
 
-        nbt.putInt(STATE_NBT_KEY, this.dataTracker.get(STATE));
-        nbt.putInt(STATE_AGE_NBT_KEY, this.dataTracker.get(STATE_AGE));
+        nbt.putInt(STATE_NBT_KEY, this.getState().ordinal());
+        nbt.putInt(STATE_AGE_NBT_KEY, this.getStateAge());
 
         if (detonatorArrowData != null) {
             detonatorArrowData.saveDataTo(nbt);
@@ -277,8 +274,8 @@ public class BirthdayGiftEntity extends Entity {
             targetUUID = nbt.getUuid(GIFT_TARGET_NBT_KEY);
         }
 
-        this.dataTracker.set(STATE, nbt.getInt(STATE_NBT_KEY));
-        this.dataTracker.set(STATE_AGE, nbt.getInt(STATE_AGE_NBT_KEY));
+        this.setState(nbt.getInt(STATE_NBT_KEY));
+        this.setStateAge(nbt.getInt(STATE_AGE_NBT_KEY));
 
         detonatorArrowData = ToyArrowEntityData.loadDataFrom(nbt);
     }
@@ -309,10 +306,6 @@ public class BirthdayGiftEntity extends Entity {
         return null;
     }
 
-    public boolean isEmerging() {
-        return this.getState() == GiftState.EMERGING;
-    }
-
     public boolean isDetonated() {
         return this.getState() == GiftState.DETONATED;
     }
@@ -328,8 +321,16 @@ public class BirthdayGiftEntity extends Entity {
         this.noClip = state != GiftState.FALLING;
     }
 
+    protected void setState(int stateOrdinal) {
+        this.setState(GiftState.values()[stateOrdinal]);
+    }
+
     public int getStateAge() {
         return this.dataTracker.get(STATE_AGE);
+    }
+
+    protected void setStateAge(int stateAge) {
+        this.dataTracker.set(STATE_AGE, stateAge);
     }
 
     protected void updateStateAge() {
