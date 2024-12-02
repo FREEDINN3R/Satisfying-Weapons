@@ -104,7 +104,7 @@ public class WishingStarItem extends Item {
         // The actual rolling part
         ItemStack rolledStack = (shouldRollWeapon) ? rollRandomWeapon(world, starterWeapon) : rollRandomChestLoot(world);
 
-        // Prevent accidentally using the new item
+        // Prevents accidentally using the new item
         serverPlayer.getItemCooldownManager().set(rolledStack.getItem(), 10);
 
         // Visuals & SFX
@@ -139,7 +139,8 @@ public class WishingStarItem extends Item {
         // TODO: properly implement chances based on weapon rarity
 
         List<Item> allWeapons = List.of(
-                ModItems.FIREWORK_SWORD.get(0)
+                ModItems.FIREWORK_SWORD.get(0),
+                ModItems.TOY_BOW.get(0)
         );
 
         Item randomWeapon = allWeapons.get(world.getRandom().nextInt(allWeapons.size()));
