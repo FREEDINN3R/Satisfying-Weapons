@@ -1,7 +1,7 @@
 package net.freedinner.satisfying_weapons.entity.renderer;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
-import net.freedinner.satisfying_weapons.entity.ModEntities;
+import net.freedinner.satisfying_weapons.entity.ModEntitiesClient;
 import net.freedinner.satisfying_weapons.entity.custom.BirthdayGiftEntity;
 import net.freedinner.satisfying_weapons.entity.model.BirthdayGiftEntityModel;
 import net.minecraft.client.render.RenderLayer;
@@ -18,7 +18,7 @@ public class BirthdayGiftEntityRenderer extends EntityRenderer<BirthdayGiftEntit
 
     public BirthdayGiftEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
-        this.model = new BirthdayGiftEntityModel(context.getPart(ModEntities.BIRTHDAY_GIFT_MODEL_LAYER));
+        this.model = new BirthdayGiftEntityModel(context.getPart(ModEntitiesClient.BIRTHDAY_GIFT_MODEL_LAYER));
     }
 
     @Override

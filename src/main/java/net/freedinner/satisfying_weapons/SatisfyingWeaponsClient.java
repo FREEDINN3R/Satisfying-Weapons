@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
+import net.freedinner.satisfying_weapons.entity.ModEntitiesClient;
 import net.freedinner.satisfying_weapons.gui.ModScreenHandlers;
 import net.freedinner.satisfying_weapons.item.ModItemPredicates;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
@@ -12,7 +13,7 @@ public class SatisfyingWeaponsClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		ModItemPredicates.registerItemPredicates();
 
-		ModEntities.registerEntitiesClient();
+		ModEntitiesClient.registerEntitiesClient();
 
 		ModParticles.registerParticlesClient();
 
