@@ -116,7 +116,7 @@ public class BirthdayGiftEntity extends Entity {
 
             case FALLING:
                 // Fall down, up to 0.8 block per tick
-                double fallVelocity = 0.2 * Math.min(this.getStateAge(), 4);
+                double fallVelocity = 0.2 * Math.min(this.getStateAge(), 5);
                 this.moveTo(this.getPos().subtract(0, fallVelocity, 0));
 
                 if (this.isOnGround()) {

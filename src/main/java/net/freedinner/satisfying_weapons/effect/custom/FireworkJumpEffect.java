@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons.effect.custom;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
@@ -85,6 +86,8 @@ public class FireworkJumpEffect extends StatusEffect {
         if (entity.getWorld().isClient) {
             return;
         }
+
+        SatisfyingWeapons.LOGGER.info("Velocity: " + entity.getVelocity());
 
         if (!(entity instanceof PlayerEntity player)) {
             return;
@@ -190,7 +193,7 @@ public class FireworkJumpEffect extends StatusEffect {
         return true;
     }
 
-    public static boolean isEligible(LivingEntity entity, boolean checkStartingConditions) {
+    public static boolean isEligible(LivingEntity entity, boolean initiatingJump) {
         // Only players can do a Firework Jump
         if (!(entity instanceof PlayerEntity player)) {
             return false;
@@ -202,13 +205,17 @@ public class FireworkJumpEffect extends StatusEffect {
 
         // Conditions that apply when the player starts a Firework Jump
         boolean startingConditions =
-                !player.getAbilities().flying && !hasElytra
+                !player.isOnGround() && !player.getAbilities().flying && !hasElytra
                 && player.getVelocity().y < 0 && FestivityEffect.getStacks(player) >= 3;
 
-        // Conditions that apply when the player is already doing a Firework Jump
-        return (!checkStartingConditions || startingConditions)
+        // Conditions that apply when the player is already performing a Firework Jump
+        boolean ongoingConditions = getOnGroundTime(player) <= MAX_ON_GROUND_TIME;
+
+        // Conditions that always apply
+        return (!initiatingJump || startingConditions)
+                && (initiatingJump || ongoingConditions)
                 && FireworkSwordItem.heldInHand(player)
-                && getOnGroundTime(player) <= MAX_ON_GROUND_TIME && !player.isClimbing() && !player.isFallFlying()
+                && !player.isClimbing() && !player.isFallFlying()
                 && !entity.isTouchingWater() && !entity.isInLava() && !entity.hasVehicle()
                 && !entity.hasStatusEffect(StatusEffects.LEVITATION) && !entity.hasStatusEffect(StatusEffects.SLOW_FALLING);
     }
