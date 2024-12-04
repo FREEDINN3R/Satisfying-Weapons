@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons.item.custom;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
+import net.freedinner.satisfying_weapons.util.TextUtils;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
@@ -50,13 +51,11 @@ public abstract class UpgradeableSwordItem extends SwordItem implements IUpgrade
 
         MutableText levelText = Text.literal("Level " + this.getLevel()).formatted(Formatting.YELLOW);
 
-        SatisfyingWeapons.LOGGER.info(Color.orange.getRGB() + "");
-
         if (this.getMaterial() instanceof ModToolMaterial toolMaterial) {
             MutableText rarityText = switch (toolMaterial) {
                 case RARE -> Text.literal("★☆☆").formatted(Formatting.GREEN);
                 case EPIC -> Text.literal("★★☆").formatted(Formatting.AQUA);
-                case LEGENDARY -> Text.literal("★★★").setStyle(Style.EMPTY.withColor(Color.orange.getRGB()));
+                case LEGENDARY -> Text.literal("★★★").setStyle(Style.EMPTY.withColor(-14336));
             };
 
             levelText.append("  ").append(rarityText);
@@ -64,5 +63,16 @@ public abstract class UpgradeableSwordItem extends SwordItem implements IUpgrade
 
         tooltip.add(levelText);
         tooltip.add(Text.empty());
+
+        MutableText description = switch (this.getLevel()) {
+            case 1 -> Text.literal("Hitting a mob grants 1_Festivity, up to 5 stacks. While in the air, press jump to consume 3_Festivity and do a Firework Jump. During a Firework Jump, sneak to do a plunge attack.");
+            case 2 -> Text.literal("Plunge attack damage increases by_25% and is further increased by_15% for each mob in its radius. Max damage increase is_100%.");
+            case 3 -> Text.literal("For each mob damaged by a plunge attack, recover 1_Festivity. Max 2_stacks per plunge attack.");
+            case 4 -> Text.literal("For each mob damaged by a plunge attack, recover 1_HP.");
+            case 5 -> Text.literal("Festivity can now go up to 10_stacks. Also, Festivity recovered by Level_3 is no longer limited to 2_stacks per plunge.");
+            default -> Text.empty();
+        };
+
+        TextUtils.addLongTooltip(tooltip, description, Formatting.GRAY);
     }
 }
