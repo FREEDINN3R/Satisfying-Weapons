@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons.item.custom;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.effect.custom.FestivityEffect;
+import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
@@ -12,12 +13,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.util.List;
 
 public class FireworkSwordItem extends UpgradeableSwordItem {
@@ -40,7 +44,7 @@ public class FireworkSwordItem extends UpgradeableSwordItem {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        if (Screen.hasShiftDown()) switch (this.getLevel()) {
+        switch (this.getLevel()) {
             case 1:
                 tooltip.add(Text.literal("Hit mob -> get Festivity stack, max 5 stacks").formatted(Formatting.GRAY));
                 tooltip.add(Text.literal("When falling, press jump to do Firework Jump").formatted(Formatting.GRAY));
