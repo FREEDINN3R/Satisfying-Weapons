@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TextUtils {
-    public static final int MAX_LINE_LENGTH = 40;
+    public static final int MAX_LINE_LENGTH = 32;
 
     public static void addLongTooltip(List<Text> tooltipList, MutableText tooltip, Formatting... formatting) {
         List<MutableText> lines = breakDownLongTooltip(tooltip);
