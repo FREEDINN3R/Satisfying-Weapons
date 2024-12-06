@@ -11,6 +11,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -35,6 +36,20 @@ public interface IUpgradeableWeapon {
 
     default boolean isAtMaxLevel() {
         return this.getNextLevel() == null;
+    }
+
+    default List<Text> generateWeaponDescription(ItemStack stack) {
+        List<Text> weaponDescription;
+
+        if (Screen.hasShiftDown()) {
+            weaponDescription = this.getCollapsedDescription();
+        }
+        else {
+            World clientWorld = MinecraftClient.getInstance().world;
+            weaponDescription = (clientWorld != null) ? getLeveledDescription(stack) : getSimpleDescription(stack);
+        }
+
+        return weaponDescription;
     }
     
     default List<Text> getCollapsedDescription() {

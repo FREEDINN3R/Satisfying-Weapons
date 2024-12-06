@@ -49,17 +49,6 @@ public abstract class UpgradeableSwordItem extends SwordItem implements IUpgrade
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-
-        List<Text> weaponDescription;
-
-        if (Screen.hasShiftDown()) {
-            weaponDescription = this.getCollapsedDescription();
-        }
-        else {
-            World clientWorld = MinecraftClient.getInstance().world;
-            weaponDescription = (clientWorld != null) ? getLeveledDescription(stack) : getSimpleDescription(stack);
-        }
-
-        tooltip.addAll(weaponDescription);
+        tooltip.addAll(this.generateWeaponDescription(stack));
     }
 }
