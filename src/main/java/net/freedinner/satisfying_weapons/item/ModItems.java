@@ -30,8 +30,8 @@ public class ModItems {
 
     @SuppressWarnings("unchecked")
     private static <T extends Item & IUpgradeableWeapon> List<Item> registerUpgradeableWeapon(
-            String name, BlockStateVariantMap.QuadFunction<ToolMaterial, Item.Settings, Integer, T, T> constructor,
-            ToolMaterial material, int maxLevel, Item.Settings settings
+            String name, BlockStateVariantMap.QuadFunction<ModToolMaterial, Item.Settings, Integer, T, T> constructor,
+            ModToolMaterial material, int maxLevel, Item.Settings settings
     ) {
         List<Item> list = new ArrayList<>();
 

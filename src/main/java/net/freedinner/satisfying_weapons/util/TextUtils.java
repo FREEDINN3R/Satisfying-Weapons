@@ -10,19 +10,7 @@ import java.util.List;
 public class TextUtils {
     public static final int MAX_LINE_LENGTH = 32;
 
-    public static void addLongTooltip(List<Text> tooltipList, MutableText tooltip, Formatting... formatting) {
-        List<MutableText> lines = breakDownLongTooltip(tooltip);
-
-        for (MutableText line : lines) {
-            for (Formatting f : formatting) {
-                line = line.formatted(f);
-            }
-
-            tooltipList.add(line);
-        }
-    }
-
-    public static List<MutableText> breakDownLongTooltip(MutableText tooltip) {
+    public static List<MutableText> breakDownLongTooltip(Text tooltip) {
         String text = tooltip.getString();
 
         String[] words = text.split("\\s+");

@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -18,6 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IUpgradeableWeapon {
+    String LAST_VIEWED_TIME_NBT_KEY = "sw_last_viewed_time";
+    String CURR_PAGE_NBT_KEY = "sw_curr_page";
+    String CTRL_HELD_NBT_KEY = "sw_ctrl_held";
+    String ALT_HELD_NBT_KEY = "sw_alt_held";
+
     ModToolMaterial getRarityMaterial();
 
     int getLevel();
@@ -41,11 +47,13 @@ public interface IUpgradeableWeapon {
     default List<Text> generateWeaponDescription(ItemStack stack) {
         List<Text> weaponDescription;
 
-        if (Screen.hasShiftDown()) {
+        if (!Screen.hasShiftDown()) {
+            // Just says "Hold Shift"
             weaponDescription = this.getCollapsedDescription();
         }
         else {
-            World clientWorld = MinecraftClient.getInstance().world;
+            // Client world is needed because multipage description uses world ticks
+            World clientWorld = null;
             weaponDescription = (clientWorld != null) ? getLeveledDescription(stack) : getSimpleDescription(stack);
         }
 
@@ -54,7 +62,7 @@ public interface IUpgradeableWeapon {
     
     default List<Text> getCollapsedDescription() {
         ArrayList<Text> desc = new ArrayList<>();
-        desc.add(Text.literal("Hold Shift for more info").formatted(Formatting.YELLOW));
+        desc.add(Text.translatable("item.satisfying_weapons.desc.hold_shift").formatted(Formatting.YELLOW));
 
         return desc;
     }
@@ -62,34 +70,46 @@ public interface IUpgradeableWeapon {
     default List<Text> getSimpleDescription(ItemStack stack) {
         ArrayList<Text> desc = new ArrayList<>();
 
-        MutableText levelText = Text.literal("Level " + this.getLevel()).formatted(Formatting.YELLOW);
-
+        // Weapon rarity text
         MutableText rarityText = switch (this.getRarityMaterial()) {
-            case RARE -> Text.literal("★☆☆ Rare").formatted(Formatting.GREEN);
-            case EPIC -> Text.literal("★★☆ Epic").formatted(Formatting.AQUA);
-            case LEGENDARY -> Text.literal("★★★ Legendary").setStyle(Style.EMPTY.withColor(-14336));
+            case RARE -> Text.literal("★☆☆ ")
+                    .append(Text.translatable("item.satisfying_weapons.desc.rare"))
+                    .formatted(Formatting.GREEN);
+            case EPIC -> Text.literal("★★☆ ")
+                    .append(Text.translatable("item.satisfying_weapons.desc.epic"))
+                    .formatted(Formatting.LIGHT_PURPLE);
+            case LEGENDARY -> Text.literal("★★★ ")
+                    .append(Text.translatable("item.satisfying_weapons.desc.legendary"))
+                    .setStyle(Style.EMPTY.withColor(-14336));
         };
 
-        levelText.append("   ").append(rarityText);
+        // Weapon level text
+        desc.add(
+                Text.translatable("item.satisfying_weapons.desc.level")
+                        .append(" " + this.getLevel())
+                        .formatted(Formatting.YELLOW)
+                        .append("   ")
+                        .append(rarityText)
+        );
 
-        desc.add(levelText);
+        // Spacing
         desc.add(Text.empty());
 
-        MutableText description = switch (this.getLevel()) {
-            case 1 ->
-                    Text.literal("Hitting a mob grants 1_Festivity, up to 5 stacks. While in the air, press jump to consume 3_Festivity and do a Firework Jump. During a Firework Jump, sneak to do a plunge attack.");
-            case 2 ->
-                    Text.literal("Plunge attack damage increases by_25% and is further increased by_15% for each mob in its radius. Max damage increase is_100%.");
-            case 3 ->
-                    Text.literal("For each mob damaged by a plunge attack, recover 1_Festivity. Max 2_stacks per plunge attack.");
-            case 4 -> Text.literal("For each mob damaged by a plunge attack, recover 1_HP.");
-            case 5 ->
-                    Text.literal("Festivity can now go up to 10_stacks. Also, Festivity recovered by Level_3 is no longer limited to 2_stacks per plunge.");
-            default -> Text.empty();
-        };
+        // Skill name text
+        String weaponName = stack.getItem().getTranslationKey();
+        Text skillName = Text.translatable(weaponName + ".skill_name_" + this.getLevel())
+                .formatted(Formatting.WHITE, Formatting.ITALIC);
+        desc.add(skillName);
 
-        TextUtils.addLongTooltip(desc, description, Formatting.GRAY);
+        // Skill description text
+        Text skillDesc = Text.translatable(weaponName + ".skill_desc_" + this.getLevel());
+        List<MutableText> skillDescLines = TextUtils.breakDownLongTooltip(skillDesc)
+                .stream()
+                .map(text -> text.formatted(Formatting.GRAY))
+                .toList();
+        desc.addAll(skillDescLines);
 
+        // Extra spacing before enchantments
         if (stack.hasEnchantments()) {
             desc.add(Text.empty());
         }
@@ -169,7 +189,7 @@ public interface IUpgradeableWeapon {
             default -> Text.empty();
         };
 
-        TextUtils.addLongTooltip(desc, description, Formatting.GRAY);
+        //TextUtils.addLongTooltip(desc, description, Formatting.GRAY);
 
         MutableText levelSelection = Text.literal("←- ctrl");
         levelSelection.append(" ".repeat(TextUtils.MAX_LINE_LENGTH / 2 - 5 - this.getMaxLevel()));

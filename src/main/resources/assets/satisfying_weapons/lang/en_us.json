@@ -7,7 +7,24 @@
   "item.satisfying_weapons.wishing_star": "Wishing Star",
   "block.satisfying_weapons.upgrader": "Upgrader",
 
+  "item.satisfying_weapons.desc.hold_shift": "Hold Shift for more info",
+  "item.satisfying_weapons.desc.rare": "Rare",
+  "item.satisfying_weapons.desc.epic": "Epic",
+  "item.satisfying_weapons.desc.legendary": "Legendary",
+  "item.satisfying_weapons.desc.level": "Level",
+
   "item.satisfying_weapons.firework_sword": "Firework Sword",
+  "item.satisfying_weapons.firework_sword.skill_name_1": "Pyrotechnic Warfare",
+  "item.satisfying_weapons.firework_sword.skill_desc_1": "Hitting a mob grants 1_stack of Festivity, up to 5_stacks. While in the air, press jump to consume 3_Festivity and do a Firework Jump. During a Firework Jump, sneak to do a plunge attack.",
+  "item.satisfying_weapons.firework_sword.skill_name_2": "To Have a Blast",
+  "item.satisfying_weapons.firework_sword.skill_desc_2": "Plunge attack damage increases by_25% and is further increased by_15% for each mob in its current radius. Max damage increase is_100%.",
+  "item.satisfying_weapons.firework_sword.skill_name_3": "Extra Sulfur",
+  "item.satisfying_weapons.firework_sword.skill_desc_3": "For each mob damaged by a plunge attack, recover 1_stack of Festivity. Max 2_stacks per plunge attack.",
+  "item.satisfying_weapons.firework_sword.skill_name_4": "When the Night Ends",
+  "item.satisfying_weapons.firework_sword.skill_desc_4": "For each mob damaged by a plunge attack, recover 1_HP.",
+  "item.satisfying_weapons.firework_sword.skill_name_5": "Through the Roof",
+  "item.satisfying_weapons.firework_sword.skill_desc_5": "Festivity can now go up to 10_stacks. Also, Festivity recovered from Level_3 is no longer limited to 2_stacks per plunge.",
+
   "item.satisfying_weapons.toy_bow": "Toy Bow",
 
   "entity.satisfying_weapons.birthday_gift": "Birthday Gift",

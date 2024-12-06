@@ -1,6 +1,7 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
 import net.freedinner.satisfying_weapons.entity.custom.ToyArrowEntity;
+import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.client.gui.screen.Screen;
@@ -22,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class ToyBowItem extends UpgradeableBowItem {
-    public ToyBowItem(ToolMaterial toolMaterial, Settings settings, int level, @Nullable UpgradeableBowItem nextLevelWeapon) {
+    public ToyBowItem(ModToolMaterial toolMaterial, Settings settings, int level, @Nullable UpgradeableBowItem nextLevelWeapon) {
         super(toolMaterial, settings, level, nextLevelWeapon);
     }
 

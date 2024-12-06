@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons.item.custom;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.effect.custom.FestivityEffect;
+import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,7 +15,7 @@ import net.minecraft.util.Hand;
 import org.jetbrains.annotations.Nullable;
 
 public class FireworkSwordItem extends UpgradeableSwordItem {
-    public FireworkSwordItem(ToolMaterial toolMaterial, Settings settings, int level, @Nullable FireworkSwordItem nextLevelWeapon) {
+    public FireworkSwordItem(ModToolMaterial toolMaterial, Settings settings, int level, @Nullable FireworkSwordItem nextLevelWeapon) {
         super(toolMaterial, settings, level, nextLevelWeapon);
     }
 
