@@ -1,5 +1,6 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
+import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
@@ -17,11 +18,16 @@ public abstract class UpgradeableSwordItem extends SwordItem implements IUpgrade
     @Nullable
     protected final UpgradeableSwordItem nextLevelWeapon;
 
-    public UpgradeableSwordItem(ToolMaterial toolMaterial, Settings settings, int level, @Nullable UpgradeableSwordItem nextLevelWeapon) {
+    public UpgradeableSwordItem(ModToolMaterial toolMaterial, Settings settings, int level, @Nullable UpgradeableSwordItem nextLevelWeapon) {
         super(toolMaterial, 3, -2.4f, settings);
 
         this.level = level;
         this.nextLevelWeapon = nextLevelWeapon;
+    }
+
+    @Override
+    public ModToolMaterial getRarityMaterial() {
+        return (ModToolMaterial) this.getMaterial();
     }
 
     @Override

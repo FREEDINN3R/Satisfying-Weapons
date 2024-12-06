@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IUpgradeableWeapon {
-    ModToolMaterial getWeaponRarity();
+    ModToolMaterial getRarityMaterial();
 
     int getLevel();
 
@@ -49,7 +49,7 @@ public interface IUpgradeableWeapon {
 
         MutableText levelText = Text.literal("Level " + this.getLevel()).formatted(Formatting.YELLOW);
 
-        MutableText rarityText = switch (this.getWeaponRarity()) {
+        MutableText rarityText = switch (this.getRarityMaterial()) {
             case RARE -> Text.literal("★☆☆ Rare").formatted(Formatting.GREEN);
             case EPIC -> Text.literal("★★☆ Epic").formatted(Formatting.AQUA);
             case LEGENDARY -> Text.literal("★★★ Legendary").setStyle(Style.EMPTY.withColor(-14336));
@@ -130,7 +130,7 @@ public interface IUpgradeableWeapon {
             levelText.append(Text.literal(" (Preview)").formatted(Formatting.GRAY));
         }
 
-        MutableText rarityText = switch (this.getWeaponRarity()) {
+        MutableText rarityText = switch (this.getRarityMaterial()) {
             case RARE -> Text.literal("★☆☆ Rare").formatted(Formatting.GREEN);
             case EPIC -> Text.literal("★★☆ Epic").formatted(Formatting.AQUA);
             case LEGENDARY -> Text.literal("★★★ Legendary").setStyle(Style.EMPTY.withColor(-14336));
