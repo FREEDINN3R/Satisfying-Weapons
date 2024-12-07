@@ -38,11 +38,11 @@ import java.util.UUID;
 public class FireworkJumpEffect extends StatusEffect {
     private static final int MAX_ON_GROUND_TIME = 1;
 
-    // Attribute modifier with a 0.95 value increase for knockback resistance
+    // Attribute modifier with 1.0 value increase for knockback resistance
     private static final EntityAttributeModifier knockbackResModifier = new EntityAttributeModifier(
             UUID.fromString("bc8a023f-1eff-418b-a6c8-a793940f4eed"),
             "firework_jump_knockback_resistance_modifier",
-            0.95,
+            1.0,
             EntityAttributeModifier.Operation.ADDITION
     );
 
