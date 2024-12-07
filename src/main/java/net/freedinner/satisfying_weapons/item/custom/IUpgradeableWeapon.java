@@ -3,7 +3,6 @@ package net.freedinner.satisfying_weapons.item.custom;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.util.NbtUtils;
 import net.freedinner.satisfying_weapons.util.TextUtils;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -12,6 +11,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public interface IUpgradeableWeapon {
         return this.getNextLevel() == null;
     }
 
-    default List<Text> generateWeaponDescription(ItemStack stack) {
+    default List<Text> generateWeaponDescription(ItemStack stack, @Nullable World world) {
         List<Text> weaponDescription;
 
         if (!Screen.hasShiftDown()) {
@@ -51,9 +51,8 @@ public interface IUpgradeableWeapon {
             weaponDescription = this.getCollapsedDescription();
         }
         else {
-            // Client world is needed because multipage description uses world ticks
-            World clientWorld = MinecraftClient.getInstance().world;
-            weaponDescription = (clientWorld != null) ? getMultipageDescription(stack) : getSimpleDescription(stack);
+            // World is needed because multipage description uses world ticks
+            weaponDescription = (world != null) ? getMultipageDescription(stack, world) : getSimpleDescription(stack);
         }
 
         return weaponDescription;
@@ -116,15 +115,13 @@ public interface IUpgradeableWeapon {
         return desc;
     }
 
-    default List<Text> getMultipageDescription(ItemStack stack) {
-        assert MinecraftClient.getInstance().world != null; // Otherwise, this method won't be called
-
+    default List<Text> getMultipageDescription(ItemStack stack, @NotNull World world) {
         ArrayList<Text> desc = new ArrayList<>();
         NbtCompound stackNbt = stack.getOrCreateNbt();
 
         // Last tick when description of this weapon was viewed
         long lastViewedTime = NbtUtils.getOrCreate(stackNbt, LAST_VIEWED_TIME_NBT_KEY, 0);
-        long currTime = MinecraftClient.getInstance().world.getTime();
+        long currTime = world.getTime();
 
         // If the player wasn't viewing the full description continuously
         if (currTime - lastViewedTime > 5) {

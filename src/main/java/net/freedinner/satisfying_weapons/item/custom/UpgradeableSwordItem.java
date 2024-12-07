@@ -49,6 +49,6 @@ public abstract class UpgradeableSwordItem extends SwordItem implements IUpgrade
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.addAll(this.generateWeaponDescription(stack));
+        tooltip.addAll(this.generateWeaponDescription(stack, world));
     }
 }
