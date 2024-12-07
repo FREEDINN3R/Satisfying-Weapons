@@ -7,7 +7,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -21,8 +20,8 @@ import java.util.List;
 public interface IUpgradeableWeapon {
     String LAST_VIEWED_TIME_NBT_KEY = "sw_last_viewed_time";
     String CURR_PAGE_NBT_KEY = "sw_curr_page";
-    String CTRL_HELD_NBT_KEY = "sw_ctrl_held";
-    String ALT_HELD_NBT_KEY = "sw_alt_held";
+    String CTRL_WAS_HELD_NBT_KEY = "sw_ctrl_was_held";
+    String ALT_WAS_HELD_NBT_KEY = "sw_alt_was_held";
 
     ModToolMaterial getRarityMaterial();
 
@@ -53,8 +52,8 @@ public interface IUpgradeableWeapon {
         }
         else {
             // Client world is needed because multipage description uses world ticks
-            World clientWorld = null;
-            weaponDescription = (clientWorld != null) ? getLeveledDescription(stack) : getSimpleDescription(stack);
+            World clientWorld = MinecraftClient.getInstance().world;
+            weaponDescription = (clientWorld != null) ? getMultipageDescription(stack) : getSimpleDescription(stack);
         }
 
         return weaponDescription;
@@ -70,7 +69,7 @@ public interface IUpgradeableWeapon {
     default List<Text> getSimpleDescription(ItemStack stack) {
         ArrayList<Text> desc = new ArrayList<>();
 
-        // Weapon rarity text
+        // Weapon rarity text, goes after level
         MutableText rarityText = switch (this.getRarityMaterial()) {
             case RARE -> Text.literal("★☆☆ ")
                     .append(Text.translatable("item.satisfying_weapons.desc.rare"))
@@ -117,101 +116,130 @@ public interface IUpgradeableWeapon {
         return desc;
     }
 
-    default List<Text> getLeveledDescription(ItemStack stack) {
-        ArrayList<Text> desc = new ArrayList<>();
+    default List<Text> getMultipageDescription(ItemStack stack) {
+        assert MinecraftClient.getInstance().world != null; // Otherwise, this method won't be called
 
+        ArrayList<Text> desc = new ArrayList<>();
         NbtCompound stackNbt = stack.getOrCreateNbt();
 
-        long lastViewedTime = NbtUtils.getOrCreate(stackNbt, "sw_last_viewed_time", 0);
-        boolean shouldReset = MinecraftClient.getInstance().world.getTime() - lastViewedTime > 5;
+        // Last tick when description of this weapon was viewed
+        long lastViewedTime = NbtUtils.getOrCreate(stackNbt, LAST_VIEWED_TIME_NBT_KEY, 0);
+        long currTime = MinecraftClient.getInstance().world.getTime();
 
-        if (shouldReset) {
-            stackNbt.putInt("sw_curr_page", this.getLevel());
-            stackNbt.putBoolean("sw_ctrl_held", true);
-            stackNbt.putBoolean("sw_alt_held", true);
+        // If the player wasn't viewing the full description continuously
+        if (currTime - lastViewedTime > 5) {
+            // Reset everything
+            stackNbt.putInt(CURR_PAGE_NBT_KEY, this.getLevel());
+            stackNbt.putBoolean(CTRL_WAS_HELD_NBT_KEY, true);
+            stackNbt.putBoolean(ALT_WAS_HELD_NBT_KEY, true); // Both true, to prevent players from flipping a page immediately
         }
 
-        stackNbt.putLong("sw_last_viewed_time", MinecraftClient.getInstance().world.getTime());
+        // After all relevant checks, record "last viewed" tick
+        stackNbt.putLong(LAST_VIEWED_TIME_NBT_KEY, currTime);
 
-        int currPage = NbtUtils.getOrCreate(stackNbt, "sw_curr_page", this.getLevel());
-        boolean ctrlHeld = NbtUtils.getOrCreate(stackNbt, "sw_ctrl_held", true);
-        boolean altHeld = NbtUtils.getOrCreate(stackNbt, "sw_alt_held", true);
+        // Oh boy here we go
+        int currPage = NbtUtils.getOrCreate(stackNbt, CURR_PAGE_NBT_KEY, this.getLevel());
+        boolean ctrlWasHeld = NbtUtils.getOrCreate(stackNbt, CTRL_WAS_HELD_NBT_KEY, true);
+        boolean altWasHeld = NbtUtils.getOrCreate(stackNbt, ALT_WAS_HELD_NBT_KEY, true);
 
-        if (Screen.hasControlDown() && !ctrlHeld) {
-            ctrlHeld = true;
-            currPage = Math.max(1, currPage - 1);
+        // If player pressed Ctrl
+        if (Screen.hasControlDown() && !ctrlWasHeld) {
+            ctrlWasHeld = true;
+            currPage = Math.max(1, currPage - 1); // Go back a page
         }
 
-        if (!Screen.hasControlDown() && ctrlHeld) {
-            ctrlHeld = false;
+        // If player released Ctrl
+        if (!Screen.hasControlDown() && ctrlWasHeld) {
+            ctrlWasHeld = false;
         }
 
-        if (Screen.hasAltDown() && !altHeld) {
-            altHeld = true;
-            currPage = Math.min(this.getMaxLevel(), currPage + 1);
+        // If player pressed Alt
+        if (Screen.hasAltDown() && !altWasHeld) {
+            altWasHeld = true;
+            currPage = Math.min(this.getMaxLevel(), currPage + 1); // Go forward a page
         }
 
-        if (!Screen.hasAltDown() && altHeld) {
-            altHeld = false;
+        // If player released Alt
+        if (!Screen.hasAltDown() && altWasHeld) {
+            altWasHeld = false;
         }
 
-        stackNbt.putInt("sw_curr_page", currPage);
-        stackNbt.putBoolean("sw_ctrl_held", ctrlHeld);
-        stackNbt.putBoolean("sw_alt_held", altHeld);
+        // After all relevant checks, record current page and key states
+        stackNbt.putInt(CURR_PAGE_NBT_KEY, currPage);
+        stackNbt.putBoolean(CTRL_WAS_HELD_NBT_KEY, ctrlWasHeld);
+        stackNbt.putBoolean(ALT_WAS_HELD_NBT_KEY, altWasHeld);
 
-        MutableText levelText = Text.literal("Level " + currPage).formatted(Formatting.YELLOW);
-
-        if (currPage != this.getLevel()) {
-            levelText.append(Text.literal(" (Preview)").formatted(Formatting.GRAY));
-        }
-
+        // Weapon rarity text, goes after level
         MutableText rarityText = switch (this.getRarityMaterial()) {
-            case RARE -> Text.literal("★☆☆ Rare").formatted(Formatting.GREEN);
-            case EPIC -> Text.literal("★★☆ Epic").formatted(Formatting.AQUA);
-            case LEGENDARY -> Text.literal("★★★ Legendary").setStyle(Style.EMPTY.withColor(-14336));
+            case RARE -> Text.literal("★☆☆ ")
+                    .append(Text.translatable("item.satisfying_weapons.desc.rare"))
+                    .formatted(Formatting.GREEN);
+            case EPIC -> Text.literal("★★☆ ")
+                    .append(Text.translatable("item.satisfying_weapons.desc.epic"))
+                    .formatted(Formatting.LIGHT_PURPLE);
+            case LEGENDARY -> Text.literal("★★★ ")
+                    .append(Text.translatable("item.satisfying_weapons.desc.legendary"))
+                    .setStyle(Style.EMPTY.withColor(-14336));
         };
 
-        levelText.append("   ").append(rarityText);
+        // Weapon level text
+        desc.add(
+                Text.translatable("item.satisfying_weapons.desc.level")
+                        .append(" " + currPage)
+                        .formatted(Formatting.YELLOW)
+                        .append("   ")
+                        .append(rarityText)
+        );
 
-        desc.add(levelText);
+        // Spacing
         desc.add(Text.empty());
 
-        MutableText description = switch (currPage) {
-            case 1 ->
-                    Text.literal("Hitting a mob grants 1_Festivity, up to 5 stacks. While in the air, press jump to consume 3_Festivity and do a Firework Jump. During a Firework Jump, sneak to do a plunge attack.");
-            case 2 ->
-                    Text.literal("Plunge attack damage increases by_25% and is further increased by_15% for each mob in its radius. Max damage increase is_100%.");
-            case 3 ->
-                    Text.literal("For each mob damaged by a plunge attack, recover 1_Festivity. Max 2_stacks per plunge attack.");
-            case 4 -> Text.literal("For each mob damaged by a plunge attack, recover 1_HP.");
-            case 5 ->
-                    Text.literal("Festivity can now go up to 10_stacks. Also, Festivity recovered by Level_3 is no longer limited to 2_stacks per plunge.");
-            default -> Text.empty();
-        };
+        // Skill name text
+        String weaponName = stack.getItem().getTranslationKey();
+        Text skillName = Text.translatable(weaponName + ".skill_name_" + currPage)
+                .formatted(Formatting.WHITE, Formatting.ITALIC);
+        desc.add(skillName);
 
-        //TextUtils.addLongTooltip(desc, description, Formatting.GRAY);
+        // Skill description text
+        Text skillDesc = Text.translatable(weaponName + ".skill_desc_" + currPage);
+        List<MutableText> skillDescLines = TextUtils.breakDownLongTooltip(skillDesc)
+                .stream()
+                .map(text -> text.formatted(Formatting.GRAY))
+                .toList();
+        desc.addAll(skillDescLines);
 
-        MutableText levelSelection = Text.literal("←- ctrl");
-        levelSelection.append(" ".repeat(TextUtils.MAX_LINE_LENGTH / 2 - 5 - this.getMaxLevel()));
-        levelSelection.append("•").formatted(Formatting.GRAY);
+        // Spacing
+        desc.add(Text.empty());
 
+        // Level selection text, starts with left (ctrl) arrow
+        MutableText levelSelection = Text.empty()
+                .append("←- ctrl")
+                .append(" ".repeat(TextUtils.MAX_LINE_LENGTH / 2 - 5 - this.getMaxLevel()))
+                .append("•")
+                .formatted(Formatting.GRAY);
+
+        // Row of page numbers
         for (int i = 1; i <= this.getMaxLevel(); i++) {
+            MutableText pageNumber = Text.literal("" + i).formatted(Formatting.GRAY);
+
+            // The selected page is highlighted
             if (currPage == i) {
-                levelSelection.append(Text.literal("" + i).formatted(Formatting.WHITE, Formatting.BOLD));
-            }
-            else {
-                levelSelection.append(Text.literal("" + i).formatted(Formatting.GRAY));
+                pageNumber.formatted(Formatting.WHITE, Formatting.BOLD);
             }
 
-            levelSelection.append("•").formatted(Formatting.GRAY);
+            levelSelection
+                    .append(pageNumber)
+                    .append(Text.literal("•").formatted(Formatting.GRAY));
         }
 
-        levelSelection.append(" ".repeat(TextUtils.MAX_LINE_LENGTH / 2 - 5 - this.getMaxLevel()));
-        levelSelection.append("alt -→");
+        // Ends with right (alt) arrow
+        levelSelection
+                .append(" ".repeat(TextUtils.MAX_LINE_LENGTH / 2 - 5 - this.getMaxLevel()))
+                .append("alt -→");
 
-        desc.add(Text.empty());
         desc.add(levelSelection);
 
+        // Extra spacing before enchantments
         if (stack.hasEnchantments()) {
             desc.add(Text.empty());
         }
