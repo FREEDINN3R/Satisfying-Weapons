@@ -211,7 +211,7 @@ public interface IUpgradeableWeapon {
         // Spacing
         desc.add(Text.empty());
 
-        // Level selection text, starts with left (ctrl) arrow
+        // Level selection text, starts left arrow and spacing
         MutableText levelSelection = Text.empty()
                 .append("←- ctrl")
                 .append(" ".repeat(TextUtils.MAX_LINE_LENGTH / 2 - 5 - this.getMaxLevel()))
@@ -232,7 +232,7 @@ public interface IUpgradeableWeapon {
                     .append(Text.literal("•").formatted(Formatting.GRAY));
         }
 
-        // Ends with right (alt) arrow
+        // Right spacing and arrow
         levelSelection
                 .append(" ".repeat(TextUtils.MAX_LINE_LENGTH / 2 - 5 - this.getMaxLevel()))
                 .append("alt -→");
