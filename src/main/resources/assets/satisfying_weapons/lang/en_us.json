@@ -26,9 +26,19 @@
   "item.satisfying_weapons.firework_sword.skill_desc_5": "Festivity can now go up to 10_stacks. Also, Festivity recovered from Level_3 is no longer limited to 2_stacks per plunge.",
 
   "item.satisfying_weapons.toy_bow": "Toy Bow",
+  "item.satisfying_weapons.toy_bow.skill_name_1": "Best Day of the Year",
+  "item.satisfying_weapons.toy_bow.skill_desc_1": "Shoots Toy Arrows that apply Birthday Party to the target. While the Birthday Party is active, the affected mob will cause all non-friendly entities to attack it.",
+  "item.satisfying_weapons.toy_bow.skill_name_2": "Many Happy Returns!",
+  "item.satisfying_weapons.toy_bow.skill_desc_2": "Greatly increases accuracy and range of Toy Arrows. Also, there is a 50%_chance to keep an arrow while shooting.",
+  "item.satisfying_weapons.toy_bow.skill_name_3": "Special Delivery",
+  "item.satisfying_weapons.toy_bow.skill_desc_3": "When Birthday Party is applied, Birthday Gift appears above the target’s head. After the Birthday Party ends, or the target dies, Birthday Gift will fall down and explode.",
+  "item.satisfying_weapons.toy_bow.skill_name_4": "Leaving So Soon?",
+  "item.satisfying_weapons.toy_bow.skill_desc_4": "Entities with Birthday Party are slowed down and receive 15%_more damage.",
+  "item.satisfying_weapons.toy_bow.skill_name_5": "Party Crasher",
+  "item.satisfying_weapons.toy_bow.skill_desc_5": "Hitting a Birthday Gift with a Toy Arrow will cause it to explode and fire 5_identical Toy Arrows in random directions, prioritizing other mobs as targets.",
 
-  "entity.satisfying_weapons.birthday_gift": "Birthday Gift",
   "entity.satisfying_weapons.toy_arrow": "Toy Arrow",
+  "entity.satisfying_weapons.birthday_gift": "Birthday Gift",
 
   "effect.satisfying_weapons.festivity": "Festivity",
   "effect.satisfying_weapons.firework_jump": "Firework Jump",
