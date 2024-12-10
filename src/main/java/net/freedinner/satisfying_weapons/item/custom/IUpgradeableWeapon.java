@@ -67,6 +67,7 @@ public interface IUpgradeableWeapon {
 
     default List<Text> getSimpleDescription(ItemStack stack) {
         ArrayList<Text> desc = new ArrayList<>();
+        int currLevel = this.getLevel();
 
         // Weapon rarity text, goes after level
         MutableText rarityText = switch (this.getRarityMaterial()) {
@@ -84,7 +85,7 @@ public interface IUpgradeableWeapon {
         // Weapon level text
         desc.add(
                 Text.translatable("item.satisfying_weapons.desc.level")
-                        .append(" " + this.getLevel())
+                        .append(" " + currLevel)
                         .formatted(Formatting.YELLOW)
                         .append("   ")
                         .append(rarityText)
@@ -95,12 +96,12 @@ public interface IUpgradeableWeapon {
 
         // Skill name text
         String weaponName = stack.getItem().getTranslationKey();
-        Text skillName = Text.translatable(weaponName + ".skill_name_" + this.getLevel())
+        Text skillName = Text.translatable(weaponName + ".skill_name_" + currLevel)
                 .formatted(Formatting.WHITE, Formatting.ITALIC);
         desc.add(skillName);
 
         // Skill description text
-        Text skillDesc = Text.translatable(weaponName + ".skill_desc_" + this.getLevel());
+        Text skillDesc = Text.translatable(weaponName + ".skill_desc_" + currLevel);
         List<MutableText> skillDescLines = TextUtils.breakDownLongTooltip(skillDesc)
                 .stream()
                 .map(text -> text.formatted(Formatting.GRAY))
@@ -117,6 +118,7 @@ public interface IUpgradeableWeapon {
 
     default List<Text> getMultipageDescription(ItemStack stack, @NotNull World world) {
         ArrayList<Text> desc = new ArrayList<>();
+        int currLevel = this.getLevel();
         NbtCompound stackNbt = stack.getOrCreateNbt();
 
         // Last tick when description of this weapon was viewed
@@ -126,7 +128,7 @@ public interface IUpgradeableWeapon {
         // If the player wasn't viewing the full description continuously
         if (currTime - lastViewedTime > 5) {
             // Reset everything
-            stackNbt.putInt(CURR_PAGE_NBT_KEY, this.getLevel());
+            stackNbt.putInt(CURR_PAGE_NBT_KEY, currLevel);
             stackNbt.putBoolean(CTRL_WAS_HELD_NBT_KEY, true);
             stackNbt.putBoolean(ALT_WAS_HELD_NBT_KEY, true); // Both true, to prevent players from flipping a page immediately
         }
@@ -135,7 +137,7 @@ public interface IUpgradeableWeapon {
         stackNbt.putLong(LAST_VIEWED_TIME_NBT_KEY, currTime);
 
         // Oh boy here we go
-        int currPage = NbtUtils.getOrCreate(stackNbt, CURR_PAGE_NBT_KEY, this.getLevel());
+        int currPage = NbtUtils.getOrCreate(stackNbt, CURR_PAGE_NBT_KEY, currLevel);
         boolean ctrlWasHeld = NbtUtils.getOrCreate(stackNbt, CTRL_WAS_HELD_NBT_KEY, true);
         boolean altWasHeld = NbtUtils.getOrCreate(stackNbt, ALT_WAS_HELD_NBT_KEY, true);
 
@@ -183,7 +185,7 @@ public interface IUpgradeableWeapon {
         desc.add(
                 Text.translatable("item.satisfying_weapons.desc.level")
                         .append(" " + currPage)
-                        .formatted(Formatting.YELLOW)
+                        .formatted((currPage <= currLevel) ? Formatting.YELLOW : Formatting.GRAY)
                         .append("   ")
                         .append(rarityText)
         );
@@ -193,20 +195,50 @@ public interface IUpgradeableWeapon {
 
         // Skill name text
         String weaponName = stack.getItem().getTranslationKey();
-        Text skillName = Text.translatable(weaponName + ".skill_name_" + currPage)
+        MutableText skillName = Text.translatable(weaponName + ".skill_name_" + currPage)
                 .formatted(Formatting.WHITE, Formatting.ITALIC);
+
+        // If viewing the next level, add (Preview)
+        if (currLevel + 1 == currPage) {
+            skillName.append(Text.empty()
+                    .append(" (")
+                    .append(Text.translatable("item.satisfying_weapons.desc.preview"))
+                    .append(")")
+                    .formatted(Formatting.GRAY)
+            );
+        }
+
         desc.add(skillName);
 
         // Skill description text
-        Text skillDesc = Text.translatable(weaponName + ".skill_desc_" + currPage);
-        List<MutableText> skillDescLines = TextUtils.breakDownLongTooltip(skillDesc)
-                .stream()
-                .map(text -> text.formatted(Formatting.GRAY))
-                .toList();
-        desc.addAll(skillDescLines);
+        if (currPage <= currLevel + 1) {
+            Text skillDesc = Text.translatable(weaponName + ".skill_desc_" + currPage);
+            List<MutableText> skillDescLines = TextUtils.breakDownLongTooltip(skillDesc)
+                    .stream()
+                    .map(text -> text.formatted(Formatting.GRAY))
+                    .toList();
+            desc.addAll(skillDescLines);
+        }
+        else {
+            // Skill description is not available more than 1 level ahead
+            desc.add(Text.literal("???").formatted(Formatting.GRAY));
+        }
 
         // Spacing
         desc.add(Text.empty());
+
+        // Unlock criteria
+        if (currPage > currLevel) {
+            Text unlockCriteria = Text.translatable("item.satisfying_weapons.desc.unlock_criteria");
+            List<MutableText> unlockCriteriaLines = TextUtils.breakDownLongTooltip(unlockCriteria)
+                    .stream()
+                    .map(text -> text.formatted(Formatting.RED, Formatting.UNDERLINE))
+                    .toList();
+            desc.addAll(unlockCriteriaLines);
+
+            // Spacing
+            desc.add(Text.empty());
+        }
 
         // Level selection text, starts left arrow and spacing
         MutableText levelSelection = Text.empty()

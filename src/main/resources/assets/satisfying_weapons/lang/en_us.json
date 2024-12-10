@@ -8,10 +8,12 @@
   "block.satisfying_weapons.upgrader": "Upgrader",
 
   "item.satisfying_weapons.desc.hold_shift": "Hold Shift for more info",
+  "item.satisfying_weapons.desc.level": "Level",
   "item.satisfying_weapons.desc.rare": "Rare",
   "item.satisfying_weapons.desc.epic": "Epic",
   "item.satisfying_weapons.desc.legendary": "Legendary",
-  "item.satisfying_weapons.desc.level": "Level",
+  "item.satisfying_weapons.desc.preview": "Preview",
+  "item.satisfying_weapons.desc.unlock_criteria": "To unlock, combine with an identical weapon of any level using Upgrader",
 
   "item.satisfying_weapons.firework_sword": "Firework Sword",
   "item.satisfying_weapons.firework_sword.skill_name_1": "Pyrotechnic Warfare",

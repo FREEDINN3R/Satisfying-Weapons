@@ -17,7 +17,7 @@ public class TextUtils {
         List<String> lines = new ArrayList<>();
         StringBuilder currLine = new StringBuilder();
 
-        //Replacing $ with \n, and dividing into lines
+        // Replacing $ with \n, and dividing into lines
         for (String word : words) {
             if (word.contains("$")) {
                 String[] splitWord = word.split("\\$");
@@ -37,8 +37,11 @@ public class TextUtils {
 
         lines.add(currLine.toString());
 
-        //Replacing _ with non-breaking spaces
+        // Replacing _ with non-breaking spaces
         lines.replaceAll(s -> s.replaceAll("_", " "));
+
+        // Removing trailing spaces
+        lines.replaceAll(String::trim);
 
         return lines.stream().map(Text::literal).toList();
     }
