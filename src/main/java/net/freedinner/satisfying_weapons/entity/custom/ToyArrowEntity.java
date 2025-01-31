@@ -47,6 +47,16 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
     }
 
     @Override
+    protected boolean canHit(Entity entity) {
+        if (this.getToyBowLevel() == 5 && entity instanceof BirthdayGiftEntity giftEntity && giftEntity.isActive()) {
+            return true;
+        }
+        else {
+            return super.canHit(entity);
+        }
+    }
+
+    @Override
     protected void onHit(LivingEntity target) {
         super.onHit(target);
 

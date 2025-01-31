@@ -245,13 +245,8 @@ public class BirthdayGiftEntity extends Entity {
 
     @Override
     public boolean canBeHitByProjectile() {
-        return true;
-    }
-
-    @Override
-    public boolean collidesWith(Entity other) {
-        // Only Toy Arrows of level 5
-        return super.collidesWith(other) && other instanceof ToyArrowEntity toyArrow && toyArrow.getToyBowLevel() >= 5;
+        // Only level 5 Toy Arrows can collide with the gift
+        return false;
     }
 
     @Override
@@ -304,6 +299,10 @@ public class BirthdayGiftEntity extends Entity {
         }
 
         return null;
+    }
+
+    public boolean isActive() {
+        return this.getState() == GiftState.ACTIVE;
     }
 
     public boolean isDetonated() {
