@@ -2,7 +2,7 @@ package net.freedinner.satisfying_weapons.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.freedinner.satisfying_weapons.util.GiftExplosionBehavior;
+import net.freedinner.satisfying_weapons.entity.misc.GiftExplosionBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;

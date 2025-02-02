@@ -1,4 +1,4 @@
-package net.freedinner.satisfying_weapons.util;
+package net.freedinner.satisfying_weapons.entity.misc;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

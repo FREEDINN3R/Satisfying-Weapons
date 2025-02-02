@@ -1,5 +1,6 @@
-package net.freedinner.satisfying_weapons.entity.custom;
+package net.freedinner.satisfying_weapons.entity.misc;
 
+import net.freedinner.satisfying_weapons.entity.custom.ToyArrowEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
