@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons.util;
 
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +19,9 @@ public class TextUtils {
     public static List<MutableText> breakDownLongTooltip(Text tooltip) {
         String text = tooltip.getString();
 
-        if (!validateBrackets(text)) {
-            throw new RuntimeException("Encountered tooltip with an incorrect brackets placement");
-        }
+        // Removing color values from text, and saving them in a separate list
+        List<Pair<Integer, Integer>> colorsList = new ArrayList<>();
+        text = extractColorValues(text, colorsList);
 
         String[] words = text.split("\\s+");
         List<String> lines = new ArrayList<>();
@@ -53,6 +54,31 @@ public class TextUtils {
         lines.replaceAll(String::trim);
 
         return lines.stream().map(Text::literal).toList();
+    }
+
+    private static String extractColorValues(String text, List<Pair<Integer, Integer>> targetList) {
+        // TODO: texts can't change dynamically, so validating them each tick is redundant, but idk how to fix it properly
+        if (!validateBrackets(text)) {
+            throw new RuntimeException("Encountered a tooltip that violates bracket placement rules");
+        }
+
+        int opIndex = 0;
+
+        while (opIndex != -1) {
+            opIndex = text.indexOf("{", opIndex);
+
+            if (opIndex != -1) {
+                int clIndex = text.indexOf("}", opIndex);
+
+                int color = Integer.parseInt(text.substring(opIndex + 1, clIndex));
+                targetList.add(new Pair<>(opIndex, color));
+
+                StringBuilder sb = new StringBuilder(text);
+                text = sb.delete(opIndex, clIndex + 1).toString();
+            }
+        }
+
+        return text;
     }
 
     private static boolean validateBrackets(String text) {
