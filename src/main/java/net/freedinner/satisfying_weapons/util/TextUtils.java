@@ -18,8 +18,7 @@ public class TextUtils {
     public static List<MutableText> breakDownLongTooltip(Text tooltip) {
         String text = tooltip.getString();
 
-        // BRACKETS
-        if (!checkBrackets(text)) {
+        if (!validateBrackets(text)) {
             throw new RuntimeException("Encountered tooltip with an incorrect brackets placement");
         }
 
@@ -56,7 +55,7 @@ public class TextUtils {
         return lines.stream().map(Text::literal).toList();
     }
 
-    private static boolean checkBrackets(String text) {
+    private static boolean validateBrackets(String text) {
         // Pos of opening & closing brackets
         List<Integer> opb = findAllOccurrences(text, "{");
         List<Integer> clb = findAllOccurrences(text, "}");
