@@ -20,7 +20,7 @@
   "item.satisfying_weapons.firework_sword.skill_desc_1": "Hitting a mob grants 1_stack of Festivity, up to 5_stacks. While in the air, press jump to consume 3_Festivity and do a Firework Jump. During a Firework Jump, sneak to do a plunge attack.",
   "item.satisfying_weapons.firework_sword.skill_name_2": "To Have a Blast",
   "item.satisfying_weapons.firework_sword.skill_desc_2": "Plunge attack damage increases by_25% and is further increased by_15% for each mob in its current radius. Max damage increase is_100%.",
-  "item.satisfying_weapons.firework_sword.skill_name_3": "Extra Sulfur",
+  "item.satisfying_weapons.firework_sword.skill_name_3": "Double Sulfur",
   "item.satisfying_weapons.firework_sword.skill_desc_3": "For each mob damaged by a plunge attack, recover 1_stack of Festivity. Max 2_stacks per plunge attack.",
   "item.satisfying_weapons.firework_sword.skill_name_4": "When the Night Ends",
   "item.satisfying_weapons.firework_sword.skill_desc_4": "For each mob damaged by a plunge attack, recover 1_HP.",
