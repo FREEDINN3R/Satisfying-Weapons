@@ -73,8 +73,7 @@ public class TextUtils {
                 int color = Integer.parseInt(text.substring(opIndex + 1, clIndex));
                 targetList.add(new Pair<>(opIndex, color));
 
-                StringBuilder sb = new StringBuilder(text);
-                text = sb.delete(opIndex, clIndex + 1).toString();
+                text = text.substring(0, opIndex) + text.substring(clIndex + 1);
             }
         }
 
