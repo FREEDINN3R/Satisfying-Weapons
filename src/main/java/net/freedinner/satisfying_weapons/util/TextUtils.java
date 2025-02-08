@@ -11,7 +11,6 @@ public class TextUtils {
     public static final int MAX_LINE_LENGTH = 32;
 
     /* MY CUSTOM SYNTAX FOR DESCRIPTIONS
-          $ = new line
           _ = non-breaking space
           {-xxx} = set text color, accepts any int
      */
@@ -27,16 +26,9 @@ public class TextUtils {
         List<String> lines = new ArrayList<>();
         StringBuilder currLine = new StringBuilder();
 
-        // Replacing $ with \n, and dividing into lines
+        // Dividing words into lines
         for (String word : words) {
-            if (word.contains("$")) {
-                String[] splitWord = word.split("\\$");
-                currLine.append(splitWord[0]).append(" ");
-
-                lines.add(currLine.toString());
-                currLine = new StringBuilder(splitWord[1]).append(" ");
-            }
-            else if (currLine.length() + word.length() <= MAX_LINE_LENGTH) {
+            if (currLine.length() + word.length() <= MAX_LINE_LENGTH) {
                 currLine.append(word).append(" ");
             }
             else {
