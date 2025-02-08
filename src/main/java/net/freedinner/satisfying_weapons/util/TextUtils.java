@@ -1,10 +1,13 @@
 package net.freedinner.satisfying_weapons.util;
 
+import com.google.common.collect.Iterables;
+import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TextUtils {
@@ -22,18 +25,24 @@ public class TextUtils {
         List<Pair<Integer, Integer>> colorsList = new ArrayList<>();
         text = extractColorValues(text, colorsList);
 
-        String[] words = text.split("\\s+");
-        List<String> lines = new ArrayList<>();
-        StringBuilder currLine = new StringBuilder();
+        // Splitting into words, based on spaces
+        List<String> words = Arrays.asList(text.split("\\s+"));
+        if (words.isEmpty()) {
+            SatisfyingWeapons.LOGGER.warn("Encountered an empty description");
+            return List.of();
+        }
 
-        // Dividing words into lines
-        for (String word : words) {
-            if (currLine.length() + word.length() <= MAX_LINE_LENGTH) {
-                currLine.append(word).append(" ");
+        List<String> lines = new ArrayList<>();
+        StringBuilder currLine = new StringBuilder(words.get(0));
+
+        // Dividing words into description lines
+        for (String word : Iterables.skip(words, 1)) {
+            if (currLine.length() + word.length() + 1 <= MAX_LINE_LENGTH) {
+                currLine.append(" ").append(word);
             }
             else {
                 lines.add(currLine.toString());
-                currLine = new StringBuilder(word).append(" ");
+                currLine = new StringBuilder(word);
             }
         }
 
@@ -41,9 +50,6 @@ public class TextUtils {
 
         // Replacing _ with non-breaking spaces
         lines.replaceAll(s -> s.replaceAll("_", " "));
-
-        // Removing trailing spaces
-        lines.replaceAll(String::trim);
 
         return lines.stream().map(Text::literal).toList();
     }
