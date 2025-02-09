@@ -17,7 +17,7 @@
 
   "item.satisfying_weapons.firework_sword": "Firework Sword",
   "item.satisfying_weapons.firework_sword.skill_name_1": "Pyrotechnic Warfare",
-  "item.satisfying_weapons.firework_sword.skill_desc_1": "Hitting a mob grants 1_stack of Festivity, up to 5_stacks. While in the air, press jump to consume 3_Festivity and do a Firework Jump. During a Firework Jump, sneak to do a plunge attack.",
+  "item.satisfying_weapons.firework_sword.skill_desc_1": "Hitting a mob grants 1_stack of {16711680}F{16755200}e{16776960}s{65280}t{39423}i{255}v{16711935}i{16711680}t{16755200}y{16777215}, up to 5_stacks. While in the air, press jump to consume 3_Festivity and do a Firework Jump. During a Firework Jump, sneak to do a plunge attack.",
   "item.satisfying_weapons.firework_sword.skill_name_2": "To Have a Blast",
   "item.satisfying_weapons.firework_sword.skill_desc_2": "Plunge attack damage increases by_25% and is further increased by_15% for each mob in its current radius. Max damage increase is_100%.",
   "item.satisfying_weapons.firework_sword.skill_name_3": "Double Sulfur",

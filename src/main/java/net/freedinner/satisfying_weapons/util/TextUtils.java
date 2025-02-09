@@ -3,27 +3,26 @@ package net.freedinner.satisfying_weapons.util;
 import com.google.common.collect.Iterables;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class TextUtils {
     public static final int MAX_LINE_LENGTH = 32;
 
     /* MY CUSTOM SYNTAX FOR DESCRIPTIONS
           _ = non-breaking space
-          {-xxx} = set text color, accepts any int
+          {xxx} = set text color, accepts any int
      */
 
     public static List<MutableText> breakDownLongTooltip(Text tooltip) {
         String text = tooltip.getString();
 
         // Removing color values from text, and saving them in a separate list
-        List<Pair<Integer, Integer>> colorsList = new ArrayList<>();
-        text = extractColorValues(text, colorsList);
+        Queue<Pair<Integer, Integer>> colorsQueue = new LinkedList<>();
+        text = extractColorValues(text, colorsQueue);
 
         // Splitting into words, based on spaces
         List<String> words = Arrays.asList(text.split("\\s+"));
@@ -51,10 +50,35 @@ public class TextUtils {
         // Replacing _ with non-breaking spaces
         lines.replaceAll(s -> s.replaceAll("_", " "));
 
-        return lines.stream().map(Text::literal).toList();
+        List<MutableText> textLines = new ArrayList<>();
+
+        int currColor = 16777215;
+        int currPos = 0;
+
+        for (String line : lines) {
+            MutableText textLine = Text.empty();
+            int currPosInLine = 0;
+
+            while (!colorsQueue.isEmpty() && colorsQueue.peek().getLeft() < currPos + line.length()) {
+                Pair<Integer, Integer> colorPair = colorsQueue.remove();
+                MutableText textPiece = Text.literal(line.substring(currPosInLine, colorPair.getLeft() - currPos));
+                textLine.append(textPiece.setStyle(Style.EMPTY.withColor(currColor)));
+
+                currColor = colorPair.getRight();
+                currPosInLine = colorPair.getLeft() - currPos;
+            }
+
+            MutableText textPiece = Text.literal(line.substring(currPosInLine));
+            textLine.append(textPiece.setStyle(Style.EMPTY.withColor(currColor)));
+
+            textLines.add(textLine);
+            currPos += line.length() + 1;
+        }
+
+        return textLines;
     }
 
-    private static String extractColorValues(String text, List<Pair<Integer, Integer>> targetList) {
+    private static String extractColorValues(String text, Queue<Pair<Integer, Integer>> targetQueue) {
         // TODO: texts can't change dynamically, so validating them each tick is redundant, but idk how to fix it properly
         if (!validateBrackets(text)) {
             throw new RuntimeException("Encountered a tooltip that violates bracket placement rules");
@@ -69,7 +93,7 @@ public class TextUtils {
                 int clIndex = text.indexOf("}", opIndex);
 
                 int color = Integer.parseInt(text.substring(opIndex + 1, clIndex));
-                targetList.add(new Pair<>(opIndex, color));
+                targetQueue.add(new Pair<>(opIndex, color));
 
                 text = text.substring(0, opIndex) + text.substring(clIndex + 1);
             }
