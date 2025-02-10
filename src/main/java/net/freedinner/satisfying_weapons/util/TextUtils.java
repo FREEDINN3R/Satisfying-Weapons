@@ -34,7 +34,7 @@ public class TextUtils {
         List<String> lines = new ArrayList<>();
         StringBuilder currLine = new StringBuilder(words.get(0));
 
-        // Dividing words into description lines
+        // Dividing words into lines
         for (String word : Iterables.skip(words, 1)) {
             if (currLine.length() + word.length() + 1 <= MAX_LINE_LENGTH) {
                 currLine.append(" ").append(word);
@@ -55,24 +55,30 @@ public class TextUtils {
         int currColor = 11184810; // Gray
         int currPos = 0;
 
+        // Converting string to text, applying color
         for (String line : lines) {
             MutableText textLine = Text.empty();
             int currPosInLine = 0;
 
+            // While the queue still has colors belonging to this line
             while (!colorsQueue.isEmpty() && colorsQueue.peek().getLeft() < currPos + line.length()) {
                 Pair<Integer, Integer> colorPair = colorsQueue.remove();
+
+                // Color and append the previous text piece
                 MutableText textPiece = Text.literal(line.substring(currPosInLine, colorPair.getLeft() - currPos));
                 textLine.append(textPiece.setStyle(Style.EMPTY.withColor(currColor)));
 
+                // Save the current one
                 currColor = colorPair.getRight();
                 currPosInLine = colorPair.getLeft() - currPos;
             }
 
+            // Color and append the remaining text
             MutableText textPiece = Text.literal(line.substring(currPosInLine));
             textLine.append(textPiece.setStyle(Style.EMPTY.withColor(currColor)));
 
             textLines.add(textLine);
-            currPos += line.length() + 1;
+            currPos += line.length() + 1; // accounts for a missing space
         }
 
         return textLines;
