@@ -84,18 +84,16 @@ public class TextUtils {
             throw new RuntimeException("Encountered a tooltip that violates bracket placement rules");
         }
 
-        int opIndex = 0;
+        int colorPos = 0;
 
-        while (opIndex != -1) {
-            opIndex = text.indexOf("{", opIndex);
+        while (colorPos != -1) {
+            colorPos = text.indexOf("{", colorPos);
 
-            if (opIndex != -1) {
-                int clIndex = text.indexOf("}", opIndex);
+            if (colorPos != -1) {
+                int color = Integer.parseInt(text.substring(colorPos + 1, colorPos + 7), 16);
+                targetQueue.add(new Pair<>(colorPos, color));
 
-                int color = Integer.parseInt(text.substring(opIndex + 1, clIndex));
-                targetQueue.add(new Pair<>(opIndex, color));
-
-                text = text.substring(0, opIndex) + text.substring(clIndex + 1);
+                text = text.substring(0, colorPos) + text.substring(colorPos + 8);
             }
         }
 
@@ -113,12 +111,12 @@ public class TextUtils {
         }
 
         for (int i = 0; i < opb.size(); i++) {
-            // Closing bracket must be >1 pos ahead
-            if (clb.get(i) < opb.get(i) + 2) {
+            // Closing bracket must be exactly 7 pos ahead
+            if (clb.get(i) - opb.get(i) != 7) {
                 return false;
             }
 
-            // Next pair, if exists, must be ahead
+            // Next pair, if exists, must not intersect with this one
             if (i + 1 < opb.size() && opb.get(i + 1) < clb.get(i) + 1) {
                 return false;
             }
