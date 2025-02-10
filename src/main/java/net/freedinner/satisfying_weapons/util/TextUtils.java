@@ -52,7 +52,7 @@ public class TextUtils {
 
         List<MutableText> textLines = new ArrayList<>();
 
-        int currColor = 11184810; // Gray
+        int currColor = 0xAAAAAA; // Gray
         int currPos = 0;
 
         // Converting string to text, applying color
