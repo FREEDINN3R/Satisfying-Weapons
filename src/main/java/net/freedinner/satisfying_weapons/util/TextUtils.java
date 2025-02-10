@@ -52,7 +52,7 @@ public class TextUtils {
 
         List<MutableText> textLines = new ArrayList<>();
 
-        int currColor = 16777215;
+        int currColor = 11184810; // Gray
         int currPos = 0;
 
         for (String line : lines) {
