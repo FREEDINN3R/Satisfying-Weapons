@@ -20,9 +20,15 @@ public class TextUtils {
     public static List<MutableText> breakDownLongTooltip(Text tooltip) {
         String text = tooltip.getString();
 
+        SatisfyingWeapons.LOGGER.info("START");
+
         // Removing color values from text, and saving them in a separate list
         Queue<Pair<Integer, Integer>> colorsQueue = new LinkedList<>();
         text = extractColorValues(text, colorsQueue);
+
+        for (Pair<Integer, Integer> pair : colorsQueue) {
+            SatisfyingWeapons.LOGGER.info("pos: " + pair.getLeft() + "  color: " + pair.getRight());
+        }
 
         // Splitting into words, based on spaces
         List<String> words = Arrays.asList(text.split("\\s+"));
@@ -61,10 +67,11 @@ public class TextUtils {
             int currPosInLine = 0;
 
             // While the queue still has colors belonging to this line
-            while (!colorsQueue.isEmpty() && colorsQueue.peek().getLeft() < currPos + line.length()) {
+            while (!colorsQueue.isEmpty() && colorsQueue.peek().getLeft() < currPos + line.length() + 1) {
                 Pair<Integer, Integer> colorPair = colorsQueue.remove();
 
                 // Color and append the previous text piece
+                SatisfyingWeapons.LOGGER.info(colorPair.getLeft() + " - " + currPos + " = " + (colorPair.getLeft() - currPos));
                 MutableText textPiece = Text.literal(line.substring(currPosInLine, colorPair.getLeft() - currPos));
                 textLine.append(textPiece.setStyle(Style.EMPTY.withColor(currColor)));
 
@@ -80,6 +87,8 @@ public class TextUtils {
             textLines.add(textLine);
             currPos += line.length() + 1; // accounts for a missing space
         }
+
+        SatisfyingWeapons.LOGGER.info("END");
 
         return textLines;
     }
