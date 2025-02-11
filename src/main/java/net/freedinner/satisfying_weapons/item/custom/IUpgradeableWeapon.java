@@ -232,7 +232,7 @@ public interface IUpgradeableWeapon {
             Text unlockCriteria = Text.translatable("item.satisfying_weapons.desc.unlock_criteria");
             List<MutableText> unlockCriteriaLines = TextUtils.breakDownLongTooltip(unlockCriteria)
                     .stream()
-                    .map(text -> text.formatted(Formatting.RED, Formatting.UNDERLINE))
+                    .map(text -> text.formatted(Formatting.UNDERLINE))
                     .toList();
             desc.addAll(unlockCriteriaLines);
 
