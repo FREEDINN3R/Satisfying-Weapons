@@ -13,7 +13,7 @@
   "item.satisfying_weapons.desc.epic": "Epic",
   "item.satisfying_weapons.desc.legendary": "Legendary",
   "item.satisfying_weapons.desc.preview": "Preview",
-  "item.satisfying_weapons.desc.unlock_criteria": "{FF5555}To unlock, combine with an identical weapon of any level using Upgrader",
+  "item.satisfying_weapons.desc.unlock_criteria": "{FF5555}To unlock, combine with an identical weapon of any level using Upgrader!",
 
   "item.satisfying_weapons.firework_sword": "Firework Sword",
   "item.satisfying_weapons.firework_sword.skill_name_1": "Pyrotechnic Warfare",

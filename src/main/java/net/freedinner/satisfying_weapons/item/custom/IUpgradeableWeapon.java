@@ -185,7 +185,7 @@ public interface IUpgradeableWeapon {
         desc.add(
                 Text.translatable("item.satisfying_weapons.desc.level")
                         .append(" " + currPage)
-                        .formatted((currPage <= currLevel) ? Formatting.YELLOW : Formatting.GRAY)
+                        .formatted(Formatting.YELLOW)
                         .append("   ")
                         .append(rarityText)
         );
