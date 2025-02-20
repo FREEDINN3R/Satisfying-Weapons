@@ -1,10 +1,7 @@
 package net.freedinner.satisfying_weapons.item;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
-import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
-import net.freedinner.satisfying_weapons.item.custom.IUpgradeableWeapon;
-import net.freedinner.satisfying_weapons.item.custom.ToyBowItem;
-import net.freedinner.satisfying_weapons.item.custom.WishingStarItem;
+import net.freedinner.satisfying_weapons.item.custom.*;
 import net.minecraft.data.client.BlockStateVariantMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ToolMaterial;
@@ -21,11 +18,16 @@ public class ModItems {
             new Item(new Item.Settings().rarity(Rarity.RARE).fireproof()));
     public static final Item WISHING_STAR = register("wishing_star",
             new WishingStarItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC).fireproof()));
+    public static final Item BROKEN_GLASS_SWORD = register("broken_glass_sword",
+            new Item(new Item.Settings()));
 
     public static final List<Item> FIREWORK_SWORD = registerUpgradeableWeapon("firework_sword",
             FireworkSwordItem::new, ModToolMaterial.RARE, 5, new Item.Settings());
     public static final List<Item> TOY_BOW = registerUpgradeableWeapon("toy_bow",
             ToyBowItem::new, ModToolMaterial.RARE, 5, new Item.Settings());
+
+    public static final List<Item> GLASS_SWORD = registerUpgradeableWeapon("glass_sword",
+            GlassSwordItem::new, ModToolMaterial.EPIC, 2, new Item.Settings());
 
 
     @SuppressWarnings("unchecked")

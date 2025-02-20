@@ -39,6 +39,13 @@
   "item.satisfying_weapons.toy_bow.skill_name_5": "Party Crasher",
   "item.satisfying_weapons.toy_bow.skill_desc_5": "Hitting a {F53C0F}Birthday Gift{AAAAAA} with a {1E90FF}Toy Arrow{AAAAAA} will cause it to explode and fire 5_identical {1E90FF}Toy Arrows{AAAAAA} in random directions, prioritizing other mobs as targets.",
 
+  "item.satisfying_weapons.glass_sword": "Glass Sword",
+  "item.satisfying_weapons.glass_sword.skill_name_1": "Fragile",
+  "item.satisfying_weapons.glass_sword.skill_desc_1": "Handle with care",
+  "item.satisfying_weapons.glass_sword.skill_name_2": "Tempered",
+  "item.satisfying_weapons.glass_sword.skill_desc_2": "Now it's broken, now it's not",
+  "item.satisfying_weapons.broken_glass_sword": "Broken Glass Sword",
+
   "entity.satisfying_weapons.toy_arrow": "Toy Arrow",
   "entity.satisfying_weapons.birthday_gift": "Birthday Gift",
 

@@ -19,6 +19,8 @@ public class ModNetworking {
     public static final Identifier GIFT_SMOKE_PARTICLES_ID = SatisfyingWeapons.id("gift_smoke_particles");
     public static final Identifier GIFT_EXPLOSION_PARTICLES_ID = SatisfyingWeapons.id("gift_explosion_particles");
 
+    public static final Identifier GLASS_SWORD_PARTICLES_ID = SatisfyingWeapons.id("glass_sword_particles");
+
     public static void registerS2CPackets() {
         SatisfyingWeapons.LOGGER.info("Registering S2C packets");
 
@@ -32,6 +34,8 @@ public class ModNetworking {
         ClientPlayNetworking.registerGlobalReceiver(CONFETTI_PARTICLES_ID, ConfettiParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(GIFT_SMOKE_PARTICLES_ID, GiftSmokeParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(GIFT_EXPLOSION_PARTICLES_ID, GiftExplosionParticlesPacket::receive);
+
+        ClientPlayNetworking.registerGlobalReceiver(GLASS_SWORD_PARTICLES_ID, GlassSwordParticlesPacket::receive);
     }
 
     public static final Identifier FIREWORK_JUMP_CLIENT_PACKET = SatisfyingWeapons.id("firework_jump_client");

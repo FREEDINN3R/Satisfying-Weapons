@@ -39,6 +39,7 @@ public class ModTags {
             FabricTagBuilder builder = this.getOrCreateTagBuilder(MOD_WEAPONS);
             addAll(ModItems.FIREWORK_SWORD, builder);
             addAll(ModItems.TOY_BOW, builder);
+            addAll(ModItems.GLASS_SWORD, builder);
 
             builder = this.getOrCreateTagBuilder(MOD_BOWS);
             addAll(ModItems.TOY_BOW, builder);
