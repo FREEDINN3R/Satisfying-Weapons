@@ -45,7 +45,7 @@ public class ModItems {
 
         do {
             // Recursively adding weapon levels, in order to properly assign nextLevelWeapon
-            T currentInstance = (T) register(name + "_l" + i, constructor.apply(material, settings, i, nextLevelWeapon));
+            T currentInstance = (T) register(name + "_l" + i, constructor.apply(material, settings.fireproof(), i, nextLevelWeapon));
             list.add(currentInstance);
             nextLevelWeapon = currentInstance;
 
