@@ -27,9 +27,9 @@ public class GlassSwordParticlesPacket {
             }
 
             for (int i = 0; i < 60; i++) {
-                double x = particlesPos.x + MathUtils.randomNumber(0.25);
+                double x = particlesPos.x + MathUtils.randomNumber(0.5) - 0.25;
                 double y = particlesPos.y;
-                double z = particlesPos.z + MathUtils.randomNumber(0.25);
+                double z = particlesPos.z + MathUtils.randomNumber(0.5) - 0.25;
 
                 Vec3d v = MathUtils.randomPointInSphere();
                 v = v.normalize().multiply(MathUtils.randomNumber(0.3, 0.5));
