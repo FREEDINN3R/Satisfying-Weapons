@@ -29,6 +29,9 @@ public class ModItems {
     public static final List<Item> GLASS_SWORD = registerUpgradeableWeapon("glass_sword",
             GlassSwordItem::new, ModToolMaterial.EPIC, 2, new Item.Settings());
 
+    public static final List<Item> VOID_BLADE = registerUpgradeableWeapon("void_blade",
+            VoidBladeItem::new, ModToolMaterial.LEGENDARY, 5, new Item.Settings());
+
 
     @SuppressWarnings("unchecked")
     private static <T extends Item & IUpgradeableWeapon> List<Item> registerUpgradeableWeapon(

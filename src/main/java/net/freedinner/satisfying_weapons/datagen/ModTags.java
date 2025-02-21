@@ -40,6 +40,7 @@ public class ModTags {
             addAll(ModItems.FIREWORK_SWORD, builder);
             addAll(ModItems.TOY_BOW, builder);
             addAll(ModItems.GLASS_SWORD, builder);
+            addAll(ModItems.VOID_BLADE, builder);
 
             builder = this.getOrCreateTagBuilder(MOD_BOWS);
             addAll(ModItems.TOY_BOW, builder);

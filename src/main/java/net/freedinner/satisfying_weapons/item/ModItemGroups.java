@@ -31,6 +31,7 @@ public class ModItemGroups {
 
                             addAll(entries, ModItems.FIREWORK_SWORD);
                             addAll(entries, ModItems.TOY_BOW);
+                            addAll(entries, ModItems.VOID_BLADE);
                         }))
                         .build()
         );
