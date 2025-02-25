@@ -20,15 +20,9 @@ public class TextUtils {
     public static List<MutableText> breakDownLongTooltip(Text tooltip) {
         String text = tooltip.getString();
 
-        SatisfyingWeapons.LOGGER.info("START");
-
         // Removing color values from text, and saving them in a separate list
         Queue<Pair<Integer, Integer>> colorsQueue = new LinkedList<>();
         text = extractColorValues(text, colorsQueue);
-
-        for (Pair<Integer, Integer> pair : colorsQueue) {
-            SatisfyingWeapons.LOGGER.info("pos: " + pair.getLeft() + "  color: " + pair.getRight());
-        }
 
         // Splitting into words, based on spaces
         List<String> words = Arrays.asList(text.split("\\s+"));
@@ -87,8 +81,6 @@ public class TextUtils {
             textLines.add(textLine);
             currPos += line.length() + 1; // accounts for a missing space
         }
-
-        SatisfyingWeapons.LOGGER.info("END");
 
         return textLines;
     }

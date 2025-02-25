@@ -87,8 +87,6 @@ public class FireworkJumpEffect extends StatusEffect {
             return;
         }
 
-        SatisfyingWeapons.LOGGER.info("Velocity: " + entity.getVelocity());
-
         if (!(entity instanceof PlayerEntity player)) {
             return;
         }
