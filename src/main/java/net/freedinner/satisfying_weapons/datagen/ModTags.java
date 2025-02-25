@@ -3,11 +3,9 @@ package net.freedinner.satisfying_weapons.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.TagKey;
@@ -40,7 +38,7 @@ public class ModTags {
             addAll(ModItems.FIREWORK_SWORD, builder);
             addAll(ModItems.TOY_BOW, builder);
             addAll(ModItems.GLASS_SWORD, builder);
-            addAll(ModItems.VOID_BLADE, builder);
+            addAll(ModItems.SWORD_OF_DYING_STAR, builder);
 
             builder = this.getOrCreateTagBuilder(MOD_BOWS);
             addAll(ModItems.TOY_BOW, builder);

@@ -4,7 +4,6 @@ import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.item.custom.*;
 import net.minecraft.data.client.BlockStateVariantMap;
 import net.minecraft.item.Item;
-import net.minecraft.item.ToolMaterial;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Rarity;
@@ -29,8 +28,8 @@ public class ModItems {
     public static final List<Item> GLASS_SWORD = registerUpgradeableWeapon("glass_sword",
             GlassSwordItem::new, ModToolMaterial.EPIC, 2, new Item.Settings());
 
-    public static final List<Item> VOID_BLADE = registerUpgradeableWeapon("void_blade",
-            VoidBladeItem::new, ModToolMaterial.LEGENDARY, 5, new Item.Settings());
+    public static final List<Item> SWORD_OF_DYING_STAR = registerUpgradeableWeapon("sword_of_dying_star",
+            DyingStarSwordItem::new, ModToolMaterial.LEGENDARY, 5, new Item.Settings());
 
 
     @SuppressWarnings("unchecked")

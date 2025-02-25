@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "satisfying_weapons:item/sword_of_dying_star"
+  }
+}
