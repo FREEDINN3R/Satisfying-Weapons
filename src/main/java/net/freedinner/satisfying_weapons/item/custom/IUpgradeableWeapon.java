@@ -79,7 +79,7 @@ public interface IUpgradeableWeapon {
                     .formatted(Formatting.LIGHT_PURPLE);
             case LEGENDARY -> Text.literal("★★★ ")
                     .append(Text.translatable("item.satisfying_weapons.desc.legendary"))
-                    .setStyle(Style.EMPTY.withColor(-14336));
+                    .setStyle(Style.EMPTY.withColor(0xFFA900));
         };
 
         // Weapon level text
@@ -178,7 +178,7 @@ public interface IUpgradeableWeapon {
                     .formatted(Formatting.LIGHT_PURPLE);
             case LEGENDARY -> Text.literal("★★★ ")
                     .append(Text.translatable("item.satisfying_weapons.desc.legendary"))
-                    .setStyle(Style.EMPTY.withColor(-14336));
+                    .setStyle(Style.EMPTY.withColor(0xFFA900));
         };
 
         // Weapon level text

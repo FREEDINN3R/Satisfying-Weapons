@@ -65,7 +65,6 @@ public class TextUtils {
                 Pair<Integer, Integer> colorPair = colorsQueue.remove();
 
                 // Color and append the previous text piece
-                SatisfyingWeapons.LOGGER.info(colorPair.getLeft() + " - " + currPos + " = " + (colorPair.getLeft() - currPos));
                 MutableText textPiece = Text.literal(line.substring(currPosInLine, colorPair.getLeft() - currPos));
                 textLine.append(textPiece.setStyle(Style.EMPTY.withColor(currColor)));
 
