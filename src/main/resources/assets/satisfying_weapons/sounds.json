@@ -25,5 +25,19 @@
     "sounds": [
       "satisfying_weapons:birthday_gift_explosion"
     ]
+  },
+
+  "black_hole_thrown": {
+    "sound.subtitle": "satisfying_weapons.black_hole_thrown",
+    "sounds": [
+      "satisfying_weapons:black_hole_thrown"
+    ]
+  },
+
+  "black_hole_activates": {
+    "sound.subtitle": "satisfying_weapons.black_hole_activates",
+    "sounds": [
+      "satisfying_weapons:black_hole_activates"
+    ]
   }
 }

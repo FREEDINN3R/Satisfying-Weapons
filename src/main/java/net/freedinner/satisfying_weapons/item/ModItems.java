@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ModItems {
+    // --- GENERIC ITEMS --- //
     public static final Item UNFULFILLED_WISH = register("unfulfilled_wish",
             new Item(new Item.Settings().rarity(Rarity.RARE).fireproof()));
     public static final Item WISHING_STAR = register("wishing_star",
@@ -20,6 +21,7 @@ public class ModItems {
     public static final Item BROKEN_GLASS_SWORD = register("broken_glass_sword",
             new Item(new Item.Settings()));
 
+    // --- WEAPONS --- //
     public static final List<Item> FIREWORK_SWORD = registerUpgradeableWeapon("firework_sword",
             FireworkSwordItem::new, ModToolMaterial.RARE, 5, new Item.Settings());
     public static final List<Item> TOY_BOW = registerUpgradeableWeapon("toy_bow",
@@ -30,6 +32,10 @@ public class ModItems {
 
     public static final List<Item> SWORD_OF_DYING_STAR = registerUpgradeableWeapon("sword_of_dying_star",
             DyingStarSwordItem::new, ModToolMaterial.LEGENDARY, 5, new Item.Settings());
+
+    // --- TECHNICAL ITEMS --- //
+    public static final Item BLACK_HOLE = register("black_hole",
+            new Item(new Item.Settings()));
 
 
     @SuppressWarnings("unchecked")
