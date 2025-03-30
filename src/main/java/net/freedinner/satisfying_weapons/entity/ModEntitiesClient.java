@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.entity.model.BirthdayGiftEntityModel;
 import net.freedinner.satisfying_weapons.entity.renderer.BirthdayGiftEntityRenderer;
+import net.freedinner.satisfying_weapons.entity.renderer.BlackHoleEntityRenderer;
 import net.freedinner.satisfying_weapons.entity.renderer.ToyArrowEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 
@@ -22,6 +23,8 @@ public class ModEntitiesClient {
 
         EntityRendererRegistry.register(ModEntities.TOY_ARROW, ToyArrowEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.BIRTHDAY_GIFT, BirthdayGiftEntityRenderer::new);
+        EntityRendererRegistry.register(ModEntities.THROWN_BLACK_HOLE, BlackHoleEntityRenderer::new);
+        EntityRendererRegistry.register(ModEntities.ACTIVE_BLACK_HOLE, BlackHoleEntityRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(BIRTHDAY_GIFT_MODEL_LAYER, BirthdayGiftEntityModel::getTexturedModelData);
     }

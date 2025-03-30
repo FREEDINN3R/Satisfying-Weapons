@@ -2,7 +2,9 @@ package net.freedinner.satisfying_weapons.entity;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
+import net.freedinner.satisfying_weapons.entity.custom.ActiveBlackHoleEntity;
 import net.freedinner.satisfying_weapons.entity.custom.BirthdayGiftEntity;
+import net.freedinner.satisfying_weapons.entity.custom.ThrownBlackHoleEntity;
 import net.freedinner.satisfying_weapons.entity.custom.ToyArrowEntity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -26,6 +28,24 @@ public class ModEntities {
             FabricEntityTypeBuilder.<BirthdayGiftEntity>create(SpawnGroup.MISC, BirthdayGiftEntity::new)
                     .dimensions(EntityDimensions.fixed(0.5f, 0.65f))
                     .trackedUpdateRate(1)
+                    .build()
+    );
+
+    public static final EntityType<ThrownBlackHoleEntity> THROWN_BLACK_HOLE = Registry.register(
+            Registries.ENTITY_TYPE,
+            SatisfyingWeapons.id("thrown_black_hole"),
+            FabricEntityTypeBuilder.<ThrownBlackHoleEntity>create(SpawnGroup.MISC, ThrownBlackHoleEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.15f, 0.15f))
+                    .trackRangeChunks(4).trackedUpdateRate(10)
+                    .build()
+    );
+
+    public static final EntityType<ActiveBlackHoleEntity> ACTIVE_BLACK_HOLE = Registry.register(
+            Registries.ENTITY_TYPE,
+            SatisfyingWeapons.id("active_pocket_vortex"),
+            FabricEntityTypeBuilder.<ActiveBlackHoleEntity>create(SpawnGroup.MISC, ActiveBlackHoleEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.15f, 0.15f))
+                    .trackRangeChunks(4).trackedUpdateRate(10)
                     .build()
     );
 
