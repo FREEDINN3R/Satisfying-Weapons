@@ -39,13 +39,6 @@
   "item.satisfying_weapons.toy_bow.skill_name_5": "Party Crasher",
   "item.satisfying_weapons.toy_bow.skill_desc_5": "Hitting a {F53C0F}Birthday Gift{AAAAAA} with a {1E90FF}Toy Arrow{AAAAAA} will cause it to explode and fire 5_identical {1E90FF}Toy Arrows{AAAAAA} in random directions, prioritizing other mobs as targets.",
 
-  "item.satisfying_weapons.glass_sword": "Glass Sword",
-  "item.satisfying_weapons.glass_sword.skill_name_1": "Fragile",
-  "item.satisfying_weapons.glass_sword.skill_desc_1": "Handle with care",
-  "item.satisfying_weapons.glass_sword.skill_name_2": "Tempered",
-  "item.satisfying_weapons.glass_sword.skill_desc_2": "Strength brought by hardships",
-  "item.satisfying_weapons.broken_glass_sword": "Broken Glass Sword",
-
   "item.satisfying_weapons.sword_of_dying_star": "Sword of Dying Star",
   "item.satisfying_weapons.sword_of_dying_star.skill_name_1": "Collapsing Star",
   "item.satisfying_weapons.sword_of_dying_star.skill_desc_1": "Right click - Black Hole",
@@ -58,8 +51,17 @@
   "item.satisfying_weapons.sword_of_dying_star.skill_name_5": "Skill 5",
   "item.satisfying_weapons.sword_of_dying_star.skill_desc_5": "Idk, massive damage",
 
+  "item.satisfying_weapons.glass_sword": "Glass Sword",
+  "item.satisfying_weapons.glass_sword.skill_name_1": "Fragile",
+  "item.satisfying_weapons.glass_sword.skill_desc_1": "Handle with care",
+  "item.satisfying_weapons.glass_sword.skill_name_2": "Tempered",
+  "item.satisfying_weapons.glass_sword.skill_desc_2": "Strength built by hardships",
+  "item.satisfying_weapons.broken_glass_sword": "Broken Glass Sword",
+
   "entity.satisfying_weapons.toy_arrow": "Toy Arrow",
   "entity.satisfying_weapons.birthday_gift": "Birthday Gift",
+  "entity.satisfying_weapons.thrown_black_hole": "Black Hole",
+  "entity.satisfying_weapons.active_black_hole": "Black Hole",
 
   "effect.satisfying_weapons.festivity": "Festivity",
   "effect.satisfying_weapons.firework_jump": "Firework Jump",

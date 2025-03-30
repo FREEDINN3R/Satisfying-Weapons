@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.item.ModItems;
+import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.Entity;
@@ -117,7 +118,7 @@ public class ActiveBlackHoleEntity extends ThrownItemEntity {
     }
 
     private void sendParticlesPacket() {
-        /*Vector3f center = this.getPos().toVector3f();
+        Vector3f center = this.getPos().toVector3f();
 
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVector3f(center);
@@ -143,7 +144,7 @@ public class ActiveBlackHoleEntity extends ThrownItemEntity {
                 .toList();
 
         for (ServerPlayerEntity player : players) {
-            ServerPlayNetworking.send(player, ModNetworkingPackets.VORTEX_SUCTION_PARTICLES_ID, buf);
-        }*/
+            ServerPlayNetworking.send(player, ModNetworking.BLACK_HOLE_PARTICLES_ID, buf);
+        }
     }
 }

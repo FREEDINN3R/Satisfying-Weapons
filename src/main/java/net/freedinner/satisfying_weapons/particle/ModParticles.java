@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.particle.custom.ConfettiParticle;
 import net.freedinner.satisfying_weapons.particle.custom.FestivityCountParticle;
+import net.freedinner.satisfying_weapons.particle.custom.LineParticle;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -15,6 +16,8 @@ import java.util.List;
 public class ModParticles {
     public static final List<DefaultParticleType> FESTIVITY_COUNT = registerMany("festivity_count", 10);
     public static final DefaultParticleType CONFETTI = register("confetti");
+    public static final DefaultParticleType WHITE_LINE = register("white_line");
+    public static final DefaultParticleType DARK_LINE = register("dark_line");
 
     private static DefaultParticleType register(String name) {
         DefaultParticleType particleType = FabricParticleTypes.simple();
@@ -44,5 +47,7 @@ public class ModParticles {
         }
 
         ParticleFactoryRegistry.getInstance().register(CONFETTI, ConfettiParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.WHITE_LINE, LineParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.DARK_LINE, LineParticle.Factory::new);
     }
 }
