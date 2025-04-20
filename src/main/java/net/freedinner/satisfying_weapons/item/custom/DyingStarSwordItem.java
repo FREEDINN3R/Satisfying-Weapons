@@ -1,5 +1,6 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
+import net.freedinner.satisfying_weapons.entity.custom.BlackHoleEntity;
 import net.freedinner.satisfying_weapons.entity.custom.ThrownBlackHoleEntity;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
@@ -41,9 +42,9 @@ public class DyingStarSwordItem extends UpgradeableSwordItem {
                 0.6f, PitchUtils.get());
         itemStack.damage(2, user, player -> player.sendToolBreakStatus(hand));
 
-        ThrownBlackHoleEntity pocketVortex = new ThrownBlackHoleEntity(world, user);
-        pocketVortex.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, ThrownBlackHoleEntity.BLACK_HOLE_SPEED, 1.0f);
-        world.spawnEntity(pocketVortex);
+        BlackHoleEntity blackHole = new BlackHoleEntity(world, user);
+        blackHole.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, BlackHoleEntity.BLACK_HOLE_SPEED, 1.0f);
+        world.spawnEntity(blackHole);
 
         cooldownManager.set(this, 40);
 

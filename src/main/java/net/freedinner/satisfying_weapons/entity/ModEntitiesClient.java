@@ -25,6 +25,7 @@ public class ModEntitiesClient {
         EntityRendererRegistry.register(ModEntities.BIRTHDAY_GIFT, BirthdayGiftEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.THROWN_BLACK_HOLE, BlackHoleEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.ACTIVE_BLACK_HOLE, BlackHoleEntityRenderer::new);
+        EntityRendererRegistry.register(ModEntities.BLACK_HOLE, BlackHoleEntityRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(BIRTHDAY_GIFT_MODEL_LAYER, BirthdayGiftEntityModel::getTexturedModelData);
     }

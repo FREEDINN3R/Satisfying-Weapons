@@ -2,10 +2,7 @@ package net.freedinner.satisfying_weapons.entity;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
-import net.freedinner.satisfying_weapons.entity.custom.ActiveBlackHoleEntity;
-import net.freedinner.satisfying_weapons.entity.custom.BirthdayGiftEntity;
-import net.freedinner.satisfying_weapons.entity.custom.ThrownBlackHoleEntity;
-import net.freedinner.satisfying_weapons.entity.custom.ToyArrowEntity;
+import net.freedinner.satisfying_weapons.entity.custom.*;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -28,6 +25,15 @@ public class ModEntities {
             FabricEntityTypeBuilder.<BirthdayGiftEntity>create(SpawnGroup.MISC, BirthdayGiftEntity::new)
                     .dimensions(EntityDimensions.fixed(0.5f, 0.65f))
                     .trackedUpdateRate(1)
+                    .build()
+    );
+
+    public static final EntityType<BlackHoleEntity> BLACK_HOLE = Registry.register(
+            Registries.ENTITY_TYPE,
+            SatisfyingWeapons.id("black_hole"),
+            FabricEntityTypeBuilder.<BlackHoleEntity>create(SpawnGroup.MISC, BlackHoleEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.15f, 0.15f))
+                    .trackRangeChunks(4).trackedUpdateRate(10)
                     .build()
     );
 
