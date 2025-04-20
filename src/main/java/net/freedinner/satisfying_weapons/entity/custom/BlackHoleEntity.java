@@ -59,6 +59,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
         if (this.getWorld().isClient) {
             return;
         }
+
         if (!this.isActive()) {
             // If still flying, update velocity
             this.setVelocity(this.getVelocity().normalize().multiply(BLACK_HOLE_SPEED));
