@@ -60,8 +60,7 @@
 
   "entity.satisfying_weapons.toy_arrow": "Toy Arrow",
   "entity.satisfying_weapons.birthday_gift": "Birthday Gift",
-  "entity.satisfying_weapons.thrown_black_hole": "Black Hole",
-  "entity.satisfying_weapons.active_black_hole": "Black Hole",
+  "entity.satisfying_weapons.black_hole": "Black Hole",
 
   "effect.satisfying_weapons.festivity": "Festivity",
   "effect.satisfying_weapons.firework_jump": "Firework Jump",

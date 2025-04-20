@@ -37,24 +37,6 @@ public class ModEntities {
                     .build()
     );
 
-    public static final EntityType<ThrownBlackHoleEntity> THROWN_BLACK_HOLE = Registry.register(
-            Registries.ENTITY_TYPE,
-            SatisfyingWeapons.id("thrown_black_hole"),
-            FabricEntityTypeBuilder.<ThrownBlackHoleEntity>create(SpawnGroup.MISC, ThrownBlackHoleEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.15f, 0.15f))
-                    .trackRangeChunks(4).trackedUpdateRate(10)
-                    .build()
-    );
-
-    public static final EntityType<ActiveBlackHoleEntity> ACTIVE_BLACK_HOLE = Registry.register(
-            Registries.ENTITY_TYPE,
-            SatisfyingWeapons.id("active_pocket_vortex"),
-            FabricEntityTypeBuilder.<ActiveBlackHoleEntity>create(SpawnGroup.MISC, ActiveBlackHoleEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.15f, 0.15f))
-                    .trackRangeChunks(4).trackedUpdateRate(10)
-                    .build()
-    );
-
     public static void registerEntities() {
         SatisfyingWeapons.LOGGER.info("Registering entities");
     }

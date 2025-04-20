@@ -1,10 +1,8 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
 import net.freedinner.satisfying_weapons.entity.custom.BlackHoleEntity;
-import net.freedinner.satisfying_weapons.entity.custom.ThrownBlackHoleEntity;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
-import net.freedinner.satisfying_weapons.util.IPlayerDataSaver;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
