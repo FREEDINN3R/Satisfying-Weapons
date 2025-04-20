@@ -150,7 +150,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
         // If needed, go back one tick
         if (backtrack) {
             Vec3d direction = this.getVelocity().normalize();
-            Vec3d newPos = this.getPos().subtract(direction.multiply(BLACK_HOLE_SPEED));
+            Vec3d newPos = this.getPos().subtract(direction.multiply(BLACK_HOLE_SPEED * 0.05));
             this.setPosition(newPos);
         }
 

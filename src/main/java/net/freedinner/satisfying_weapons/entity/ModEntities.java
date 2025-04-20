@@ -33,7 +33,7 @@ public class ModEntities {
             SatisfyingWeapons.id("black_hole"),
             FabricEntityTypeBuilder.<BlackHoleEntity>create(SpawnGroup.MISC, BlackHoleEntity::new)
                     .dimensions(EntityDimensions.fixed(0.15f, 0.15f))
-                    .trackRangeChunks(4).trackedUpdateRate(10)
+                    .trackRangeChunks(4).trackedUpdateRate(1)
                     .build()
     );
 
