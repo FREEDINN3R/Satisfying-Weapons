@@ -9,7 +9,6 @@ import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.freedinner.satisfying_weapons.util.PosUtils;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -33,7 +32,6 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class BlackHoleEntity extends ThrownItemEntity {
     private static final TrackedData<Integer> ACTIVE_AGE = DataTracker.registerData(BlackHoleEntity.class, TrackedDataHandlerRegistry.INTEGER);

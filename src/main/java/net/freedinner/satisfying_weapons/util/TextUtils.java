@@ -27,7 +27,7 @@ public class TextUtils {
         // Splitting into words, based on spaces
         List<String> words = Arrays.asList(text.split("\\s+"));
         if (words.isEmpty()) {
-            SatisfyingWeapons.LOGGER.warn("Encountered an empty description");
+            SatisfyingWeapons.LOGGER.warn("Encountered an empty weapon description");
             return List.of();
         }
 
