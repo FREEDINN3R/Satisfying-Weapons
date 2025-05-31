@@ -45,8 +45,8 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
     // Visuals
     public static final int BLACK_HOLE_MAX_ACTIVE_AGE = 25;
-    public static final int BLACK_HOLE_GROWING_DURATION = 3;
-    public static final int BLACK_HOLE_SHRINKING_DURATION = 2;
+    public static final int BLACK_HOLE_GROWING_DURATION = 4;
+    public static final int BLACK_HOLE_SHRINKING_DURATION = 3;
 
     // NBT
     private static final String DISTANCE_TRAVELLED_NBT_KEY = "black_hole_distance_traveled";
