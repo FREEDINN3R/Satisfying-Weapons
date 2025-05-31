@@ -13,6 +13,9 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
@@ -33,12 +36,19 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class BlackHoleEntity extends ThrownItemEntity {
+    private static final TrackedData<Integer> ACTIVE_AGE = DataTracker.registerData(BlackHoleEntity.class, TrackedDataHandlerRegistry.INTEGER);
+
+    // Stats
     public static final float BLACK_HOLE_SPEED = 2.5f;
     public static final double BLACK_HOLE_THROW_RANGE = 14;
+    public static final double BLACK_HOLE_EFFECT_RANGE = 16;
+
+    // Visuals
     public static final int BLACK_HOLE_MAX_ACTIVE_AGE = 25;
     public static final int BLACK_HOLE_GROWING_DURATION = 3;
     public static final int BLACK_HOLE_SHRINKING_DURATION = 2;
 
+    // NBT
     private static final String DISTANCE_TRAVELLED_NBT_KEY = "black_hole_distance_traveled";
     private double distanceTravelled = 0;
     private static final String ACTIVATION_AGE_NBT_KEY = "black_hole_activation_age";
@@ -53,11 +63,23 @@ public class BlackHoleEntity extends ThrownItemEntity {
     }
 
     @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+
+        this.dataTracker.startTracking(ACTIVE_AGE, -1);
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
         if (this.getWorld().isClient) {
             return;
+        }
+
+        // Very important, constantly refreshes activation age for both client and server to use
+        if (activationAge != -1) {
+            dataTracker.set(ACTIVE_AGE, this.age - activationAge);
         }
 
         if (!this.isActive()) {
@@ -71,7 +93,9 @@ public class BlackHoleEntity extends ThrownItemEntity {
             }
         }
         else {
+            // Active black whole stays in one place
             this.setVelocity(0, 0, 0);
+
 
             // If active and not shrinking yet
             if (this.getActiveAge() <= BLACK_HOLE_MAX_ACTIVE_AGE - BLACK_HOLE_SHRINKING_DURATION) {
@@ -83,7 +107,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
             }
 
             // If finished shrinking
-            if (age > BLACK_HOLE_MAX_ACTIVE_AGE) {
+            if (this.getActiveAge() > BLACK_HOLE_MAX_ACTIVE_AGE) {
                 this.discard();
             }
         }
@@ -131,16 +155,12 @@ public class BlackHoleEntity extends ThrownItemEntity {
         return 0;
     }
 
-    public boolean isActive() {
-        return activationAge != -1;
+    public int getActiveAge() {
+        return dataTracker.get(ACTIVE_AGE);
     }
 
-    public int getActiveAge() {
-        if (!this.isActive()) {
-            return 0;
-        }
-
-        return age - activationAge;
+    public boolean isActive() {
+        return this.getActiveAge() != -1;
     }
 
     private void activate(boolean backtrack) {
@@ -161,11 +181,12 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
     private void suckInEntities() {
         Vec3d pos = this.getPos();
-        Box box = new Box(pos, pos).expand(BLACK_HOLE_THROW_RANGE + 1); // +1 cuz otherwise it's annoying
+        Box box = new Box(pos, pos).expand(BLACK_HOLE_EFFECT_RANGE);
+        int effectRangeSqr = (int) Math.pow(BLACK_HOLE_EFFECT_RANGE, 2);
 
         List<Entity> affectedEntities = this.getWorld().getOtherEntities(this.getOwner(), box)
                 .stream()
-                .filter(e -> e.squaredDistanceTo(pos) <= Math.pow(BLACK_HOLE_THROW_RANGE + 1, 2))
+                .filter(e -> e.squaredDistanceTo(pos) <= effectRangeSqr)
                 .toList();
 
         for (Entity entity : affectedEntities) {
@@ -185,17 +206,17 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVector3f(center);
-        buf.writeDouble(BLACK_HOLE_THROW_RANGE + 1); // +1 cuz it's for the lines and debris
+        buf.writeDouble(BLACK_HOLE_EFFECT_RANGE);
 
         // List of center pos, and edge pos in each cardinal direction
         List<BlockPos> blockPosList = new ArrayList<>();
         blockPosList.add(PosUtils.toBlockPos(center));
-        blockPosList.add(blockPosList.get(0).north((int) BLACK_HOLE_THROW_RANGE)); // No +1 cuz it makes no difference for tracking
-        blockPosList.add(blockPosList.get(0).south((int) BLACK_HOLE_THROW_RANGE));
-        blockPosList.add(blockPosList.get(0).west((int) BLACK_HOLE_THROW_RANGE));
-        blockPosList.add(blockPosList.get(0).east((int) BLACK_HOLE_THROW_RANGE));
-        blockPosList.add(blockPosList.get(0).down((int) BLACK_HOLE_THROW_RANGE));
-        blockPosList.add(blockPosList.get(0).up((int) BLACK_HOLE_THROW_RANGE));
+        blockPosList.add(blockPosList.get(0).north((int) BLACK_HOLE_EFFECT_RANGE));
+        blockPosList.add(blockPosList.get(0).south((int) BLACK_HOLE_EFFECT_RANGE));
+        blockPosList.add(blockPosList.get(0).west((int) BLACK_HOLE_EFFECT_RANGE));
+        blockPosList.add(blockPosList.get(0).east((int) BLACK_HOLE_EFFECT_RANGE));
+        blockPosList.add(blockPosList.get(0).down((int) BLACK_HOLE_EFFECT_RANGE));
+        blockPosList.add(blockPosList.get(0).up((int) BLACK_HOLE_EFFECT_RANGE));
 
         ServerWorld world = (ServerWorld) this.getWorld();
         Collection<ServerPlayerEntity> trackingPlayers = new ArrayList<>();

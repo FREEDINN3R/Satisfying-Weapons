@@ -16,28 +16,32 @@ public class BlackHoleEntityRenderer<T extends Entity & FlyingItemEntity> extend
 
     @Override
     public void render(BlackHoleEntity blackHole, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+        matrices.push();
+
         if (blackHole.isActive()) {
-            matrices.push();
-
             int activeAge = blackHole.getActiveAge();
-            float scale;
-
-            if (activeAge <= BlackHoleEntity.BLACK_HOLE_GROWING_DURATION) {
-                scale = 1.0f + 0.5f * activeAge / BlackHoleEntity.BLACK_HOLE_GROWING_DURATION;
-            }
-            else if (activeAge <= BlackHoleEntity.BLACK_HOLE_MAX_ACTIVE_AGE - BlackHoleEntity.BLACK_HOLE_SHRINKING_DURATION) {
-                scale = 1.0f + ((activeAge % 2 == 1) ? 0.3f : 0.5f);
-            }
-            else {
-                scale = 1.5f * (BlackHoleEntity.BLACK_HOLE_MAX_ACTIVE_AGE - activeAge) / BlackHoleEntity.BLACK_HOLE_SHRINKING_DURATION;
-            }
-
+            float scale = getScaleForAge(activeAge);
             matrices.scale(scale, scale, scale);
-
-            matrices.pop();
         }
 
         super.render(blackHole, yaw, tickDelta, matrices, vertexConsumers, light);
+
+        matrices.pop();
+    }
+
+    private static float getScaleForAge(int activeAge) {
+        float scale;
+
+        if (activeAge <= BlackHoleEntity.BLACK_HOLE_GROWING_DURATION) {
+            scale = 1.0f + 0.5f * activeAge / BlackHoleEntity.BLACK_HOLE_GROWING_DURATION;
+        }
+        else if (activeAge <= BlackHoleEntity.BLACK_HOLE_MAX_ACTIVE_AGE - BlackHoleEntity.BLACK_HOLE_SHRINKING_DURATION) {
+            scale = 1.0f + ((activeAge % 2 == 1) ? 0.3f : 0.5f);
+        }
+        else {
+            scale = 1.5f * (BlackHoleEntity.BLACK_HOLE_MAX_ACTIVE_AGE - activeAge) / BlackHoleEntity.BLACK_HOLE_SHRINKING_DURATION;
+        }
+        return scale;
     }
 
 
