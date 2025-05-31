@@ -18,6 +18,7 @@ public class BlackHoleEntityRenderer<T extends Entity & FlyingItemEntity> extend
     public void render(BlackHoleEntity blackHole, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         matrices.push();
 
+        // If active, animate the size changes
         if (blackHole.isActive()) {
             int activeAge = blackHole.getActiveAge();
             float scale = getScaleForAge(activeAge);
@@ -33,12 +34,15 @@ public class BlackHoleEntityRenderer<T extends Entity & FlyingItemEntity> extend
         float scale;
 
         if (activeAge <= BlackHoleEntity.BLACK_HOLE_GROWING_DURATION) {
+            // Goes from 1.0 to 1.5
             scale = 1.0f + 0.5f * activeAge / BlackHoleEntity.BLACK_HOLE_GROWING_DURATION;
         }
         else if (activeAge <= BlackHoleEntity.BLACK_HOLE_MAX_ACTIVE_AGE - BlackHoleEntity.BLACK_HOLE_SHRINKING_DURATION) {
-            scale = 1.0f + ((activeAge % 2 == 1) ? 0.3f : 0.5f);
+            // Alternates between 1.4 and 1.5
+            scale = 1.0f + ((activeAge % 2 == 1) ? 0.4f : 0.5f);
         }
         else {
+            // Goes from 1.5 to 0
             scale = 1.5f * (BlackHoleEntity.BLACK_HOLE_MAX_ACTIVE_AGE - activeAge) / BlackHoleEntity.BLACK_HOLE_SHRINKING_DURATION;
         }
         return scale;

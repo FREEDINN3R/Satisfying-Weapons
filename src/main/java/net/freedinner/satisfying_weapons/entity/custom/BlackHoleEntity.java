@@ -83,7 +83,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
         }
 
         if (!this.isActive()) {
-            // If still flying, update velocity
+            // If still flying, refresh velocity
             this.setVelocity(this.getVelocity().normalize().multiply(BLACK_HOLE_SPEED));
 
             // Activate if exceeds throw range
@@ -93,9 +93,8 @@ public class BlackHoleEntity extends ThrownItemEntity {
             }
         }
         else {
-            // Active black whole stays in one place
+            // When activated, stays in one place
             this.setVelocity(0, 0, 0);
-
 
             // If active and not shrinking yet
             if (this.getActiveAge() <= BLACK_HOLE_MAX_ACTIVE_AGE - BLACK_HOLE_SHRINKING_DURATION) {
@@ -123,7 +122,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
             return;
         }
 
-        // Activates from any collision, backtracks a bit to be visible
+        // Activates from any collision, backtracks to be visible
         this.activate(true);
     }
 
@@ -186,16 +185,17 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
         List<Entity> affectedEntities = this.getWorld().getOtherEntities(this.getOwner(), box)
                 .stream()
-                .filter(e -> e.squaredDistanceTo(pos) <= effectRangeSqr)
+                .filter(e -> e.squaredDistanceTo(pos) <= effectRangeSqr) // Cuz it's a sphere, not a cube
                 .toList();
 
+        // Suck in all nearby entities
         for (Entity entity : affectedEntities) {
             Vec3d direction = pos.subtract(entity.getPos());
             double distance = direction.length();
 
-            // Suck in entities, depending on their distance from the black hole
             double force = Math.sqrt(distance) / 16;
             Vec3d v = direction.normalize().multiply(force);
+
             entity.addVelocity(v);
             entity.velocityModified = true;
         }
