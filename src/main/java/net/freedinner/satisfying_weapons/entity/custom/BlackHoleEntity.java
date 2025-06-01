@@ -3,7 +3,7 @@ package net.freedinner.satisfying_weapons.entity.custom;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.freedinner.satisfying_weapons.SatisfyingWeapons;
+import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.mixin.LivingEntityAccessor;
@@ -15,8 +15,8 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
@@ -24,8 +24,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -51,21 +49,24 @@ public class BlackHoleEntity extends ThrownItemEntity {
     public static final int BLACK_HOLE_SHRINKING_DURATION = 3;
 
     // NBT
+    private static final String SWORD_LEVEL_NBT_KEY = "black_hole_sword_level";
+    private int swordLevel = 1;
     private static final String DISTANCE_TRAVELLED_NBT_KEY = "black_hole_distance_traveled";
     private double distanceTravelled = 0;
     private static final String ACTIVATION_AGE_NBT_KEY = "black_hole_activation_age";
     private int activationAge = -1;
-    private static final String SHOULD_TRANSFER_LOOT_NBT_KEY = "black_hole_should_transfer_loot";
-    private boolean shouldTransferLoot = false;
+    private static final String SHOULD_COLLECT_LOOT_NBT_KEY = "black_hole_should_collect_loot";
+    private boolean shouldCollectLoot = false;
 
     public BlackHoleEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public BlackHoleEntity(World world, LivingEntity owner, boolean shouldTransferLoot) {
+    public BlackHoleEntity(World world, LivingEntity owner, int swordLevel, boolean shouldCollectLoot) {
         super(ModEntities.BLACK_HOLE, owner, world);
 
-        this.shouldTransferLoot = shouldTransferLoot;
+        this.swordLevel = swordLevel;
+        this.shouldCollectLoot = shouldCollectLoot;
     }
 
     @Override
@@ -135,22 +136,26 @@ public class BlackHoleEntity extends ThrownItemEntity {
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
 
+        nbt.putInt(SWORD_LEVEL_NBT_KEY, swordLevel);
         nbt.putDouble(DISTANCE_TRAVELLED_NBT_KEY, distanceTravelled);
         nbt.putInt(ACTIVATION_AGE_NBT_KEY, activationAge);
-        nbt.putBoolean(SHOULD_TRANSFER_LOOT_NBT_KEY, shouldTransferLoot);
+        nbt.putBoolean(SHOULD_COLLECT_LOOT_NBT_KEY, shouldCollectLoot);
     }
 
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
 
+        if (nbt.contains(SWORD_LEVEL_NBT_KEY)) {
+            swordLevel = nbt.getInt(SWORD_LEVEL_NBT_KEY);
+        }
         if (nbt.contains(DISTANCE_TRAVELLED_NBT_KEY)) {
             distanceTravelled = nbt.getDouble(DISTANCE_TRAVELLED_NBT_KEY);
         }
         if (nbt.contains(ACTIVATION_AGE_NBT_KEY)) {
             activationAge = nbt.getInt(ACTIVATION_AGE_NBT_KEY);
         }
-        if (nbt.contains(SHOULD_TRANSFER_LOOT_NBT_KEY)) {
-            shouldTransferLoot = nbt.getBoolean(SHOULD_TRANSFER_LOOT_NBT_KEY);
+        if (nbt.contains(SHOULD_COLLECT_LOOT_NBT_KEY)) {
+            shouldCollectLoot = nbt.getBoolean(SHOULD_COLLECT_LOOT_NBT_KEY);
         }
     }
 
@@ -203,8 +208,8 @@ public class BlackHoleEntity extends ThrownItemEntity {
             Vec3d direction = pos.subtract(entity.getPos());
             double distance = direction.length();
 
-            // If needed, try to pick up loot
-            if (shouldTransferLoot && distance < 1f) {
+            // Try to collect loot
+            if (shouldCollectLoot && distance < 1f) {
                 this.tryPickUp(entity);
             }
 
@@ -219,6 +224,11 @@ public class BlackHoleEntity extends ThrownItemEntity {
             if (entity instanceof LivingEntity livingEntity && this.getOwner() instanceof PlayerEntity owner) {
                 livingEntity.setAttacking(owner);
                 ((LivingEntityAccessor) livingEntity).setPlayerHitTimer(100); // setAttacking() sets it to age, it's weird
+            }
+
+            // Try to inflict Entropy
+            if (swordLevel >= 3 && entity instanceof LivingEntity livingEntity) {
+                livingEntity.addStatusEffect(new StatusEffectInstance(ModEffects.ENTROPY, 200, 0, false, true));
             }
         }
     }

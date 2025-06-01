@@ -35,9 +35,9 @@ public class DyingStarSwordItem extends UpgradeableSwordItem {
         user.getWorld().playSound(null, user.getBlockPos(), ModSounds.BLACK_HOLE_THROWN, SoundCategory.MASTER,
                 0.6f, PitchUtils.get());
 
-        boolean shouldTransferLoot = this.getLevel() >= 2 && user.isSneaking();
+        boolean shouldCollectLoot = this.getLevel() >= 2 && user.isSneaking();
 
-        BlackHoleEntity blackHole = new BlackHoleEntity(world, user, shouldTransferLoot);
+        BlackHoleEntity blackHole = new BlackHoleEntity(world, user, this.getLevel(), shouldCollectLoot);
         blackHole.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, BlackHoleEntity.BLACK_HOLE_SPEED, 1.0f);
         world.spawnEntity(blackHole);
 
