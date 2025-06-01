@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons.effect;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.effect.custom.BirthdayPartyEffect;
+import net.freedinner.satisfying_weapons.effect.custom.EntropyEffect;
 import net.freedinner.satisfying_weapons.effect.custom.FestivityEffect;
 import net.freedinner.satisfying_weapons.effect.custom.FireworkJumpEffect;
 import net.minecraft.entity.effect.StatusEffect;
@@ -25,6 +26,10 @@ public class ModEffects {
             new Color(255, 255, 255),
             StatusEffectCategory.HARMFUL,
             BirthdayPartyEffect::new);
+    public static StatusEffect ENTROPY = registerStatusEffect("entropy",
+            new Color(255, 255, 255),
+            StatusEffectCategory.HARMFUL,
+            EntropyEffect::new);
 
     private static StatusEffect registerStatusEffect(
             String name, Color color, StatusEffectCategory category,

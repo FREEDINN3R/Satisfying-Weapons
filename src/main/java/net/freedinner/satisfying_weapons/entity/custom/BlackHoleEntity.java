@@ -130,8 +130,6 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
         // Activates from any collision, backtracks to be visible
         this.activate(true);
-
-        this.getOwner().sendMessage(Text.literal("awooga"));
     }
 
     public void writeCustomDataToNbt(NbtCompound nbt) {
