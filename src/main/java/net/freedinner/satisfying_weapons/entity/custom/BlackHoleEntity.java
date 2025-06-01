@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.item.ModItems;
+import net.freedinner.satisfying_weapons.mixin.LivingEntityAccessor;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
@@ -215,6 +216,12 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
             entity.addVelocity(v);
             entity.velocityModified = true;
+
+            // If possible, set the owner as attacker
+            if (entity instanceof LivingEntity livingEntity && this.getOwner() instanceof PlayerEntity owner) {
+                livingEntity.setAttacking(owner);
+                ((LivingEntityAccessor) livingEntity).setPlayerHitTimer(100); // setAttacking() sets it to age, it's weird
+            }
         }
     }
 

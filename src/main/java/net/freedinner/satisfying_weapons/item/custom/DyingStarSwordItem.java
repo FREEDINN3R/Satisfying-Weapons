@@ -46,6 +46,7 @@ public class DyingStarSwordItem extends UpgradeableSwordItem {
 
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) user;
         ItemCooldownManager cooldownManager = serverPlayer.getItemCooldownManager();
+        
         this.setCooldown(cooldownManager, 60);
 
         return TypedActionResult.success(itemStack);

@@ -5,6 +5,7 @@
   "mixins": [
     "AnvilScreenHandlerMixin",
     "ExplosionMixin",
+    "LivingEntityAccessor",
     "LootTableBuilderAccessor",
     "PlayerEntityMixin"
   ],
