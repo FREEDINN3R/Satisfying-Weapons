@@ -1,14 +1,17 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
 import net.freedinner.satisfying_weapons.entity.custom.BlackHoleEntity;
+import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -25,27 +28,32 @@ public class DyingStarSwordItem extends UpgradeableSwordItem {
             return super.use(world, user, hand);
         }
 
-        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) user;
-        ItemCooldownManager cooldownManager = serverPlayer.getItemCooldownManager();
-
         ItemStack itemStack = user.getStackInHand(hand);
-
-        if (cooldownManager.isCoolingDown(this)) {
-            return TypedActionResult.pass(itemStack);
-        }
 
         user.setCurrentHand(hand);
         user.swingHand(hand, true);
         user.getWorld().playSound(null, user.getBlockPos(), ModSounds.BLACK_HOLE_THROWN, SoundCategory.MASTER,
                 0.6f, PitchUtils.get());
-        itemStack.damage(2, user, player -> player.sendToolBreakStatus(hand));
 
-        BlackHoleEntity blackHole = new BlackHoleEntity(world, user);
+        boolean shouldTransferLoot = this.getLevel() >= 2 && user.isSneaking();
+
+        BlackHoleEntity blackHole = new BlackHoleEntity(world, user, shouldTransferLoot);
         blackHole.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, BlackHoleEntity.BLACK_HOLE_SPEED, 1.0f);
         world.spawnEntity(blackHole);
 
-        cooldownManager.set(this, 40);
+        int durabilityCost = (this.getLevel() < 2) ? 2 : 1;
+        itemStack.damage(durabilityCost, user, player -> player.sendToolBreakStatus(hand));
+
+        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) user;
+        ItemCooldownManager cooldownManager = serverPlayer.getItemCooldownManager();
+        this.setCooldown(cooldownManager, 60);
 
         return TypedActionResult.success(itemStack);
+    }
+
+    private void setCooldown(ItemCooldownManager cooldownManager, int cooldown) {
+        for (Item swordLevel : ModItems.SWORD_OF_DYING_STAR) {
+            cooldownManager.set(swordLevel, cooldown);
+        }
     }
 }

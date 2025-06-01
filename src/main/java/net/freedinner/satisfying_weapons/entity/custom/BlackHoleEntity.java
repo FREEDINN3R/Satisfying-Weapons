@@ -3,18 +3,19 @@ package net.freedinner.satisfying_weapons.entity.custom;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.freedinner.satisfying_weapons.util.PosUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
@@ -22,6 +23,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -41,8 +44,8 @@ public class BlackHoleEntity extends ThrownItemEntity {
     public static final double BLACK_HOLE_THROW_RANGE = 14;
     public static final double BLACK_HOLE_EFFECT_RANGE = 16;
 
-    // Visuals
-    public static final int BLACK_HOLE_MAX_ACTIVE_AGE = 25;
+    // Timings
+    public static final int BLACK_HOLE_MAX_ACTIVE_AGE = 26; // effectively 1.5 s, not sure why it's not 30
     public static final int BLACK_HOLE_GROWING_DURATION = 4;
     public static final int BLACK_HOLE_SHRINKING_DURATION = 3;
 
@@ -51,13 +54,17 @@ public class BlackHoleEntity extends ThrownItemEntity {
     private double distanceTravelled = 0;
     private static final String ACTIVATION_AGE_NBT_KEY = "black_hole_activation_age";
     private int activationAge = -1;
+    private static final String SHOULD_TRANSFER_LOOT_NBT_KEY = "black_hole_should_transfer_loot";
+    private boolean shouldTransferLoot = false;
 
     public BlackHoleEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public BlackHoleEntity(World world, LivingEntity owner) {
+    public BlackHoleEntity(World world, LivingEntity owner, boolean shouldTransferLoot) {
         super(ModEntities.BLACK_HOLE, owner, world);
+
+        this.shouldTransferLoot = shouldTransferLoot;
     }
 
     @Override
@@ -122,6 +129,8 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
         // Activates from any collision, backtracks to be visible
         this.activate(true);
+
+        this.getOwner().sendMessage(Text.literal("awooga"));
     }
 
     public void writeCustomDataToNbt(NbtCompound nbt) {
@@ -129,6 +138,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
         nbt.putDouble(DISTANCE_TRAVELLED_NBT_KEY, distanceTravelled);
         nbt.putInt(ACTIVATION_AGE_NBT_KEY, activationAge);
+        nbt.putBoolean(SHOULD_TRANSFER_LOOT_NBT_KEY, shouldTransferLoot);
     }
 
     public void readCustomDataFromNbt(NbtCompound nbt) {
@@ -139,6 +149,9 @@ public class BlackHoleEntity extends ThrownItemEntity {
         }
         if (nbt.contains(ACTIVATION_AGE_NBT_KEY)) {
             activationAge = nbt.getInt(ACTIVATION_AGE_NBT_KEY);
+        }
+        if (nbt.contains(SHOULD_TRANSFER_LOOT_NBT_KEY)) {
+            shouldTransferLoot = nbt.getBoolean(SHOULD_TRANSFER_LOOT_NBT_KEY);
         }
     }
 
@@ -186,16 +199,31 @@ public class BlackHoleEntity extends ThrownItemEntity {
                 .filter(e -> e.squaredDistanceTo(pos) <= effectRangeSqr) // Cuz it's a sphere, not a cube
                 .toList();
 
-        // Suck in all nearby entities
+        // For every entity in range
         for (Entity entity : affectedEntities) {
             Vec3d direction = pos.subtract(entity.getPos());
             double distance = direction.length();
 
+            // If needed, try to pick up loot
+            if (shouldTransferLoot && distance < 1f) {
+                this.tryPickUp(entity);
+            }
+
+            // Suck in entities
             double force = Math.sqrt(distance) / 16;
             Vec3d v = direction.normalize().multiply(force);
 
             entity.addVelocity(v);
             entity.velocityModified = true;
+        }
+    }
+
+    private void tryPickUp(Entity entity) {
+        PlayerEntity owner = (PlayerEntity) this.getOwner();
+        boolean canPickUp = entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity;
+
+        if (owner != null && canPickUp) {
+            entity.onPlayerCollision(owner);
         }
     }
 
