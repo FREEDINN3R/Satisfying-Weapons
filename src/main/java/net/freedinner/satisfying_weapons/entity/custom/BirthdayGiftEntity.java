@@ -19,6 +19,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -29,6 +30,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,6 +45,8 @@ public class BirthdayGiftEntity extends Entity {
     private static final String GIFT_TARGET_NBT_KEY = "gift_target";
     private LivingEntity target;
     private UUID targetUUID;
+    private static final String GIFT_OWNER_NBT_KEY = "gift_owner";
+    private UUID ownerUUID;
 
     private ToyArrowEntityData detonatorArrowData;
 
@@ -51,9 +55,12 @@ public class BirthdayGiftEntity extends Entity {
         this.setState(GiftState.EMERGING);
     }
 
-    public BirthdayGiftEntity(World world) {
+    public BirthdayGiftEntity(World world, @NotNull LivingEntity target, LivingEntity owner) {
         super(ModEntities.BIRTHDAY_GIFT, world);
+
         this.setState(GiftState.EMERGING);
+        this.setTarget(target);
+        this.setOwner(owner);
     }
 
     @Override
@@ -122,7 +129,7 @@ public class BirthdayGiftEntity extends Entity {
 
                 if (this.isOnGround()) {
                     // Create a non-destructive explosion
-                    this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, null), new GiftExplosionBehavior(), this.getPos(), 1.5f, false, World.ExplosionSourceType.MOB);
+                    this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new GiftExplosionBehavior(), this.getPos(), 1.5f, false, World.ExplosionSourceType.MOB);
                     sendExplosionParticlesPacket();
 
                     this.remove(RemovalReason.DISCARDED);
@@ -252,8 +259,12 @@ public class BirthdayGiftEntity extends Entity {
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
+        // Both can be null if the gift is summoned through commands, leading to a crash
         if (targetUUID != null) {
             nbt.putUuid(GIFT_TARGET_NBT_KEY, targetUUID);
+        }
+        if (ownerUUID != null) {
+            nbt.putUuid(GIFT_OWNER_NBT_KEY, ownerUUID);
         }
 
         nbt.putInt(STATE_NBT_KEY, this.getState().ordinal());
@@ -268,6 +279,9 @@ public class BirthdayGiftEntity extends Entity {
     protected void readCustomDataFromNbt(NbtCompound nbt) {
         if (nbt.contains(GIFT_TARGET_NBT_KEY)) {
             targetUUID = nbt.getUuid(GIFT_TARGET_NBT_KEY);
+        }
+        if (nbt.contains(GIFT_OWNER_NBT_KEY)) {
+            ownerUUID = nbt.getUuid(GIFT_OWNER_NBT_KEY);
         }
 
         this.setState(nbt.getInt(STATE_NBT_KEY));
@@ -297,6 +311,18 @@ public class BirthdayGiftEntity extends Entity {
 
         if (targetUUID != null && this.getWorld() instanceof ServerWorld) {
             return (LivingEntity) ((ServerWorld) this.getWorld()).getEntity(targetUUID);
+        }
+
+        return null;
+    }
+
+    public void setOwner(LivingEntity owner) {
+        this.ownerUUID = owner.getUuid();
+    }
+
+    public LivingEntity getOwner() {
+        if (ownerUUID != null && this.getWorld() instanceof ServerWorld) {
+            return (LivingEntity) ((ServerWorld) this.getWorld()).getEntity(ownerUUID);
         }
 
         return null;

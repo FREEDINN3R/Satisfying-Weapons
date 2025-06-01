@@ -166,9 +166,7 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
 
     private void summonBirthdayGift(LivingEntity target) {
         if (!this.getWorld().isClient) {
-            BirthdayGiftEntity birthdayGift = new BirthdayGiftEntity(this.getWorld());
-            birthdayGift.setTarget(target);
-
+            BirthdayGiftEntity birthdayGift = new BirthdayGiftEntity(this.getWorld(), target, (LivingEntity) this.getOwner());
             this.getWorld().spawnEntity(birthdayGift);
         }
     }
