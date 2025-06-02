@@ -45,9 +45,9 @@
   "item.satisfying_weapons.sword_of_dying_star.skill_name_2": "Skill 2",
   "item.satisfying_weapons.sword_of_dying_star.skill_desc_2": "Durability cost 2 -> 1, if sneaking, Black Hole transfers all items and EXP to you inventory",
   "item.satisfying_weapons.sword_of_dying_star.skill_name_3": "Skill 3",
-  "item.satisfying_weapons.sword_of_dying_star.skill_desc_3": "Cooldown decreased by 50%, effect: shred fall damage immunity",
+  "item.satisfying_weapons.sword_of_dying_star.skill_desc_3": "Effect: fall damage +50%, all other damage +20%",
   "item.satisfying_weapons.sword_of_dying_star.skill_name_4": "Skill 4",
-  "item.satisfying_weapons.sword_of_dying_star.skill_desc_4": "Effect: fall damage +50%, all other damage +20%",
+  "item.satisfying_weapons.sword_of_dying_star.skill_desc_4": "Cooldown decreased by 1 s, affected mobs have a chance to drop equipment",
   "item.satisfying_weapons.sword_of_dying_star.skill_name_5": "Skill 5",
   "item.satisfying_weapons.sword_of_dying_star.skill_desc_5": "Can ignore cooldown by sacrificing 2 HP, colliding 2 Black Holes creates an explosion",
 

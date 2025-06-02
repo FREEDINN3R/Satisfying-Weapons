@@ -45,7 +45,7 @@ public class DyingStarSwordItem extends UpgradeableSwordItem {
         itemStack.damage(durabilityCost, user, player -> player.sendToolBreakStatus(hand));
 
         ItemCooldownManager cooldownManager = user.getItemCooldownManager();
-        int cooldown = (this.getLevel() < 3) ? 60 : 30;
+        int cooldown = (this.getLevel() < 4) ? 60 : 40;
         this.setCooldown(cooldownManager, cooldown);
 
         return TypedActionResult.success(itemStack);
