@@ -9,6 +9,8 @@ import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.mixin.LivingEntityAccessor;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
+import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
+import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.freedinner.satisfying_weapons.util.PosUtils;
 import net.minecraft.entity.*;
@@ -19,11 +21,13 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -230,6 +234,10 @@ public class BlackHoleEntity extends ThrownItemEntity {
             if (swordLevel >= 3 && entity instanceof LivingEntity livingEntity) {
                 livingEntity.addStatusEffect(new StatusEffectInstance(ModEffects.ENTROPY, 200, 0, false, false));
             }
+
+            if (entity instanceof LivingEntity livingEntity) {
+                this.tryDropEquipment(livingEntity);
+            }
         }
     }
 
@@ -240,6 +248,25 @@ public class BlackHoleEntity extends ThrownItemEntity {
         if (owner != null && canPickUp) {
             entity.onPlayerCollision(owner);
         }
+    }
+
+    private void tryDropEquipment(LivingEntity livingEntity) {
+        if (livingEntity.getStackInHand(Hand.MAIN_HAND).isEmpty()) {
+            return;
+        }
+
+        ILivingEntityDataSaver dataSaver = (ILivingEntityDataSaver) livingEntity;
+        if (dataSaver.satisfyingWeapons$getDropAttemptsBH() >= 60) {
+            return;
+        }
+
+        if (MathUtils.takeChance(0.0059)) {
+            ItemStack itemStack = livingEntity.getStackInHand(Hand.MAIN_HAND);
+            livingEntity.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+            livingEntity.dropStack(itemStack);
+        }
+
+        dataSaver.satisfyingWeapons$addDropAttemptsBH(1);
     }
 
     private void sendParticlesPacket() {

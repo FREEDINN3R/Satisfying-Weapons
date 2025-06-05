@@ -1,6 +1,7 @@
 package net.freedinner.satisfying_weapons.util;
 
-public interface IPlayerDataSaver {
+public interface
+IPlayerDataSaver {
     long satisfyingWeapons$getLastDropTime();
     void satisfyingWeapons$setLastDropTime(long worldTick);
 
