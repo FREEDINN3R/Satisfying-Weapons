@@ -1,9 +1,13 @@
 package net.freedinner.satisfying_weapons.mixin;
 
+import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
+import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,6 +25,16 @@ public abstract class LivingEntityMixin implements ILivingEntityDataSaver {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onConstructor(EntityType<? extends LivingEntity> entityType, World world, CallbackInfo ci) {
         this.dropAttemptsBH = 0;
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void onTick(CallbackInfo ci) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+
+        // Takes approx. 60 seconds to reach 0
+        if (entity instanceof PlayerEntity && this.satisfyingWeapons$getDropAttemptsBH() > 0 && MathUtils.takeChance(0.05)) {
+            this.satisfyingWeapons$addDropAttemptsBH(-1);
+        }
     }
 
     @Override

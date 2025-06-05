@@ -31,7 +31,7 @@
   "item.satisfying_weapons.toy_bow.skill_name_1": "Best Day of the Year",
   "item.satisfying_weapons.toy_bow.skill_desc_1": "Shoots {1E90FF}Toy Arrows{AAAAAA} that apply {F123DE}Birthday Party{AAAAAA} to the target hit. While the target has an active {F123DE}Birthday Party{AAAAAA}, it will cause all non-friendly mobs to attack it.",
   "item.satisfying_weapons.toy_bow.skill_name_2": "Many Happy Returns!",
-  "item.satisfying_weapons.toy_bow.skill_desc_2": "Greatly increases accuracy and range of {1E90FF}Toy Arrows{AAAAAA}. Also, there is a 50%_chance to keep an arrow after shooting.",
+  "item.satisfying_weapons.toy_bow.skill_desc_2": "Greatly increases accuracy and range of {1E90FF}Toy Arrows{AAAAAA}. Also, there is a 50%_chance to keep an arrow while shooting.",
   "item.satisfying_weapons.toy_bow.skill_name_3": "Special Delivery",
   "item.satisfying_weapons.toy_bow.skill_desc_3": "When {F123DE}Birthday Party{AAAAAA} is applied, {F53C0F}Birthday Gift{AAAAAA} appears above the target’s head. After the {F123DE}Birthday Party{AAAAAA} ends, or the target dies, {F53C0F}Birthday Gift{AAAAAA} will fall down and explode.",
   "item.satisfying_weapons.toy_bow.skill_name_4": "Leaving So Soon?",

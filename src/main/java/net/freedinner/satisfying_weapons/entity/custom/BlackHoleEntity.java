@@ -27,6 +27,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -36,6 +37,7 @@ import net.minecraft.world.World;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -227,15 +229,16 @@ public class BlackHoleEntity extends ThrownItemEntity {
             // If possible, set the owner as attacker
             if (entity instanceof LivingEntity livingEntity && this.getOwner() instanceof PlayerEntity owner) {
                 livingEntity.setAttacking(owner);
-                ((LivingEntityAccessor) livingEntity).setPlayerHitTimer(100); // setAttacking() sets it to age, it's weird
+                ((LivingEntityAccessor) livingEntity).setPlayerHitTimer(100); // setAttacking() sets it to age, idk why
             }
 
             // Try to inflict Entropy
             if (swordLevel >= 3 && entity instanceof LivingEntity livingEntity) {
-                livingEntity.addStatusEffect(new StatusEffectInstance(ModEffects.ENTROPY, 200, 0, false, false));
+                livingEntity.addStatusEffect(new StatusEffectInstance(ModEffects.ENTROPY, 320, 0, false, false));
             }
 
-            if (entity instanceof LivingEntity livingEntity) {
+            // Try to steal equipment
+            if (swordLevel >= 3 && entity instanceof LivingEntity livingEntity) {
                 this.tryDropEquipment(livingEntity);
             }
         }
@@ -251,7 +254,8 @@ public class BlackHoleEntity extends ThrownItemEntity {
     }
 
     private void tryDropEquipment(LivingEntity livingEntity) {
-        if (livingEntity.getStackInHand(Hand.MAIN_HAND).isEmpty()) {
+        List<EquipmentSlot> occupiedSlots = this.getOccupiedSlots(livingEntity);
+        if (occupiedSlots.isEmpty()) {
             return;
         }
 
@@ -260,13 +264,39 @@ public class BlackHoleEntity extends ThrownItemEntity {
             return;
         }
 
+        // 30% to drop at least one item
         if (MathUtils.takeChance(0.0059)) {
-            ItemStack itemStack = livingEntity.getStackInHand(Hand.MAIN_HAND);
-            livingEntity.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
-            livingEntity.dropStack(itemStack);
+            EquipmentSlot slot = occupiedSlots.get(MathUtils.randomNumber(occupiedSlots.size()));
+
+            ItemStack itemStack = livingEntity.getEquippedStack(slot);
+            livingEntity.equipStack(slot, ItemStack.EMPTY);
+            ItemEntity droppedStack = livingEntity.dropStack(itemStack);
+
+            if (droppedStack != null) {
+                Vec3d direction = this.getPos().subtract(droppedStack.getPos());
+                double distance = direction.length();
+
+                double force = Math.sqrt(distance) / 8;
+                Vec3d v = direction.normalize().multiply(force);
+
+                droppedStack.addVelocity(v);
+                droppedStack.velocityModified = true;
+            }
         }
 
         dataSaver.satisfyingWeapons$addDropAttemptsBH(1);
+    }
+
+    private List<EquipmentSlot> getOccupiedSlots(LivingEntity livingEntity) {
+        ArrayList<EquipmentSlot> occupiedSlots = new ArrayList<>();
+
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (!livingEntity.getEquippedStack(slot).isEmpty()) {
+                occupiedSlots.add(slot);
+            }
+        }
+
+        return occupiedSlots;
     }
 
     private void sendParticlesPacket() {
