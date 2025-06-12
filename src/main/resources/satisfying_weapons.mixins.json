@@ -8,13 +8,15 @@
     "LivingEntityAccessor",
     "LivingEntityMixin",
     "LootTableBuilderAccessor",
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "ServerPlayerInteractionManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
     "AbstractClientPlayerEntityMixin",
-    "ClientPlayerEntityMixin"
+    "ClientPlayerEntityMixin",
+    "ClientPlayerInteractionManagerMixin"
   ]
 }
