@@ -261,8 +261,10 @@ public class BlackHoleEntity extends ThrownItemEntity {
             return;
         }
 
-        // 30% to drop at least one item
-        if (MathUtils.takeChance(0.0059)) {
+        double mult = Math.cbrt(occupiedSlots.size());
+
+        // 30% base chance to drop at least one item, goes up to 48% with full equipment
+        if (MathUtils.takeChance(0.0059 * mult)) {
             EquipmentSlot slot = occupiedSlots.get(MathUtils.randomNumber(occupiedSlots.size()));
 
             ItemStack itemStack = livingEntity.getEquippedStack(slot);
