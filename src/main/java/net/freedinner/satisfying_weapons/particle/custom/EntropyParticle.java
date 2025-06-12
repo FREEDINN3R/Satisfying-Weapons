@@ -13,8 +13,8 @@ public class EntropyParticle extends SpriteBillboardParticle {
     protected EntropyParticle(ClientWorld clientWorld, double x, double y, double z, SpriteProvider spriteProvider, double dx, double dy, double dz) {
         super(clientWorld, x, y, z, dx, dy, dz);
 
-        this.velocityMultiplier = 1f;
-        this.gravityStrength = -0.1f;
+        this.velocityMultiplier = 0.96f;
+        this.gravityStrength = -0.15f;
         this.x = x;
         this.y = y;
         this.z = z;

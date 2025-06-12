@@ -20,6 +20,7 @@ public class ModNetworking {
     public static final Identifier GIFT_EXPLOSION_PARTICLES_ID = SatisfyingWeapons.id("gift_explosion_particles");
 
     public static final Identifier BLACK_HOLE_PARTICLES_ID = SatisfyingWeapons.id("black_hole_particles");
+    public static final Identifier ENTROPY_PARTICLES_ID = SatisfyingWeapons.id("entropy_particles");
 
     public static final Identifier GLASS_SWORD_PARTICLES_ID = SatisfyingWeapons.id("glass_sword_particles");
 
@@ -38,6 +39,7 @@ public class ModNetworking {
         ClientPlayNetworking.registerGlobalReceiver(GIFT_EXPLOSION_PARTICLES_ID, GiftExplosionParticlesPacket::receive);
 
         ClientPlayNetworking.registerGlobalReceiver(BLACK_HOLE_PARTICLES_ID, BlackHoleParticlesPacket::receive);
+        ClientPlayNetworking.registerGlobalReceiver(ENTROPY_PARTICLES_ID, EntropyParticlesPacket::receive);
 
         ClientPlayNetworking.registerGlobalReceiver(GLASS_SWORD_PARTICLES_ID, GlassSwordParticlesPacket::receive);
     }
