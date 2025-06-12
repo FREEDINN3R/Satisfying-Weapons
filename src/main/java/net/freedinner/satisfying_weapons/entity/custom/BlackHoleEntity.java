@@ -27,8 +27,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -36,7 +34,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class BlackHoleEntity extends ThrownItemEntity {
     private static final TrackedData<Integer> ACTIVE_AGE = DataTracker.registerData(BlackHoleEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -45,6 +45,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
     public static final float BLACK_HOLE_SPEED = 2.5f;
     public static final double BLACK_HOLE_THROW_RANGE = 14;
     public static final double BLACK_HOLE_EFFECT_RANGE = 16;
+    public static final double BLACK_HOLE_EFFECT_RANGE_SQR = (int) Math.pow(BLACK_HOLE_EFFECT_RANGE, 2);
 
     // Timings
     public static final int BLACK_HOLE_MAX_ACTIVE_AGE = 26; // effectively 1.5 s, not sure why it's not 30
@@ -199,11 +200,11 @@ public class BlackHoleEntity extends ThrownItemEntity {
     private void suckInEntities() {
         Vec3d pos = this.getPos();
         Box box = new Box(pos, pos).expand(BLACK_HOLE_EFFECT_RANGE);
-        int effectRangeSqr = (int) Math.pow(BLACK_HOLE_EFFECT_RANGE, 2);
 
         List<Entity> affectedEntities = this.getWorld().getOtherEntities(this.getOwner(), box)
                 .stream()
-                .filter(e -> e.squaredDistanceTo(pos) <= effectRangeSqr) // Cuz it's a sphere, not a cube
+                .filter(e -> e.squaredDistanceTo(pos) <= BLACK_HOLE_EFFECT_RANGE_SQR) // Cuz it's a sphere, not a cube
+                .filter(e -> !(e instanceof BlackHoleEntity otherBlackHole && otherBlackHole.getOwner() != this.getOwner())) // Ignore black holes from other players
                 .toList();
 
         // For every entity in range
@@ -216,10 +217,14 @@ public class BlackHoleEntity extends ThrownItemEntity {
                 this.tryPickUp(entity);
             }
 
-            // Suck in entities
+            // Calculate force, collapse with other black holes from this player
             double force = Math.sqrt(distance) / 16;
-            Vec3d v = direction.normalize().multiply(force);
+            if (entity instanceof BlackHoleEntity) {
+                force *= 3;
+            }
 
+            // Suck in entities
+            Vec3d v = direction.normalize().multiply(force);
             entity.addVelocity(v);
             entity.velocityModified = true;
 

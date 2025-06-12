@@ -35,7 +35,7 @@ public class EntropyEffect extends StatusEffect {
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         // About once per 1.5 seconds
-        if (MathUtils.takeChance(0.03)) {
+        if (!entity.getWorld().isClient && MathUtils.takeChance(0.03)) {
             this.sendParticlesPacket(entity);
         }
     }
