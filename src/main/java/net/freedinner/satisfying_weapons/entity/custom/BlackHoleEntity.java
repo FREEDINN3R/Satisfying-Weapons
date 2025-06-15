@@ -246,7 +246,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
             }
 
             // Try to steal equipment
-            if (swordLevel >= 3 && entity instanceof LivingEntity livingEntity) {
+            if (swordLevel >= 4 && entity instanceof LivingEntity livingEntity) {
                 this.tryDropEquipment(livingEntity);
             }
         }
