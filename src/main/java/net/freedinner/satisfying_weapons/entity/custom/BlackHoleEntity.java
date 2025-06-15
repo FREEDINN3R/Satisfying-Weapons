@@ -88,6 +88,12 @@ public class BlackHoleEntity extends ThrownItemEntity {
             return;
         }
 
+        // TODO: change velocity calculations
+        // TODO: implement explosion
+        // TODO: implement explosion visuals
+        // TODO: add HP sacrifice sound
+        // TODO: write proper descriptions
+
         // Very important, constantly refreshes activation age for both client and server to use
         if (activationAge != -1) {
             dataTracker.set(ACTIVE_AGE, this.age - activationAge);

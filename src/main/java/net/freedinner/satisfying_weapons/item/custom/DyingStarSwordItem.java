@@ -41,7 +41,7 @@ public class DyingStarSwordItem extends UpgradeableSwordItem {
         blackHole.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, BlackHoleEntity.BLACK_HOLE_SPEED, 1.0f);
         world.spawnEntity(blackHole);
 
-        int durabilityCost = (this.getLevel() < 2) ? 2 : 1;
+        int durabilityCost = (this.getLevel() < 2) ? 3 : 1;
         itemStack.damage(durabilityCost, user, player -> player.sendToolBreakStatus(hand));
 
         ItemCooldownManager cooldownManager = user.getItemCooldownManager();
