@@ -34,10 +34,10 @@
     ]
   },
 
-  "black_hole_activates": {
-    "sound.subtitle": "satisfying_weapons.black_hole_activates",
+  "black_hole_active": {
+    "sound.subtitle": "satisfying_weapons.black_hole_active",
     "sounds": [
-      "satisfying_weapons:black_hole_activates"
+      "satisfying_weapons:black_hole_active"
     ]
   }
 }

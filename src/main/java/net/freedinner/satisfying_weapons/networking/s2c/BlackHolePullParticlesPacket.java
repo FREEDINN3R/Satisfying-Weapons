@@ -15,7 +15,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class BlackHoleParticlesPacket {
+public class BlackHolePullParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
         Vec3d center = new Vec3d(buf.readVector3f());
         double radius = buf.readDouble();

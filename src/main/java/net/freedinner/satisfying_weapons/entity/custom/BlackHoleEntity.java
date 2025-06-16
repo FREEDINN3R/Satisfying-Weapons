@@ -29,6 +29,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -91,9 +92,6 @@ public class BlackHoleEntity extends ThrownItemEntity {
             return;
         }
 
-        // TODO: implement explosion visuals
-        // TODO: add HP sacrifice sound
-
         // Very important, constantly refreshes activation age for both client and server to use
         if (activationAge != -1) {
             dataTracker.set(ACTIVE_AGE, this.age - activationAge);
@@ -119,8 +117,8 @@ public class BlackHoleEntity extends ThrownItemEntity {
                 suckInEntities();
 
                 // Visuals & SFX
-                sendParticlesPacket();
-                this.getWorld().playSound(null, this.getBlockPos(), ModSounds.BLACK_HOLE_ACTIVATES, SoundCategory.MASTER, 1.2f, PitchUtils.get());
+                sendPullParticlesPacket();
+                this.getWorld().playSound(null, this.getBlockPos(), ModSounds.BLACK_HOLE_ACTIVE, SoundCategory.MASTER, 1.8f, PitchUtils.get());
             }
 
             // If finished shrinking
@@ -337,11 +335,15 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
         this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new NonDestructiveExplosionBehavior(), this.getPos(), 6, false, World.ExplosionSourceType.MOB);
 
+        this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, SoundCategory.MASTER, 1.8f, PitchUtils.get());
+        this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_HURT, SoundCategory.MASTER, 1.8f, PitchUtils.get() - 0.4f);
+        this.sendExplosionParticlesPacket();
+
         otherBlackHole.remove(RemovalReason.DISCARDED);
         this.remove(RemovalReason.DISCARDED);
     }
 
-    private void sendParticlesPacket() {
+    private void sendPullParticlesPacket() {
         Vector3f center = this.getPos().toVector3f();
 
         PacketByteBuf buf = PacketByteBufs.create();
@@ -373,7 +375,18 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
         // Send particle packet
         for (ServerPlayerEntity player : trackingPlayers) {
-            ServerPlayNetworking.send(player, ModNetworking.BLACK_HOLE_PARTICLES_ID, buf);
+            ServerPlayNetworking.send(player, ModNetworking.BLACK_HOLE_PULL_PARTICLES_ID, buf);
+        }
+    }
+
+    private void sendExplosionParticlesPacket() {
+        Vec3d pos = this.getPos();
+
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVector3f(pos.toVector3f());
+
+        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) this.getWorld(), PosUtils.toBlockPos(pos))) {
+            ServerPlayNetworking.send(player, ModNetworking.BLACK_HOLE_EXPLOSION_PARTICLES_ID, buf);
         }
     }
 }
