@@ -2,7 +2,7 @@ package net.freedinner.satisfying_weapons.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.freedinner.satisfying_weapons.entity.misc.GiftExplosionBehavior;
+import net.freedinner.satisfying_weapons.entity.misc.NonDestructiveExplosionBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;
@@ -18,7 +18,7 @@ public abstract class ExplosionMixin {
     @Shadow @Final private ExplosionBehavior behavior;
 
     @WrapOperation(method = "collectBlocksAndDamageEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;isImmuneToExplosion()Z"))
-    private boolean preventLootDestroyedByGift(Entity entity, Operation<Boolean> original) {
-        return original.call(entity) || (behavior instanceof GiftExplosionBehavior && (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity));
+    private boolean preventLootDestroyed(Entity entity, Operation<Boolean> original) {
+        return original.call(entity) || (behavior instanceof NonDestructiveExplosionBehavior && (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity));
     }
 }

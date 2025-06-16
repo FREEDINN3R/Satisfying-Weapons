@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
+import net.freedinner.satisfying_weapons.entity.misc.NonDestructiveExplosionBehavior;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.mixin.LivingEntityAccessor;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
@@ -18,6 +19,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
@@ -46,6 +48,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
     public static final double BLACK_HOLE_THROW_RANGE = 14;
     public static final double BLACK_HOLE_EFFECT_RANGE = 16;
     public static final double BLACK_HOLE_EFFECT_RANGE_SQR = (int) Math.pow(BLACK_HOLE_EFFECT_RANGE, 2);
+    public static final double BLACK_HOLE_EFFECT_RANGE_SQRT = (int) Math.sqrt(BLACK_HOLE_EFFECT_RANGE);
 
     // Timings
     public static final int BLACK_HOLE_MAX_ACTIVE_AGE = 26; // effectively 1.5 s, not sure why it's not 30
@@ -88,11 +91,8 @@ public class BlackHoleEntity extends ThrownItemEntity {
             return;
         }
 
-        // TODO: change velocity calculations
-        // TODO: implement explosion
         // TODO: implement explosion visuals
         // TODO: add HP sacrifice sound
-        // TODO: write proper descriptions
 
         // Very important, constantly refreshes activation age for both client and server to use
         if (activationAge != -1) {
@@ -111,6 +111,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
         }
         else {
             // When activated, stays in one place
+            // Unfortunately it can't prevent movement fully, but at least it stops BH from gliding after being knocked back
             this.setVelocity(0, 0, 0);
 
             // If active and not shrinking yet
@@ -207,10 +208,11 @@ public class BlackHoleEntity extends ThrownItemEntity {
         Vec3d pos = this.getPos();
         Box box = new Box(pos, pos).expand(BLACK_HOLE_EFFECT_RANGE);
 
-        List<Entity> affectedEntities = this.getWorld().getOtherEntities(this.getOwner(), box)
+        List<Entity> affectedEntities = this.getWorld().getOtherEntities(this, box)
                 .stream()
+                .filter(e -> e != this.getOwner())
                 .filter(e -> e.squaredDistanceTo(pos) <= BLACK_HOLE_EFFECT_RANGE_SQR) // Cuz it's a sphere, not a cube
-                .filter(e -> !(e instanceof BlackHoleEntity otherBlackHole && otherBlackHole.getOwner() != this.getOwner())) // Ignore black holes from other players
+                .filter(e -> !(e instanceof BlackHoleEntity otherBlackHole && !this.shouldCollapseWith(otherBlackHole))) // Ignore BHs not legible for collapse
                 .toList();
 
         // For every entity in range
@@ -223,14 +225,22 @@ public class BlackHoleEntity extends ThrownItemEntity {
                 this.tryPickUp(entity);
             }
 
-            // Calculate force, collapse with other black holes from this player
-            double force = Math.sqrt(distance) / 16;
-            if (entity instanceof BlackHoleEntity) {
-                force *= 3;
+            double pullForce = Math.sqrt(distance) / 16;
+
+            // Increased pull force for legible BHs
+            if (entity instanceof BlackHoleEntity otherBlackHole && this.shouldCollapseWith(otherBlackHole)) {
+                pullForce *= Math.sqrt(BLACK_HOLE_EFFECT_RANGE) / distance;
+
+                // Collapse two BHs if they are too close
+                // Extra checks so that only one explosion is produced
+                if (distance < 0.5 && this.getActiveAge() > otherBlackHole.getActiveAge()) {
+                    this.produceExplosion(otherBlackHole);
+                    return;
+                }
             }
 
             // Suck in entities
-            Vec3d v = direction.normalize().multiply(force);
+            Vec3d v = direction.normalize().multiply(pullForce);
             entity.addVelocity(v);
             entity.velocityModified = true;
 
@@ -307,6 +317,28 @@ public class BlackHoleEntity extends ThrownItemEntity {
         }
 
         return occupiedSlots;
+    }
+
+    private boolean shouldCollapseWith(BlackHoleEntity otherBlackHole) {
+        return otherBlackHole.getOwner() == this.getOwner()
+                && this.getOwner() != null
+                && otherBlackHole.squaredDistanceTo(this.getPos()) < BLACK_HOLE_EFFECT_RANGE; // Not square, because BHs collapse only if very close
+    }
+
+    private void produceExplosion(BlackHoleEntity otherBlackHole) {
+        if (this.getWorld().isClient || otherBlackHole == this) {
+            return;
+        }
+
+        // Momentary invincibility for owner to prevent explosion damage
+        if (this.getOwner() instanceof LivingEntity livingOwner) {
+            livingOwner.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 2, 4, false, false));
+        }
+
+        this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new NonDestructiveExplosionBehavior(), this.getPos(), 6, false, World.ExplosionSourceType.MOB);
+
+        otherBlackHole.remove(RemovalReason.DISCARDED);
+        this.remove(RemovalReason.DISCARDED);
     }
 
     private void sendParticlesPacket() {

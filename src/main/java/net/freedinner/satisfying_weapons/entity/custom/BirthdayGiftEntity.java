@@ -8,7 +8,7 @@ import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.entity.misc.ToyArrowEntityData;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
-import net.freedinner.satisfying_weapons.entity.misc.GiftExplosionBehavior;
+import net.freedinner.satisfying_weapons.entity.misc.NonDestructiveExplosionBehavior;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.Entity;
@@ -19,7 +19,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -30,7 +29,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -129,7 +127,7 @@ public class BirthdayGiftEntity extends Entity {
 
                 if (this.isOnGround()) {
                     // Create a non-destructive explosion
-                    this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new GiftExplosionBehavior(), this.getPos(), 1.5f, false, World.ExplosionSourceType.MOB);
+                    this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new NonDestructiveExplosionBehavior(), this.getPos(), 1.5f, false, World.ExplosionSourceType.MOB);
                     sendExplosionParticlesPacket();
 
                     this.remove(RemovalReason.DISCARDED);
