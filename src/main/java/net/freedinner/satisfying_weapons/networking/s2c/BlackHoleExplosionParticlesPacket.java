@@ -26,23 +26,36 @@ public class BlackHoleExplosionParticlesPacket {
                 return;
             }
 
-            // Entropy particles
+            // Flash
+            for (int i = 0; i < 6; i++) {
+                Vec3d d = MathUtils.randomPointInSphere().normalize().multiply(2);
 
-            for (int i = 0; i < 80; i++) {
-                Vec3d v = MathUtils.randomPointInSphere();
-                v = v.normalize().multiply(MathUtils.randomNumber(0.3, 1.5));
-
-                world.addParticle(ModParticles.ENTROPY, pos.x, pos.y, pos.z, v.x, v.y, v.z);
+                world.addParticle(ParticleTypes.FLASH, pos.x + d.x, pos.y + d.y, pos.z + d.z, 0, 0, 0);
             }
 
             // Shockwave
-
-            for (int i = 0; i < 150; i++) {
+            for (int i = 0; i < 120; i++) {
                 double angle = Math.toRadians(3 * i);
                 Vec3d v = new Vec3d(Math.sin(angle), 0, Math.cos(angle));
                 v = v.normalize().multiply(4);
 
                 world.addParticle(ParticleTypes.CLOUD, pos.x, pos.y, pos.z, v.x, v.y, v.z);
+            }
+
+            // Smoke
+            for (int i = 0; i < 120; i++) {
+                Vec3d v = MathUtils.randomPointInSphere();
+                v = v.normalize().multiply(MathUtils.randomNumber(0.2, 0.5));
+
+                world.addParticle(ParticleTypes.LARGE_SMOKE, pos.x, pos.y, pos.z, v.x, v.y * 0.5, v.z);
+            }
+
+            // Entropy particles
+            for (int i = 0; i < 80; i++) {
+                Vec3d v = MathUtils.randomPointInSphere();
+                v = v.normalize().multiply(MathUtils.randomNumber(0.6, 1.2));
+
+                world.addParticle(ModParticles.ENTROPY, pos.x, pos.y, pos.z, v.x, v.y, v.z);
             }
         });
     }
