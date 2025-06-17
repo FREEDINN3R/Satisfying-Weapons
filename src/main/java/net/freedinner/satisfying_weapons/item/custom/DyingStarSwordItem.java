@@ -33,7 +33,7 @@ public class DyingStarSwordItem extends UpgradeableSwordItem {
         user.setCurrentHand(hand);
         user.swingHand(hand, true);
         user.getWorld().playSound(null, user.getBlockPos(), ModSounds.BLACK_HOLE_THROWN, SoundCategory.MASTER,
-                0.6f, PitchUtils.get());
+                0.8f, PitchUtils.get());
 
         boolean shouldCollectLoot = this.getLevel() >= 2 && user.isSneaking();
 
