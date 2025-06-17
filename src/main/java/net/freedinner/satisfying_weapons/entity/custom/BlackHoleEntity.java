@@ -30,6 +30,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -134,11 +135,11 @@ public class BlackHoleEntity extends ThrownItemEntity {
             return;
         }
 
-        if (this.isActive()) {
+        if (this.isActive() || hitResult.getType() == HitResult.Type.ENTITY) {
             return;
         }
 
-        // Activates from any collision, backtracks to be visible
+        // Activates from block collisions, backtracks to be visible
         this.activate(true);
     }
 
@@ -191,10 +192,10 @@ public class BlackHoleEntity extends ThrownItemEntity {
             return;
         }
 
-        // If needed, go back one tick
+        // If needed, go back slightly to be visible
         if (backtrack) {
             Vec3d direction = this.getVelocity().normalize();
-            Vec3d newPos = this.getPos().subtract(direction.multiply(BLACK_HOLE_SPEED * 0.05));
+            Vec3d newPos = this.getPos().subtract(direction.multiply(BLACK_HOLE_SPEED * 0.025));
             this.setPosition(newPos);
         }
 
@@ -210,7 +211,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
                 .stream()
                 .filter(e -> e != this.getOwner())
                 .filter(e -> e.squaredDistanceTo(pos) <= BLACK_HOLE_EFFECT_RANGE_SQR) // Cuz it's a sphere, not a cube
-                .filter(e -> !(e instanceof BlackHoleEntity otherBlackHole && !this.shouldCollapseWith(otherBlackHole))) // Ignore BHs not legible for collapse
+                .filter(e -> !(e instanceof BlackHoleEntity otherBlackHole) || this.shouldCollapseWith(otherBlackHole)) // Ignore BHs not legible for collapse
                 .toList();
 
         // For every entity in range
