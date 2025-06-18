@@ -335,6 +335,8 @@ public class BlackHoleEntity extends ThrownItemEntity {
         }
 
         this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new NonDestructiveExplosionBehavior(), this.getPos(), 6, false, World.ExplosionSourceType.MOB);
+
+        this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_HURT, SoundCategory.MASTER, 1.8f, PitchUtils.get() - 0.3f);
         this.sendExplosionParticlesPacket();
 
         otherBlackHole.remove(RemovalReason.DISCARDED);
