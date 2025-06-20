@@ -4,6 +4,8 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.freedinner.satisfying_weapons.PlayerWishDataSaver;
+import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.datagen.ModAdvancements;
 import net.freedinner.satisfying_weapons.datagen.ModTags;
 import net.freedinner.satisfying_weapons.item.ModItems;
@@ -106,6 +108,11 @@ public class WishingStarItem extends Item {
 
         // Prevents accidentally using the new item
         serverPlayer.getItemCooldownManager().set(rolledStack.getItem(), 10);
+
+        // Increase wish counter by 1
+        PlayerWishDataSaver wishDataSaver = PlayerWishDataSaver.getServerState(serverPlayer.server);
+        wishDataSaver.totalWishesMade += 1;
+        SatisfyingWeapons.LOGGER.info(serverPlayer.getName().toString() + " made a wish; total wishes made on server: " + wishDataSaver.totalWishesMade);
 
         // Visuals & SFX
         this.sendParticlesPacket(world, user.getEyePos().toVector3f(), rolledStack.isIn(ModTags.MOD_WEAPONS));
