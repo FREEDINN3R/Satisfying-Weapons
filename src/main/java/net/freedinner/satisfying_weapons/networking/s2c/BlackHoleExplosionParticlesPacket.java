@@ -51,9 +51,9 @@ public class BlackHoleExplosionParticlesPacket {
             }
 
             // Entropy particles
-            for (int i = 0; i < 80; i++) {
+            for (int i = 0; i < 100; i++) {
                 Vec3d v = MathUtils.randomPointInSphere();
-                v = v.normalize().multiply(MathUtils.randomNumber(0.6, 1.2));
+                v = v.normalize().multiply(MathUtils.randomNumber(0.8, 1.4));
 
                 world.addParticle(ModParticles.ENTROPY, pos.x, pos.y, pos.z, v.x, v.y, v.z);
             }
