@@ -110,15 +110,29 @@ public class PlayerWishDataManager extends PersistentState {
     }
 
     private static double getRareChance(int x) {
-        return 0.05 * x;
+        // 0 => 5%     5 => 13%
+        // 2 => 5%     6 => 33%
+        // 4 => 7%     7 => 100%
+        return 0.0505 + 0.000183 * Math.exp(1.223 * x);
     }
 
     private static double getEpicChance(int x) {
-        return 0.02 * x;
+        // 0 => 2%     15 => 12%
+        // 5 => 2%     16 => 19%
+        // 10 => 3%    17 => 33%
+        // 12 => 4%    18 => 57%
+        // 14 => 7%    19 => 100%
+        return 0.0244 + 0.0000116 * Math.exp(0.598 * x);
     }
 
     private static double getLegendaryChance(int x) {
-        return 0.005 * x;
+        // 0 => 12%     25 => 8%     47 => 55%
+        // 1 => 7%      30 => 4%     48 => 68%
+        // 5 => 1%      35 => 1%     49 => 84%
+        // 10 => 1%     40 => 6%     50 => 100%
+        // 15 => 4%     43 => 19%
+        // 20 => 9%     45 => 34%
+        return Math.max(0.01, 0.00000271503 * Math.pow(x, 4) - 0.000233831 * Math.pow(x, 3) + 0.00643612  * Math.pow(x, 2) - 0.0588076 * x + 0.124785);
     }
 
     private static ItemStack rollRandomChestLoot(World world) {
