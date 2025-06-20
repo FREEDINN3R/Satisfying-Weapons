@@ -11,6 +11,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
@@ -51,6 +52,27 @@ public class ModRecipes {
                             FabricRecipeProvider.conditionsFromItem(ModItems.UNFULFILLED_WISH))
                     .criterion(FabricRecipeProvider.hasItem(Blocks.CRAFTING_TABLE),
                             FabricRecipeProvider.conditionsFromItem(Blocks.CRAFTING_TABLE))
+                    .offerTo(exporter);
+
+            ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.BLOCK_OF_LFOS)
+                    .pattern(" U ")
+                    .pattern("@#W")
+                    .pattern(" & ")
+                    .input('U', Items.FLOWER_POT)
+                    .input('@', Items.HONEYCOMB)
+                    .input('#', Blocks.DIAMOND_BLOCK)
+                    .input('W', Items.BOOK)
+                    .input('&', Items.POTION)
+                    .criterion(FabricRecipeProvider.hasItem(Items.FLOWER_POT),
+                            FabricRecipeProvider.conditionsFromItem(Items.FLOWER_POT))
+                    .criterion(FabricRecipeProvider.hasItem(Items.HONEYCOMB),
+                            FabricRecipeProvider.conditionsFromItem(Items.HONEYCOMB))
+                    .criterion(FabricRecipeProvider.hasItem(Blocks.DIAMOND_BLOCK),
+                            FabricRecipeProvider.conditionsFromItem(Blocks.DIAMOND_BLOCK))
+                    .criterion(FabricRecipeProvider.hasItem(Items.BOOK),
+                            FabricRecipeProvider.conditionsFromItem(Items.BOOK))
+                    .criterion(FabricRecipeProvider.hasItem(Items.POTION),
+                            FabricRecipeProvider.conditionsFromItem(Items.POTION))
                     .offerTo(exporter);
         }
     }

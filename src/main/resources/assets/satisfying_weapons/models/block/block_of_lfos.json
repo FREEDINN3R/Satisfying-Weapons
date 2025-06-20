@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "satisfying_weapons:block/block_of_lfos_secret",
+    "east": "satisfying_weapons:block/block_of_lfos",
+    "north": "satisfying_weapons:block/block_of_lfos",
+    "particle": "satisfying_weapons:block/block_of_lfos",
+    "south": "satisfying_weapons:block/block_of_lfos",
+    "up": "satisfying_weapons:block/block_of_lfos",
+    "west": "satisfying_weapons:block/block_of_lfos"
+  }
+}

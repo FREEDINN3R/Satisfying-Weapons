@@ -21,6 +21,14 @@ public class ModBlocks {
                     .strength(2.5f)
                     .sounds(BlockSoundGroup.WOOD)
             ));
+    public static final Block BLOCK_OF_LFOS = registerBlock("block_of_lfos",
+            new Block(AbstractBlock.Settings
+                    .create()
+                    .mapColor(MapColor.DARK_GREEN)
+                    .instrument(Instrument.IRON_XYLOPHONE)
+                    .strength(4f)
+                    .sounds(BlockSoundGroup.STONE)
+            ));
 
     private static Block registerBlock(String name, Block block) {
         Block registeredBlock = Registry.register(Registries.BLOCK, SatisfyingWeapons.id(name), block);

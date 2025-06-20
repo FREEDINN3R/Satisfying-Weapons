@@ -21,6 +21,7 @@ public class ModLoot {
         @Override
         public void generate() {
             addDrop(ModBlocks.UPGRADER, drops(ModBlocks.UPGRADER));
+            addDrop(ModBlocks.BLOCK_OF_LFOS, drops(ModBlocks.BLOCK_OF_LFOS));
         }
     }
 }
