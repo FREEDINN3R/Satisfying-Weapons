@@ -17,6 +17,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
@@ -77,7 +78,7 @@ public class PlayerWishDataManager extends PersistentState {
 
         SatisfyingWeapons.LOGGER.info(player.getName().getString() + " makes a wish");
         SatisfyingWeapons.LOGGER.info("This is their wish no. " + playerData.totalWishesMade);
-        SatisfyingWeapons.LOGGER.info("Rare: " + (100 * rareChance) + "%; Epic: " + (100 * epicChance) + "%; Legendary: " + (100 * legendaryChance) + "%");
+        SatisfyingWeapons.LOGGER.info("Rare: " + formatPercentage(rareChance) + "; Epic: " + formatPercentage(epicChance) + "; Legendary: " + formatPercentage(legendaryChance));
 
         playerData.wishesSinceRareDrop++;
         playerData.wishesSinceEpicDrop++;
@@ -149,6 +150,10 @@ public class PlayerWishDataManager extends PersistentState {
         // Generate a random item stack from that chest
         ObjectArrayList<ItemStack> items = lootTable.generateLoot(new LootContextParameterSet.Builder((ServerWorld) world).add(LootContextParameters.ORIGIN, Vec3d.ZERO).build(LootContextTypes.CHEST));
         return items.get(world.getRandom().nextInt(items.size()));
+    }
+
+    private static String formatPercentage(double x) {
+        return MathHelper.clamp(Math.round(x * 10000) / 100.0, 0, 100) + "%";
     }
 
     private static PlayerWishDataManager getServerInstance(MinecraftServer server) {
