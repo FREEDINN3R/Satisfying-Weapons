@@ -50,7 +50,6 @@ public class BlackHoleEntity extends ThrownItemEntity {
     public static final double BLACK_HOLE_THROW_RANGE = 14;
     public static final double BLACK_HOLE_EFFECT_RANGE = 16;
     public static final double BLACK_HOLE_EFFECT_RANGE_SQR = (int) Math.pow(BLACK_HOLE_EFFECT_RANGE, 2);
-    public static final double BLACK_HOLE_EFFECT_RANGE_SQRT = (int) Math.sqrt(BLACK_HOLE_EFFECT_RANGE);
 
     // Timings
     public static final int BLACK_HOLE_MAX_ACTIVE_AGE = 26; // effectively 1.5 s, not sure why it's not 30
