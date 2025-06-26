@@ -23,11 +23,11 @@ public class ModEffects {
             StatusEffectCategory.NEUTRAL,
             FireworkJumpEffect::new);
     public static StatusEffect BIRTHDAY_PARTY = registerStatusEffect("birthday_party",
-            new Color(255, 255, 255),
+            new Color(241, 35, 222),
             StatusEffectCategory.HARMFUL,
             BirthdayPartyEffect::new);
     public static StatusEffect ENTROPY = registerStatusEffect("entropy",
-            new Color(255, 255, 255),
+            new Color(108, 63, 224),
             StatusEffectCategory.HARMFUL,
             EntropyEffect::new);
 
