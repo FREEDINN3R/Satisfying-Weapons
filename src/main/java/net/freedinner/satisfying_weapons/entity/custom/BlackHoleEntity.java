@@ -118,7 +118,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
                 // Visuals & SFX
                 sendPullParticlesPacket();
-                this.getWorld().playSound(null, this.getBlockPos(), ModSounds.BLACK_HOLE_ACTIVE, SoundCategory.MASTER, 1.8f, PitchUtils.get());
+                this.getWorld().playSound(null, this.getBlockPos(), ModSounds.BLACK_HOLE_ACTIVE, SoundCategory.MASTER, 1.6f, PitchUtils.get());
             }
 
             // If finished shrinking
