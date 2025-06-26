@@ -7,6 +7,8 @@ import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.EnderPearlItem;
+import net.minecraft.item.FishingRodItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -24,31 +26,32 @@ public class DyingStarSwordItem extends UpgradeableSwordItem {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (world.isClient() || !hand.equals(Hand.MAIN_HAND)) {
+        if (!hand.equals(Hand.MAIN_HAND)) {
             return super.use(world, user, hand);
         }
 
         ItemStack itemStack = user.getStackInHand(hand);
 
         user.setCurrentHand(hand);
-        user.swingHand(hand, true);
         user.getWorld().playSound(null, user.getBlockPos(), ModSounds.BLACK_HOLE_THROWN, SoundCategory.MASTER,
                 0.8f, PitchUtils.get());
 
-        boolean shouldCollectLoot = this.getLevel() >= 2 && user.isSneaking();
+        if (!world.isClient) {
+            boolean shouldCollectLoot = this.getLevel() >= 2 && user.isSneaking();
 
-        BlackHoleEntity blackHole = new BlackHoleEntity(world, user, this.getLevel(), shouldCollectLoot);
-        blackHole.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, BlackHoleEntity.BLACK_HOLE_SPEED, 1.0f);
-        world.spawnEntity(blackHole);
+            BlackHoleEntity blackHole = new BlackHoleEntity(world, user, this.getLevel(), shouldCollectLoot);
+            blackHole.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, BlackHoleEntity.BLACK_HOLE_SPEED, 1.0f);
+            world.spawnEntity(blackHole);
 
-        int durabilityCost = (this.getLevel() < 2) ? 3 : 1;
-        itemStack.damage(durabilityCost, user, player -> player.sendToolBreakStatus(hand));
+            int durabilityCost = (this.getLevel() < 2) ? 3 : 1;
+            itemStack.damage(durabilityCost, user, player -> player.sendToolBreakStatus(hand));
+        }
 
         ItemCooldownManager cooldownManager = user.getItemCooldownManager();
         int cooldown = (this.getLevel() < 4) ? 60 : 40;
         this.setCooldown(cooldownManager, cooldown);
 
-        return TypedActionResult.success(itemStack);
+        return TypedActionResult.success(itemStack, world.isClient);
     }
 
     private void setCooldown(ItemCooldownManager cooldownManager, int cooldown) {
