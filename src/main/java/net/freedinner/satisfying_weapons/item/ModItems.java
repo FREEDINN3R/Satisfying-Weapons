@@ -24,15 +24,15 @@ public class ModItems {
     // --- WEAPONS --- //
     public static final List<Item> FIREWORK_SWORD = registerUpgradeableWeapon("firework_sword",
             FireworkSwordItem::new, ModToolMaterial.RARE, 5, new Item.Settings());
+    public static final List<Item> GLASS_SWORD = registerUpgradeableWeapon("glass_sword",
+            GlassSwordItem::new, ModToolMaterial.RARE, 5, new Item.Settings());
+
     public static final List<Item> TOY_BOW = registerUpgradeableWeapon("toy_bow",
             ToyBowItem::new, ModToolMaterial.EPIC, 5, new Item.Settings());
     public static final List<Item> SWORD_OF_DYING_STAR = registerUpgradeableWeapon("sword_of_dying_star",
             DyingStarSwordItem::new, ModToolMaterial.LEGENDARY, 5, new Item.Settings());
 
-    public static final List<Item> GLASS_SWORD = registerUpgradeableWeapon("glass_sword",
-            GlassSwordItem::new, ModToolMaterial.EPIC, 2, new Item.Settings());
-
-    // --- UNAVAILABLE ITEMS --- //
+    // --- TECHNICAL ITEMS --- //
     public static final Item BLACK_HOLE = register("black_hole",
             new Item(new Item.Settings()));
 

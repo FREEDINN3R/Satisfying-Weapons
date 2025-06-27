@@ -29,26 +29,6 @@ public class GlassSwordItem extends UpgradeableSwordItem {
     public GlassSwordItem(ModToolMaterial toolMaterial, Settings settings, int level, @Nullable GlassSwordItem nextLevelWeapon) {
         super(toolMaterial, settings, level, nextLevelWeapon);
     }
-
-    @Override
-    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        boolean broken = MathUtils.takeChance(this.getLevel() > 1 ? 0.5 : 1.0);
-
-        if (broken) {
-            sendParticlesPacket(attacker);
-            attacker.getWorld().playSound(null, attacker.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get());
-
-            attacker.equipStack(EquipmentSlot.MAINHAND, new ItemStack(ModItems.BROKEN_GLASS_SWORD));
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean isDamageable() {
-        return false;
-    }
-
     private void sendParticlesPacket(LivingEntity attacker) {
         Vector3f particlePos = attacker.getPos().toVector3f();
         particlePos.add(0, attacker.getHeight() * 0.3f, 0);
