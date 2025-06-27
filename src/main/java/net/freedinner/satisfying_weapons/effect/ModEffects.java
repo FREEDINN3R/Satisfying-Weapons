@@ -15,11 +15,11 @@ import java.util.function.BiFunction;
 
 public class ModEffects {
     public static StatusEffect FESTIVITY = registerStatusEffect("festivity",
-            new Color(255, 255, 255),
+            new Color(237, 29, 109),
             StatusEffectCategory.NEUTRAL,
             FestivityEffect::new);
     public static StatusEffect FIREWORK_JUMP = registerStatusEffect("firework_jump",
-            new Color(255, 255, 255),
+            new Color(242, 156, 42),
             StatusEffectCategory.NEUTRAL,
             FireworkJumpEffect::new);
     public static StatusEffect BIRTHDAY_PARTY = registerStatusEffect("birthday_party",
