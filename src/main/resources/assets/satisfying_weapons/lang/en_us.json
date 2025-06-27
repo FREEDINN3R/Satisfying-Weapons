@@ -30,7 +30,7 @@
 
   "item.satisfying_weapons.glass_sword": "Glass Sword",
   "item.satisfying_weapons.glass_sword.skill_name_1": "Skill 1",
-  "item.satisfying_weapons.glass_sword.skill_desc_1": "Receiving fatal damage while holding this sword will shatter the sword instead, and inflict the attacker with Glass Cut for 90s. Entities with Glass Cut receive +2 damage from melee attacks.",
+  "item.satisfying_weapons.glass_sword.skill_desc_1": "Receiving fatal damage while holding this sword will shatter the sword instead, and inflict the attacker with Glass Cut for 90s. Entities with Glass Cut receive +2 damage from melee attacks. Broken Glass Sword can be repaired with Glass Panes.",
   "item.satisfying_weapons.glass_sword.skill_name_2": "Skill 2",
   "item.satisfying_weapons.glass_sword.skill_desc_2": "Hitting an entity with this sword (both broken and fixed forms) has a 30% chance to inflict Glass Cut for 20s.",
   "item.satisfying_weapons.glass_sword.skill_name_3": "Skill 3",
