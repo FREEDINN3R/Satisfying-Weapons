@@ -56,12 +56,12 @@ public class ModRecipes {
 
             ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.BLOCK_OF_LFOS)
                     .pattern(" U ")
-                    .pattern("@#W")
+                    .pattern("@#P")
                     .pattern(" & ")
                     .input('U', Items.FLOWER_POT)
                     .input('@', Items.HONEYCOMB)
-                    .input('#', Blocks.DIAMOND_BLOCK)
-                    .input('W', Items.BOOK)
+                    .input('#', Blocks.NETHERITE_BLOCK)
+                    .input('P', Blocks.QUARTZ_PILLAR)
                     .input('&', Items.POTION)
                     .criterion(FabricRecipeProvider.hasItem(Items.FLOWER_POT),
                             FabricRecipeProvider.conditionsFromItem(Items.FLOWER_POT))

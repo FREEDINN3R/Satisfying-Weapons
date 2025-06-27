@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "#": {
-      "item": "minecraft:diamond_block"
+      "item": "minecraft:netherite_block"
     },
     "&": {
       "item": "minecraft:potion"
@@ -11,16 +11,16 @@
     "@": {
       "item": "minecraft:honeycomb"
     },
+    "P": {
+      "item": "minecraft:quartz_pillar"
+    },
     "U": {
       "item": "minecraft:flower_pot"
-    },
-    "W": {
-      "item": "minecraft:book"
     }
   },
   "pattern": [
     " U ",
-    "@#W",
+    "@#P",
     " & "
   ],
   "result": {
