@@ -22,13 +22,8 @@ public class DyingStarSwordItem extends UpgradeableSwordItem {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (!hand.equals(Hand.MAIN_HAND)) {
-            return super.use(world, user, hand);
-        }
-
         ItemStack itemStack = user.getStackInHand(hand);
 
-        user.setCurrentHand(hand);
         user.getWorld().playSound(null, user.getBlockPos(), ModSounds.BLACK_HOLE_THROWN, SoundCategory.MASTER,
                 0.8f, PitchUtils.get());
 

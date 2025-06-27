@@ -14,13 +14,12 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ServerPlayerInteractionManager.class)
 public abstract class ServerPlayerInteractionManagerMixin {
     @ModifyExpressionValue(method = "interactItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/ItemCooldownManager;isCoolingDown(Lnet/minecraft/item/Item;)Z"))
-    private boolean summonBlackHoleForHP(boolean isOnCooldown, @Local(argsOnly = true) ServerPlayerEntity player, @Local(argsOnly = true) ItemStack itemStack, @Local(argsOnly = true) Hand hand) {
+    private boolean summonBlackHoleForHP(boolean isOnCooldown, @Local(argsOnly = true) ServerPlayerEntity player, @Local(argsOnly = true) ItemStack itemStack) {
         if (!isOnCooldown) {
             return false;
         }
 
         boolean canSacrificeHP = itemStack.isOf(ModItems.SWORD_OF_DYING_STAR.get(4))
-                && hand == Hand.MAIN_HAND
                 && player.getHealth() > 4
                 && player.hurtTime <= 0;
 
