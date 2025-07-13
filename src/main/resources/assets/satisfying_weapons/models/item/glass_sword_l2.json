@@ -6,7 +6,7 @@
   "overrides": [
     {
       "predicate": {
-        "satisfying_weapons:glass_state": 2
+        "satisfying_weapons:glass_state": 0.5
       },
       "model": "satisfying_weapons:item/glass_sword_broken"
     }
