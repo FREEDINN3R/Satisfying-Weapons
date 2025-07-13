@@ -35,6 +35,15 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
 
     private final Multimap<EntityAttribute, EntityAttributeModifier> brokenAttributeModifiers;
 
+    @Override
+    public String getTranslationKey(ItemStack stack) {
+        if (getGlassState(stack) == GlassState.BROKEN) {
+            return "item.satisfying_weapons.broken_glass_sword";
+        }
+
+        return super.getTranslationKey(stack);
+    }
+
     public GlassSwordItem(ModToolMaterial toolMaterial, Settings settings, int level, @Nullable GlassSwordItem nextLevelWeapon) {
         super(toolMaterial, settings, level, nextLevelWeapon);
 
@@ -45,7 +54,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         );
         builder.put(
                 EntityAttributes.GENERIC_ATTACK_SPEED,
-                new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", -2.4, EntityAttributeModifier.Operation.ADDITION)
+                new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", 1, EntityAttributeModifier.Operation.ADDITION)
         );
         this.brokenAttributeModifiers = builder.build();
     }

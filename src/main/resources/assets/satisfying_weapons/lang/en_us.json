@@ -29,6 +29,7 @@
   "item.satisfying_weapons.firework_sword.skill_desc_5": "{ED1D6D}Festivity{AAAAAA} can now go up to 10_stacks. Also, {ED1D6D}Festivity{AAAAAA} recovered from {EEEE66}Level_3{AAAAAA} is no longer limited to 2_stacks per plunge attack.",
 
   "item.satisfying_weapons.glass_sword": "Glass Sword",
+  "item.satisfying_weapons.broken_glass_sword": "Broken Glass Sword",
   "item.satisfying_weapons.glass_sword.skill_name_1": "Skill 1",
   "item.satisfying_weapons.glass_sword.skill_desc_1": "Receiving fatal damage while holding this sword will shatter the sword instead, and inflict surrounding entities with Glass Cut for 90s. Entities with Glass Cut receive +2 damage from melee attacks. Broken Glass Sword can be repaired with Glass Panes.",
   "item.satisfying_weapons.glass_sword.skill_name_2": "Skill 2",
@@ -39,7 +40,6 @@
   "item.satisfying_weapons.glass_sword.skill_desc_4": "The chance to inflict Glass Cut increases based on your missing HP, up to 80%. Broken Glass Sword has a 100% chance to inflict Glass Cut.",
   "item.satisfying_weapons.glass_sword.skill_name_5": "Skill 5",
   "item.satisfying_weapons.glass_sword.skill_desc_5": "Glass Cut can now stack up to 3 times. Entities with 2 / 3 stacks of Glass Cut will also have their regeneration reduced by 25% / 50%, respectively.",
-  "item.satisfying_weapons.broken_glass_sword": "Broken Glass Sword",
 
   "item.satisfying_weapons.toy_bow": "Toy Bow",
   "item.satisfying_weapons.toy_bow.skill_name_1": "Best Day of the Year",
