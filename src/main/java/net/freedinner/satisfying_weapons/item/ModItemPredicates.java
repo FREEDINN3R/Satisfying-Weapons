@@ -1,6 +1,7 @@
 package net.freedinner.satisfying_weapons.item;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
+import net.freedinner.satisfying_weapons.item.custom.GlassSwordItem;
 import net.freedinner.satisfying_weapons.item.custom.WishingStarItem;
 import net.minecraft.client.item.ClampedModelPredicateProvider;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
@@ -25,6 +26,10 @@ public class ModItemPredicates {
             }
 
             return 0;
+        });
+
+        registerItemPredicate(ModItems.GLASS_SWORD, "glass_state", (itemStack, clientWorld, entity, seed) -> {
+            return GlassSwordItem.getGlassState(itemStack).ordinal() / 2f; // predicates can only return values from 0 to 1
         });
 
         ClampedModelPredicateProvider pulling = (itemStack, world, entity, seed) -> {

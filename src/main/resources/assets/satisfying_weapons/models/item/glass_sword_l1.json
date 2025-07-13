@@ -2,5 +2,13 @@
   "parent": "item/handheld",
   "textures": {
     "layer0": "satisfying_weapons:item/glass_sword"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "satisfying_weapons:glass_state": 0.5
+      },
+      "model": "satisfying_weapons:item/glass_sword_broken"
+    }
+  ]
 }
