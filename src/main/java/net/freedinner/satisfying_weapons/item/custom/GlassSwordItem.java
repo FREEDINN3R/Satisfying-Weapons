@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItem;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.util.MathUtils;
@@ -17,6 +18,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -99,6 +101,10 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
     public static void setGlassState(ItemStack itemStack, GlassState state) {
         NbtCompound stackNbt = itemStack.getOrCreateNbt();
         stackNbt.putInt(GLASS_STATE_NBT_KEY, state.ordinal());
+    }
+
+    public static boolean isBrokenGlassSword(ItemStack itemStack) {
+        return itemStack.getItem() instanceof GlassSwordItem && getGlassState(itemStack) == GlassState.BROKEN;
     }
 
     private void sendParticlesPacket(LivingEntity attacker) {
