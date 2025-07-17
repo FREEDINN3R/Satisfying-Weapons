@@ -60,6 +60,16 @@ public abstract class AnvilScreenHandlerMixin {
     }
 
     @ModifyExpressionValue(method = "updateResult",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getRepairCost()I", ordinal = 0))
+    private int reduceGlassRepairCost(int original, @Local(ordinal = 0) ItemStack slot1, @Local(ordinal = 2) ItemStack slot2) {
+        if (GlassSwordItem.isBrokenGlass(slot1) && GlassSwordItem.isGlassPane(slot2)) {
+            return (int) Math.sqrt(original);
+        }
+
+        return original;
+    }
+
+    @ModifyExpressionValue(method = "updateResult",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/AnvilScreenHandler;getNextCost(I)I"))
     private int preventGlassCostIncrease(int original, @Local(ordinal = 0) ItemStack slot1, @Local(ordinal = 2) ItemStack slot2) {
         if (!GlassSwordItem.isBrokenGlass(slot1) || !GlassSwordItem.isGlassPane(slot2)) {
