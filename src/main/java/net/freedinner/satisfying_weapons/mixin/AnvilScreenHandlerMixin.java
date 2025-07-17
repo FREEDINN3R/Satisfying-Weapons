@@ -59,7 +59,7 @@ public abstract class AnvilScreenHandlerMixin {
         return original;
     }
 
-    @ModifyExpressionValue(method = "updateResult",
+    /*@ModifyExpressionValue(method = "updateResult",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getRepairCost()I", ordinal = 0))
     private int reduceGlassRepairCost(int original, @Local(ordinal = 0) ItemStack slot1, @Local(ordinal = 2) ItemStack slot2) {
         if (GlassSwordItem.isBrokenGlass(slot1) && GlassSwordItem.isGlassPane(slot2)) {
@@ -67,6 +67,24 @@ public abstract class AnvilScreenHandlerMixin {
         }
 
         return original;
+    }*/
+
+    @WrapOperation(method = "updateResult",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/Property;set(I)V", ordinal = 5))
+    private void reduceGlassRepairCost(Property levelCost, int originalValue, Operation<Void> operation, @Local(ordinal = 0) ItemStack slot1, @Local(ordinal = 2) ItemStack slot2, @Local(ordinal = 0) LocalIntRef i, @Local(ordinal = 1) LocalIntRef j, @Local(ordinal = 2) LocalIntRef k) {
+        if (!GlassSwordItem.isBrokenGlass(slot1) || !GlassSwordItem.isGlassPane(slot2)) {
+            operation.call(levelCost, originalValue);
+            return;
+        }
+
+        if (k.get() > 0) {
+            operation.call(levelCost, originalValue);
+            return;
+        }
+
+        int reducedJ = (int) Math.sqrt(j.get());
+        j.set(reducedJ);
+        operation.call(levelCost, reducedJ + i.get());
     }
 
     @ModifyExpressionValue(method = "updateResult",
