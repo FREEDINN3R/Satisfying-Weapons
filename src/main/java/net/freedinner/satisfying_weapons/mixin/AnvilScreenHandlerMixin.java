@@ -45,7 +45,7 @@ public abstract class AnvilScreenHandlerMixin {
             boolean original, @Local(ordinal = 0) ItemStack slot1, @Local(ordinal = 2) ItemStack slot2,
             @Local(ordinal = 1) LocalRef<ItemStack> result, @Local(ordinal = 0) LocalIntRef expCost
             ) {
-        if (GlassSwordItem.isBrokenGlassSword(slot1) && slot2.isOf(Items.GLASS_PANE)) {
+        if (GlassSwordItem.isBrokenGlass(slot1) && GlassSwordItem.isGlassPane(slot2)) {
             ItemStack repairedSword = slot1.copy();
             GlassSwordItem.setGlassState(repairedSword, GlassSwordItem.GlassState.INTACT);
             result.set(repairedSword);
@@ -57,6 +57,25 @@ public abstract class AnvilScreenHandlerMixin {
         }
 
         return original;
+    }
+
+    @ModifyExpressionValue(method = "updateResult",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/AnvilScreenHandler;getNextCost(I)I"))
+    private int preventGlassCostIncrease(int original, @Local(ordinal = 0) ItemStack slot1, @Local(ordinal = 2) ItemStack slot2) {
+        if (!GlassSwordItem.isBrokenGlass(slot1) || !GlassSwordItem.isGlassPane(slot2)) {
+            return original;
+        }
+
+        int t = original;
+        while (AnvilScreenHandler.getNextCost(t) != original && t > -1) {
+            t--;
+        }
+
+        if (t == -1) {
+            t = (original - 1) / 2;
+        }
+
+        return t;
     }
 
     @Unique

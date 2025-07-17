@@ -12,14 +12,17 @@ import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.freedinner.satisfying_weapons.util.PosUtils;
+import net.minecraft.block.StainedGlassPaneBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -103,8 +106,12 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         stackNbt.putInt(GLASS_STATE_NBT_KEY, state.ordinal());
     }
 
-    public static boolean isBrokenGlassSword(ItemStack itemStack) {
-        return itemStack.getItem() instanceof GlassSwordItem && getGlassState(itemStack) == GlassState.BROKEN;
+    public static boolean isBrokenGlass(ItemStack stack) {
+        return stack.getItem() instanceof GlassSwordItem && getGlassState(stack) == GlassState.BROKEN;
+    }
+
+    public static boolean isGlassPane(ItemStack stack) {
+        return stack.isOf(Items.GLASS_PANE) ||(stack.getItem() instanceof BlockItem blockMaterial && blockMaterial.getBlock() instanceof StainedGlassPaneBlock);
     }
 
     private void sendParticlesPacket(LivingEntity attacker) {
