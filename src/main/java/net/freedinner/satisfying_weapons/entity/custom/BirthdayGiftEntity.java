@@ -19,6 +19,8 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -126,6 +128,12 @@ public class BirthdayGiftEntity extends Entity {
                 this.moveTo(this.getPos().subtract(0, fallVelocity, 0));
 
                 if (this.isOnGround()) {
+                    // Momentary invincibility for owner to prevent explosion damage
+                    LivingEntity giftOwner = this.getOwner();
+                    if (giftOwner != null) {
+                        giftOwner.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 2, 4, false, false));
+                    }
+
                     // Create a non-destructive explosion
                     this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new NonDestructiveExplosionBehavior(), this.getPos(), 1.5f, false, World.ExplosionSourceType.MOB);
                     sendExplosionParticlesPacket();

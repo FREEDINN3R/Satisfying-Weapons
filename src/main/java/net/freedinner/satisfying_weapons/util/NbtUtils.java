@@ -11,6 +11,14 @@ public class NbtUtils {
         return nbt.getInt(nbtKey);
     }
 
+    public static double getOrCreate(NbtCompound nbt, String nbtKey, double defaultValue) {
+        if (!nbt.contains(nbtKey)) {
+            nbt.putDouble(nbtKey, defaultValue);
+        }
+
+        return nbt.getDouble(nbtKey);
+    }
+
     public static boolean getOrCreate(NbtCompound nbt, String nbtKey, boolean defaultValue) {
         if (!nbt.contains(nbtKey)) {
             nbt.putBoolean(nbtKey, defaultValue);

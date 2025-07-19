@@ -30,7 +30,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -218,14 +217,14 @@ public class BlackHoleEntity extends ThrownItemEntity {
             Vec3d direction = pos.subtract(entity.getPos());
             double distance = direction.length();
 
-            // Try to collect loot
+            // Try to collect dropped loot
             if (shouldCollectLoot && distance < 1f) {
-                this.tryPickUp(entity);
+                this.tryPickUpLoot(entity);
             }
 
             double pullForce = Math.sqrt(distance) / 16;
 
-            // Increased pull force for legible BHs
+            // Increase pull force for BHs from the same user
             if (entity instanceof BlackHoleEntity otherBlackHole && this.shouldCollapseWith(otherBlackHole)) {
                 pullForce *= Math.sqrt(BLACK_HOLE_EFFECT_RANGE) / distance;
 
@@ -242,25 +241,29 @@ public class BlackHoleEntity extends ThrownItemEntity {
             entity.addVelocity(v);
             entity.velocityModified = true;
 
-            // If possible, set the owner as attacker
-            if (entity instanceof LivingEntity livingEntity && this.getOwner() instanceof PlayerEntity owner) {
+            if (!(entity instanceof LivingEntity livingEntity)) {
+                continue;
+            }
+
+            // If owner exists, set them as attacker
+            if (this.getOwner() instanceof PlayerEntity owner) {
                 livingEntity.setAttacking(owner);
                 ((LivingEntityAccessor) livingEntity).setPlayerHitTimer(100); // setAttacking() sets it to age, idk why
             }
 
             // Try to inflict Entropy
-            if (swordLevel >= 3 && entity instanceof LivingEntity livingEntity) {
+            if (swordLevel >= 3) {
                 livingEntity.addStatusEffect(new StatusEffectInstance(ModEffects.ENTROPY, 320, 0, false, false));
             }
 
             // Try to steal equipment
-            if (swordLevel >= 4 && entity instanceof LivingEntity livingEntity) {
+            if (swordLevel >= 4) {
                 this.tryDropEquipment(livingEntity);
             }
         }
     }
 
-    private void tryPickUp(Entity entity) {
+    private void tryPickUpLoot(Entity entity) {
         PlayerEntity owner = (PlayerEntity) this.getOwner();
         boolean canPickUp = entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity;
 
@@ -282,14 +285,16 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
         double mult = Math.cbrt(occupiedSlots.size());
 
-        // 30% base chance to drop at least one item, goes up to 48% with full equipment
+        // 30% total base chance to drop at least one item, goes up to 48% with all 6 occupied slots
         if (MathUtils.takeChance(0.0059 * mult)) {
             EquipmentSlot slot = occupiedSlots.get(MathUtils.randomNumber(occupiedSlots.size()));
 
+            // Drop the stack
             ItemStack itemStack = livingEntity.getEquippedStack(slot);
             livingEntity.equipStack(slot, ItemStack.EMPTY);
             ItemEntity droppedStack = livingEntity.dropStack(itemStack);
 
+            // If successful, lunge the stack towards the BH
             if (droppedStack != null) {
                 Vec3d direction = this.getPos().subtract(droppedStack.getPos());
                 double distance = direction.length();

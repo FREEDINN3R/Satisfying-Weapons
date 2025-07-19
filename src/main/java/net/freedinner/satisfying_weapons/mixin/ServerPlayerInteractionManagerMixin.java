@@ -19,6 +19,7 @@ public abstract class ServerPlayerInteractionManagerMixin {
             return false;
         }
 
+        // Can sacrifice if has enough HP and no invincibility frames
         boolean canSacrificeHP = itemStack.isOf(ModItems.SWORD_OF_DYING_STAR.get(4))
                 && player.getHealth() > 4
                 && player.hurtTime <= 0;
