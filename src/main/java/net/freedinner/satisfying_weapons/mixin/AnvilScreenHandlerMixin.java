@@ -6,16 +6,13 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.item.custom.GlassSwordItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.ToolItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -45,7 +42,7 @@ public abstract class AnvilScreenHandlerMixin {
             boolean original, @Local(ordinal = 0) ItemStack slot1, @Local(ordinal = 2) ItemStack slot2,
             @Local(ordinal = 1) LocalRef<ItemStack> result, @Local(ordinal = 0) LocalIntRef expCost
             ) {
-        if (GlassSwordItem.isBrokenGlass(slot1) && GlassSwordItem.isGlassPane(slot2)) {
+        if (GlassSwordItem.isBrokenSword(slot1) && GlassSwordItem.isGlassPane(slot2)) {
             ItemStack repairedSword = slot1.copy();
             GlassSwordItem.setGlassState(repairedSword, GlassSwordItem.GlassState.INTACT);
             result.set(repairedSword);
@@ -62,7 +59,7 @@ public abstract class AnvilScreenHandlerMixin {
     @WrapOperation(method = "updateResult",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/Property;set(I)V", ordinal = 5))
     private void reduceGlassRepairCost(Property levelCost, int originalValue, Operation<Void> operation, @Local(ordinal = 0) ItemStack slot1, @Local(ordinal = 2) ItemStack slot2, @Local(ordinal = 0) LocalIntRef i, @Local(ordinal = 1) LocalIntRef j, @Local(ordinal = 2) LocalIntRef k) {
-        if (!GlassSwordItem.isBrokenGlass(slot1) || !GlassSwordItem.isGlassPane(slot2)) {
+        if (!GlassSwordItem.isBrokenSword(slot1) || !GlassSwordItem.isGlassPane(slot2)) {
             operation.call(levelCost, originalValue);
             return;
         }
@@ -80,7 +77,7 @@ public abstract class AnvilScreenHandlerMixin {
     @ModifyExpressionValue(method = "updateResult",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/AnvilScreenHandler;getNextCost(I)I"))
     private int preventGlassCostIncrease(int original, @Local(ordinal = 0) ItemStack slot1, @Local(ordinal = 2) ItemStack slot2) {
-        if (!GlassSwordItem.isBrokenGlass(slot1) || !GlassSwordItem.isGlassPane(slot2)) {
+        if (!GlassSwordItem.isBrokenSword(slot1) || !GlassSwordItem.isGlassPane(slot2)) {
             return original;
         }
 

@@ -10,6 +10,7 @@ import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.entity.misc.NonDestructiveExplosionBehavior;
 import net.freedinner.satisfying_weapons.util.MathUtils;
+import net.freedinner.satisfying_weapons.util.NbtUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -92,7 +93,7 @@ public class BirthdayGiftEntity extends Entity {
         // Custom logic for every state
         switch (this.getState()) {
             case EMERGING:
-                assert currTarget != null; // Because it was processed before switch
+                assert currTarget != null; // If it were, the gift would already fall
 
                 if (this.getStateAge() <= 10) {
                     double halfHeight = 0.5 * currTarget.getHeight();
@@ -104,13 +105,13 @@ public class BirthdayGiftEntity extends Entity {
                     this.moveTo(newPos);
                 }
                 else {
-                    // After rising, becomes active
+                    // When reaching the top, becomes active
                     this.setState(GiftState.ACTIVE);
                 }
                 break;
 
             case ACTIVE:
-                assert currTarget != null; // Because it was processed before switch
+                assert currTarget != null; // If it were, the gift would already fall
 
                 // Hover 0.5 blocks above the target's head
                 Vec3d giftPos = currTarget.getPos().add(0, currTarget.getHeight() + 0.5, 0);
@@ -266,12 +267,8 @@ public class BirthdayGiftEntity extends Entity {
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
         // Both can be null if the gift is summoned through commands, leading to a crash
-        if (targetUUID != null) {
-            nbt.putUuid(GIFT_TARGET_NBT_KEY, targetUUID);
-        }
-        if (ownerUUID != null) {
-            nbt.putUuid(GIFT_OWNER_NBT_KEY, ownerUUID);
-        }
+        NbtUtils.putIfExists(nbt, GIFT_TARGET_NBT_KEY, targetUUID);
+        NbtUtils.putIfExists(nbt, GIFT_OWNER_NBT_KEY, ownerUUID);
 
         nbt.putInt(STATE_NBT_KEY, this.getState().ordinal());
         nbt.putInt(STATE_AGE_NBT_KEY, this.getStateAge());
@@ -283,15 +280,14 @@ public class BirthdayGiftEntity extends Entity {
 
     @Override
     protected void readCustomDataFromNbt(NbtCompound nbt) {
-        if (nbt.contains(GIFT_TARGET_NBT_KEY)) {
-            targetUUID = nbt.getUuid(GIFT_TARGET_NBT_KEY);
-        }
-        if (nbt.contains(GIFT_OWNER_NBT_KEY)) {
-            ownerUUID = nbt.getUuid(GIFT_OWNER_NBT_KEY);
-        }
+        targetUUID = NbtUtils.getOrCreate(nbt, GIFT_TARGET_NBT_KEY, null);
+        ownerUUID = NbtUtils.getOrCreate(nbt, GIFT_OWNER_NBT_KEY, null);
 
-        this.setState(nbt.getInt(STATE_NBT_KEY));
-        this.setStateAge(nbt.getInt(STATE_AGE_NBT_KEY));
+        int stateId = NbtUtils.getOrCreate(nbt, STATE_NBT_KEY, 0);
+        this.setState(stateId);
+
+        int stateAge = NbtUtils.getOrCreate(nbt, STATE_AGE_NBT_KEY, 0);
+        this.setStateAge(stateAge);
 
         detonatorArrowData = ToyArrowEntityData.loadDataFrom(nbt);
     }

@@ -14,7 +14,7 @@ public class TextUtils {
 
     /* MY CUSTOM SYNTAX FOR DESCRIPTIONS
           _ = non-breaking space
-          {xxx} = set text color, accepts any int
+          {FFFFFF} = set text color, accepts hex
      */
 
     public static List<MutableText> breakDownLongTooltip(Text tooltip) {

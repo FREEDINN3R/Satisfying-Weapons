@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons.entity.custom;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
+import net.freedinner.satisfying_weapons.util.NbtUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -96,13 +97,10 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
 
-        if (nbt.contains(CAN_HIT_OWNER_NBT_KEY)) {
-            canHitOwner = nbt.getBoolean(CAN_HIT_OWNER_NBT_KEY);
-        }
+        canHitOwner = NbtUtils.getOrCreate(nbt, CAN_HIT_OWNER_NBT_KEY, true);
 
-        if (nbt.contains(TOY_BOW_LEVEL_NBT_KEY)) {
-            this.setToyBowLevel(nbt.getInt(TOY_BOW_LEVEL_NBT_KEY));
-        }
+        int bowLevel = NbtUtils.getOrCreate(nbt, TOY_BOW_LEVEL_NBT_KEY, 0);
+        this.setToyBowLevel(bowLevel);
     }
 
     @Override

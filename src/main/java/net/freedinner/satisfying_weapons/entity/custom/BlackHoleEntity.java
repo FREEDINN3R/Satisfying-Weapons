@@ -10,10 +10,7 @@ import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.mixin.LivingEntityAccessor;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
-import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
-import net.freedinner.satisfying_weapons.util.MathUtils;
-import net.freedinner.satisfying_weapons.util.PitchUtils;
-import net.freedinner.satisfying_weapons.util.PosUtils;
+import net.freedinner.satisfying_weapons.util.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -153,18 +150,10 @@ public class BlackHoleEntity extends ThrownItemEntity {
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
 
-        if (nbt.contains(SWORD_LEVEL_NBT_KEY)) {
-            swordLevel = nbt.getInt(SWORD_LEVEL_NBT_KEY);
-        }
-        if (nbt.contains(DISTANCE_TRAVELLED_NBT_KEY)) {
-            distanceTravelled = nbt.getDouble(DISTANCE_TRAVELLED_NBT_KEY);
-        }
-        if (nbt.contains(ACTIVATION_AGE_NBT_KEY)) {
-            activationAge = nbt.getInt(ACTIVATION_AGE_NBT_KEY);
-        }
-        if (nbt.contains(SHOULD_COLLECT_LOOT_NBT_KEY)) {
-            shouldCollectLoot = nbt.getBoolean(SHOULD_COLLECT_LOOT_NBT_KEY);
-        }
+        swordLevel = NbtUtils.getOrCreate(nbt, SWORD_LEVEL_NBT_KEY, 0);
+        distanceTravelled = NbtUtils.getOrCreate(nbt, DISTANCE_TRAVELLED_NBT_KEY, 0.0);
+        activationAge = NbtUtils.getOrCreate(nbt, ACTIVATION_AGE_NBT_KEY, 0);
+        shouldCollectLoot = NbtUtils.getOrCreate(nbt, SHOULD_COLLECT_LOOT_NBT_KEY, false);
     }
 
     @Override

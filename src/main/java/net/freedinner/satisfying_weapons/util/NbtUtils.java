@@ -2,6 +2,8 @@ package net.freedinner.satisfying_weapons.util;
 
 import net.minecraft.nbt.NbtCompound;
 
+import java.util.UUID;
+
 public class NbtUtils {
     public static int getOrCreate(NbtCompound nbt, String nbtKey, int defaultValue) {
         if (!nbt.contains(nbtKey)) {
@@ -25,5 +27,19 @@ public class NbtUtils {
         }
 
         return nbt.getBoolean(nbtKey);
+    }
+
+    public static UUID getOrCreate(NbtCompound nbt, String nbtKey, UUID defaultValue) {
+        if (!nbt.contains(nbtKey)) {
+            nbt.putUuid(nbtKey, defaultValue);
+        }
+
+        return nbt.getUuid(nbtKey);
+    }
+
+    public static void putIfExists(NbtCompound nbt, String nbtKey, UUID value) {
+        if (value != null) {
+            nbt.putUuid(nbtKey, value); // Null UUID would crash the game
+        }
     }
 }
