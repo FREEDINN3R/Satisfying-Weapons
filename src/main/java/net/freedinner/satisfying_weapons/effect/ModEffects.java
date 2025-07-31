@@ -1,10 +1,7 @@
 package net.freedinner.satisfying_weapons.effect;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
-import net.freedinner.satisfying_weapons.effect.custom.BirthdayPartyEffect;
-import net.freedinner.satisfying_weapons.effect.custom.EntropyEffect;
-import net.freedinner.satisfying_weapons.effect.custom.FestivityEffect;
-import net.freedinner.satisfying_weapons.effect.custom.FireworkJumpEffect;
+import net.freedinner.satisfying_weapons.effect.custom.*;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.registry.Registries;
@@ -22,6 +19,10 @@ public class ModEffects {
             new Color(242, 156, 42),
             StatusEffectCategory.NEUTRAL,
             FireworkJumpEffect::new);
+    public static StatusEffect GLASS_CUT = registerStatusEffect("glass_cut",
+            new Color(192, 247, 255),
+            StatusEffectCategory.HARMFUL,
+            GlassCutEffect::new);
     public static StatusEffect BIRTHDAY_PARTY = registerStatusEffect("birthday_party",
             new Color(241, 35, 222),
             StatusEffectCategory.HARMFUL,
