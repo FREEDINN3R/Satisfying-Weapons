@@ -58,7 +58,7 @@ public class FestivityEffect extends StatusEffect {
 
         entity.removeStatusEffect(ModEffects.FESTIVITY);
         if (newStacks > 0) {
-            entity.addStatusEffect(new StatusEffectInstance(ModEffects.FESTIVITY, -1, newStacks - 1, false, false));
+            entity.addStatusEffect(new StatusEffectInstance(ModEffects.FESTIVITY, -1, newStacks - 1, false, false, true));
         }
 
         return newStacks != oldStacks;

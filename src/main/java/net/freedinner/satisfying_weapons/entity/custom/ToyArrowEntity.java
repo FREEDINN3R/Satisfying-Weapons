@@ -135,7 +135,7 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
         }
 
         // Apply Birthday Party for 10 seconds
-        StatusEffectInstance birthdayPartyEffect = new StatusEffectInstance(ModEffects.BIRTHDAY_PARTY, 200, thisEffectLevel, false, false);
+        StatusEffectInstance birthdayPartyEffect = new StatusEffectInstance(ModEffects.BIRTHDAY_PARTY, 200, thisEffectLevel, false, false, true);
         boolean success = target.addStatusEffect(birthdayPartyEffect, this.getEffectCause());
 
         if (!success) {

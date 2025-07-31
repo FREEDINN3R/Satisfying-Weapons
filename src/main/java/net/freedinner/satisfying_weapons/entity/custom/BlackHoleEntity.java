@@ -242,7 +242,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
             // Try to inflict Entropy
             if (swordLevel >= 3) {
-                livingEntity.addStatusEffect(new StatusEffectInstance(ModEffects.ENTROPY, 320, 0, false, false));
+                livingEntity.addStatusEffect(new StatusEffectInstance(ModEffects.ENTROPY, 320, 0, false, false, true));
             }
 
             // Try to steal equipment
