@@ -28,10 +28,11 @@ public abstract class LivingEntityMixin implements ILivingEntityDataSaver {
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
+        int dropAttempts = this.sw$getDropAttemptsBH();
 
         // Takes approx. 60 seconds to reach 0
-        if (entity instanceof PlayerEntity && this.sw$getDropAttemptsBH() > 0 && MathUtils.takeChance(0.05)) {
-            this.sw$addDropAttemptsBH(-1);
+        if (dropAttempts > 0 && entity instanceof PlayerEntity && MathUtils.takeChance(0.05)) {
+            this.sw$setDropAttemptsBH(dropAttempts - 1);
         }
     }
 
@@ -41,7 +42,7 @@ public abstract class LivingEntityMixin implements ILivingEntityDataSaver {
     }
 
     @Override
-    public void sw$addDropAttemptsBH(int amount) {
+    public void sw$setDropAttemptsBH(int amount) {
         dropAttemptsBH += amount;
     }
 
