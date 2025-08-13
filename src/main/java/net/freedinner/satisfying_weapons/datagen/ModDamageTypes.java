@@ -42,7 +42,7 @@ public class ModDamageTypes {
                     SatisfyingWeapons.MOD_ID + ".glass_cut",
                     DamageScaling.NEVER,
                     0f,
-                    DamageEffects.HURT
+                    DamageEffects.POKING
             ));
         }
 
