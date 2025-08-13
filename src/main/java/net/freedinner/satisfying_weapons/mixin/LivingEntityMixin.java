@@ -43,7 +43,7 @@ public abstract class LivingEntityMixin implements ILivingEntityDataSaver {
 
     @Override
     public void sw$setDropAttemptsBH(int amount) {
-        dropAttemptsBH += amount;
+        dropAttemptsBH = amount;
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))
