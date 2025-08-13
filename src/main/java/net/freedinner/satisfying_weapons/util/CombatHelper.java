@@ -6,6 +6,8 @@ import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +15,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
@@ -20,6 +24,8 @@ import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class CombatHelper {
     public static boolean simulatePlayerAttack(PlayerEntity player, LivingEntity target, float damageMultiplier) {
@@ -74,5 +80,12 @@ public class CombatHelper {
         }
 
         return true;
+    }
+
+    public static DamageSource getDamageSource(RegistryKey<DamageType> modDamageType, World world, @Nullable Entity attacker) {
+        return new DamageSource(
+                world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(modDamageType),
+                attacker
+        );
     }
 }

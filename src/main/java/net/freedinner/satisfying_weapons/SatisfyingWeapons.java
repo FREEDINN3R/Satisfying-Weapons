@@ -7,7 +7,8 @@ import net.freedinner.satisfying_weapons.block.ModBlocks;
 import net.freedinner.satisfying_weapons.datagen.ModTags;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
-import net.freedinner.satisfying_weapons.event.GlassSwordDeathHandler;
+import net.freedinner.satisfying_weapons.event.ModEvents;
+import net.freedinner.satisfying_weapons.event.custom.GlassSwordDeathHandler;
 import net.freedinner.satisfying_weapons.gui.ModScreenHandlers;
 import net.freedinner.satisfying_weapons.loot.ModLootConditions;
 import net.freedinner.satisfying_weapons.loot.ModLootTablesModifier;
@@ -45,10 +46,9 @@ public class SatisfyingWeapons implements ModInitializer {
 		ModLootConditions.registerLootConditions();
 		ModLootTablesModifier.modifyLootTables();
 
+		ModEvents.registerEvents();
 		ModNetworking.registerC2SPackets();
 
 		ModScreenHandlers.registerScreenHandlers();
-
-		ServerLivingEntityEvents.ALLOW_DEATH.register(new GlassSwordDeathHandler());
 	}
 }

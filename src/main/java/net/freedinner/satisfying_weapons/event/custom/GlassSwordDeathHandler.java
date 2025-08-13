@@ -1,4 +1,4 @@
-package net.freedinner.satisfying_weapons.event;
+package net.freedinner.satisfying_weapons.event.custom;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.freedinner.satisfying_weapons.item.custom.GlassSwordItem;

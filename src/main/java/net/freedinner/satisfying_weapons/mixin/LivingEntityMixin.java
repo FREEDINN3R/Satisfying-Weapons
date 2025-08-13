@@ -1,10 +1,14 @@
 package net.freedinner.satisfying_weapons.mixin;
 
+import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
+import net.freedinner.satisfying_weapons.util.CombatHelper;
 import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.NbtUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
@@ -35,9 +39,19 @@ public abstract class LivingEntityMixin implements ILivingEntityDataSaver {
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        int dropAttempts = this.sw$getDropAttemptsBH();
+
+        int glassCutCountdown = this.sw$getGlassCutCountdown();
+        if (glassCutCountdown > 0) {
+            this.sw$setGlassCutCountdown(--glassCutCountdown);
+
+            if (glassCutCountdown == 0) {
+                DamageSource glassCutSource = CombatHelper.getDamageSource(ModDamageTypes.GLASS_CUT, entity.getWorld(), entity.getLastAttacker());
+                entity.damage(glassCutSource, 2);
+            }
+        }
 
         // Takes approx. 60 seconds to reach 0
+        int dropAttempts = this.sw$getDropAttemptsBH();
         if (dropAttempts > 0 && entity instanceof PlayerEntity && MathUtils.takeChance(0.05)) {
             this.sw$setDropAttemptsBH(dropAttempts - 1);
         }
