@@ -23,15 +23,15 @@ public class ModAdvancements {
     public static void generateAdvancements(FabricDataGenerator.Pack pack) {
         SatisfyingWeapons.LOGGER.info("Generating advancements");
 
-        pack.addProvider(AdvancementsProvider::new);
+        pack.addProvider(ModAdvancementProvider::new);
     }
 
     private static Identifier getAdvancementId(String name) {
         return Identifier.of("minecraft", SatisfyingWeapons.MOD_ID + "/" + name);
     }
 
-    static class AdvancementsProvider extends FabricAdvancementProvider {
-        protected AdvancementsProvider(FabricDataOutput dataGenerator) {
+    static class ModAdvancementProvider extends FabricAdvancementProvider {
+        protected ModAdvancementProvider(FabricDataOutput dataGenerator) {
             super(dataGenerator);
         }
 

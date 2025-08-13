@@ -24,11 +24,11 @@ public class ModTags {
     public static void generateTags(FabricDataGenerator.Pack pack) {
         SatisfyingWeapons.LOGGER.info("Generating tags");
 
-        pack.addProvider(ModTagGenerator::new);
+        pack.addProvider(ModTagProvider::new);
     }
 
-    private static class ModTagGenerator extends FabricTagProvider.ItemTagProvider {
-        public ModTagGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture) {
+    private static class ModTagProvider extends FabricTagProvider.ItemTagProvider {
+        public ModTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture) {
             super(output, completableFuture);
         }
 

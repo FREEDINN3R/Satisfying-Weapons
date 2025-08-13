@@ -3,32 +3,26 @@ package net.freedinner.satisfying_weapons.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.block.ModBlocks;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
-import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.TagKey;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class ModRecipes {
     public static void generateRecipes(FabricDataGenerator.Pack pack) {
         SatisfyingWeapons.LOGGER.info("Generating recipes");
 
-        pack.addProvider(ModRecipeGenerator::new);
+        pack.addProvider(ModRecipeProvider::new);
     }
 
-    private static class ModRecipeGenerator extends FabricRecipeProvider {
-        private ModRecipeGenerator(FabricDataOutput generator) {
+    private static class ModRecipeProvider extends FabricRecipeProvider {
+        private ModRecipeProvider(FabricDataOutput generator) {
             super(generator);
         }
 

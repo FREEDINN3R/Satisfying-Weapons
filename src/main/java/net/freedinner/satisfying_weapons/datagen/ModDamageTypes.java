@@ -7,7 +7,6 @@ import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.minecraft.entity.damage.DamageEffects;
 import net.minecraft.entity.damage.DamageScaling;
 import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.damage.DeathMessageType;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
@@ -24,12 +23,12 @@ public class ModDamageTypes {
     public static void generateDamageTypes(FabricDataGenerator.Pack pack) {
         SatisfyingWeapons.LOGGER.info("Generating damage types");
 
-        pack.addProvider(DamageTypeProvider::new);
+        pack.addProvider(ModDamageTypeProvider::new);
     }
 
-    static class DamageTypeProvider extends FabricDynamicRegistryProvider {
+    static class ModDamageTypeProvider extends FabricDynamicRegistryProvider {
 
-        public DamageTypeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        public ModDamageTypeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
             super(output, registriesFuture);
         }
 

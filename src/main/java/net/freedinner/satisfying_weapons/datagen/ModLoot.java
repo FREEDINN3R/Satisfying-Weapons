@@ -10,11 +10,11 @@ public class ModLoot {
     public static void generateLoot(FabricDataGenerator.Pack pack) {
         SatisfyingWeapons.LOGGER.info("Generating loot");
 
-        pack.addProvider(ModBlockLootGenerator::new);
+        pack.addProvider(ModBlockLootProvider::new);
     }
 
-    private static class ModBlockLootGenerator extends FabricBlockLootTableProvider {
-        protected ModBlockLootGenerator(FabricDataOutput dataOutput) {
+    private static class ModBlockLootProvider extends FabricBlockLootTableProvider {
+        protected ModBlockLootProvider(FabricDataOutput dataOutput) {
             super(dataOutput);
         }
 
