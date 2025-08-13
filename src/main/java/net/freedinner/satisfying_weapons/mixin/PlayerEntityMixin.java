@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.freedinner.satisfying_weapons.util.IPlayerDataSaver;
+import net.freedinner.satisfying_weapons.util.NbtUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
@@ -58,12 +59,7 @@ public abstract class PlayerEntityMixin implements IPlayerDataSaver {
 
     @Inject(method = "readCustomDataFromNbt", at = @At("HEAD"))
     private void onReadCustomDataFromNbt(NbtCompound nbt, CallbackInfo info) {
-        if (nbt.contains(LAST_DROP_TIME_NBT_KEY)) {
-            lastDropTime = nbt.getLong(LAST_DROP_TIME_NBT_KEY);
-        }
-
-        if (nbt.contains(ON_GROUND_TIME_FS_NBT_KEY)) {
-            onGroundTimeFS = nbt.getInt(ON_GROUND_TIME_FS_NBT_KEY);
-        }
+        lastDropTime = NbtUtils.getOrCreate(nbt, LAST_DROP_TIME_NBT_KEY, 0L);
+        onGroundTimeFS = NbtUtils.getOrCreate(nbt, ON_GROUND_TIME_FS_NBT_KEY, 0);
     }
 }

@@ -72,8 +72,6 @@ public abstract class LivingEntityMixin implements ILivingEntityDataSaver {
     @Inject(method = "readCustomDataFromNbt", at = @At("HEAD"))
     private void onReadCustomDataFromNbt(NbtCompound nbt, CallbackInfo info) {
         glassCutCountdown = NbtUtils.getOrCreate(nbt, GLASS_CUT_COUNTDOWN_NBT_KEY, 0);
-        if (nbt.contains(DROP_ATTEMPTS_BH_NBT_KEY)) {
-            dropAttemptsBH = nbt.getInt(DROP_ATTEMPTS_BH_NBT_KEY);
-        }
+        dropAttemptsBH = NbtUtils.getOrCreate(nbt, DROP_ATTEMPTS_BH_NBT_KEY, 0);
     }
 }

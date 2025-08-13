@@ -13,6 +13,14 @@ public class NbtUtils {
         return nbt.getInt(nbtKey);
     }
 
+    public static long getOrCreate(NbtCompound nbt, String nbtKey, long defaultValue) {
+        if (!nbt.contains(nbtKey)) {
+            nbt.putLong(nbtKey, defaultValue);
+        }
+
+        return nbt.getLong(nbtKey);
+    }
+
     public static double getOrCreate(NbtCompound nbt, String nbtKey, double defaultValue) {
         if (!nbt.contains(nbtKey)) {
             nbt.putDouble(nbtKey, defaultValue);
