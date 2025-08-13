@@ -2,10 +2,9 @@ package net.freedinner.satisfying_weapons.util;
 
 public interface
 IPlayerDataSaver {
-    long satisfyingWeapons$getLastDropTime();
-    void satisfyingWeapons$setLastDropTime(long worldTick);
+    long sw$getLastDropTime();
+    void sw$setLastDropTime(long worldTick);
 
-    int satisfyingWeapons$getOnGroundTimeFS();
-
-    void satisfyingWeapons$setOnGroundTimeFS(int time);
+    int sw$getOnGroundTimeFS();
+    void sw$setOnGroundTimeFS(int time);
 }

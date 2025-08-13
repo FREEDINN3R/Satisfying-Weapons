@@ -31,22 +31,22 @@ public abstract class PlayerEntityMixin implements IPlayerDataSaver {
     }
 
     @Override
-    public long satisfyingWeapons$getLastDropTime() {
+    public long sw$getLastDropTime() {
         return lastDropTime;
     }
 
     @Override
-    public void satisfyingWeapons$setLastDropTime(long worldTick) {
+    public void sw$setLastDropTime(long worldTick) {
         lastDropTime = worldTick;
     }
 
     @Override
-    public int satisfyingWeapons$getOnGroundTimeFS() {
+    public int sw$getOnGroundTimeFS() {
         return onGroundTimeFS;
     }
 
     @Override
-    public void satisfyingWeapons$setOnGroundTimeFS(int time) {
+    public void sw$setOnGroundTimeFS(int time) {
         onGroundTimeFS = time;
     }
 

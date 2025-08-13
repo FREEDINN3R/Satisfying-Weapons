@@ -3,7 +3,6 @@ package net.freedinner.satisfying_weapons.effect.custom;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
@@ -219,11 +218,11 @@ public class FireworkJumpEffect extends StatusEffect {
     }
 
     private static int getOnGroundTime(PlayerEntity player) {
-        return ((IPlayerDataSaver) player).satisfyingWeapons$getOnGroundTimeFS();
+        return ((IPlayerDataSaver) player).sw$getOnGroundTimeFS();
     }
 
     private static void setOnGroundTime(PlayerEntity player, int time) {
-        ((IPlayerDataSaver) player).satisfyingWeapons$setOnGroundTimeFS(time);
+        ((IPlayerDataSaver) player).sw$setOnGroundTimeFS(time);
     }
 
     private static void sendJumpParticlesPacket(LivingEntity entity) {

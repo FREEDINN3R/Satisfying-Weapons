@@ -268,7 +268,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
         }
 
         ILivingEntityDataSaver dataSaver = (ILivingEntityDataSaver) livingEntity;
-        if (dataSaver.satisfyingWeapons$getDropAttemptsBH() >= 60) {
+        if (dataSaver.sw$getDropAttemptsBH() >= 60) {
             return;
         }
 
@@ -296,7 +296,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
             }
         }
 
-        dataSaver.satisfyingWeapons$addDropAttemptsBH(1);
+        dataSaver.sw$addDropAttemptsBH(1);
     }
 
     private List<EquipmentSlot> getOccupiedSlots(LivingEntity livingEntity) {
