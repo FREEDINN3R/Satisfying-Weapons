@@ -8,4 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface LivingEntityAccessor {
     @Accessor("playerHitTimer")
     void setPlayerHitTimer(int playerHitTimer);
+
+    @Accessor("lastDamageTaken")
+    void setLastDamageTaken(float lastDamageTaken);
 }

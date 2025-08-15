@@ -16,10 +16,12 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -90,13 +92,18 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
         return original || source.isOf(ModDamageTypes.GLASS_CUT);
     }
 
-    @ModifyExpressionValue(method = "damage", at = @At(value = "CONSTANT", args = "intValue=20"))
-    private int preventIFramesFromGlassCut(int original, @Local(argsOnly = true) DamageSource source) {
-        if (source.isOf(ModDamageTypes.GLASS_CUT)) {
-            return timeUntilRegen;
+    @Redirect(method = "damage", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/LivingEntity;timeUntilRegen:I", opcode = Opcodes.PUTFIELD))
+    private void preventIFramesFromGlassCut(LivingEntity instance, int value, @Local(argsOnly = true) DamageSource source) {
+        if (!source.isOf(ModDamageTypes.GLASS_CUT)) {
+            instance.timeUntilRegen = value;
         }
+    }
 
-        return original;
+    @Redirect(method = "damage", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/LivingEntity;lastDamageTaken:F", opcode = Opcodes.PUTFIELD))
+    private void preventLastDamageFromGlassCut(LivingEntity instance, float value, @Local(argsOnly = true) DamageSource source) {
+        if (!source.isOf(ModDamageTypes.GLASS_CUT)) {
+            ((LivingEntityAccessor) instance).setLastDamageTaken(value);
+        }
     }
 
     @Override
