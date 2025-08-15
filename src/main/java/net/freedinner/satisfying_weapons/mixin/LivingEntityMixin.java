@@ -77,8 +77,17 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
     }
 
     @ModifyExpressionValue(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSource;isIn(Lnet/minecraft/registry/tag/TagKey;)Z", ordinal = 7))
-    public boolean preventKnockbackFromGlassCut(boolean original, @Local(argsOnly = true) DamageSource source) {
+    private boolean preventKnockbackFromGlassCut(boolean original, @Local(argsOnly = true) DamageSource source) {
         return original || source.isOf(ModDamageTypes.GLASS_CUT);
+    }
+
+    @ModifyExpressionValue(method = "damage", at = @At(value = "CONSTANT", args = "intValue=20"))
+    private int preventIFramesFromGlassCut(int original, @Local(argsOnly = true) DamageSource source) {
+        if (source.isOf(ModDamageTypes.GLASS_CUT)) {
+            return timeUntilRegen;
+        }
+
+        return original;
     }
 
     @Override
