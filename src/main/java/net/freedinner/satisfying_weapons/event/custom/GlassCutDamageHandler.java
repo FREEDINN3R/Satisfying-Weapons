@@ -18,7 +18,7 @@ public class GlassCutDamageHandler implements ServerLivingEntityEvents.AllowDama
             int glassCutCountdown = entityDataSaver.sw$getGlassCutCountdown();
 
             if (!source.isOf(ModDamageTypes.GLASS_CUT) && glassCutCountdown <= 0) {
-                entityDataSaver.sw$setGlassCutCountdown(10);
+                entityDataSaver.sw$setGlassCutCountdown(5);
             }
         }
 

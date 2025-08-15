@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "satisfying_weapons:glass_cut",
+      "required": false
+    }
+  ]
+}
