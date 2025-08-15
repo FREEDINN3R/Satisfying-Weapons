@@ -1,10 +1,12 @@
 package net.freedinner.satisfying_weapons.mixin;
 
+import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
 import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.NbtUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -13,13 +15,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.logging.Logger;
+
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin implements ILivingEntityDataSaver {
+public abstract class LivingEntityMixin extends Entity implements ILivingEntityDataSaver {
     @Unique
     private int glassCutCountdown;
     @Unique
@@ -30,6 +35,10 @@ public abstract class LivingEntityMixin implements ILivingEntityDataSaver {
     @Unique
     private final static String DROP_ATTEMPTS_BH_NBT_KEY = "satisfying_weapons_drop_attempts_bh";
 
+    public LivingEntityMixin(EntityType<?> type, World world) {
+        super(type, world);
+    }
+
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onConstructor(EntityType<? extends LivingEntity> entityType, World world, CallbackInfo ci) {
         this.glassCutCountdown = 0;
@@ -38,6 +47,10 @@ public abstract class LivingEntityMixin implements ILivingEntityDataSaver {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
+        if (this.getWorld().isClient) {
+            return;
+        }
+
         LivingEntity entity = (LivingEntity) (Object) this;
 
         int glassCutCountdown = this.sw$getGlassCutCountdown();
