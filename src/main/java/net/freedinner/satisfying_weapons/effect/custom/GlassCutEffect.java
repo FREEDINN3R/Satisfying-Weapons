@@ -5,14 +5,14 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 
 public class GlassCutEffect extends StatusEffect {
+    public static final int DAMAGE_DELAY_TICKS = 5;
+
     public GlassCutEffect(StatusEffectCategory category, int color) {
         super(category, color);
     }
 
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-
-    }
+    public void applyUpdateEffect(LivingEntity entity, int amplifier) {}
 
     @Override
     public boolean canApplyUpdateEffect(int duration, int amplifier) {

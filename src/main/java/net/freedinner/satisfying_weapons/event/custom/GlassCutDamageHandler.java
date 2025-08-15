@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons.event.custom;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
+import net.freedinner.satisfying_weapons.effect.custom.GlassCutEffect;
 import net.freedinner.satisfying_weapons.item.custom.GlassSwordItem;
 import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
 import net.minecraft.entity.LivingEntity;
@@ -18,7 +19,7 @@ public class GlassCutDamageHandler implements ServerLivingEntityEvents.AllowDama
             int glassCutCountdown = entityDataSaver.sw$getGlassCutCountdown();
 
             if (!source.isOf(ModDamageTypes.GLASS_CUT) && glassCutCountdown <= 0) {
-                entityDataSaver.sw$setGlassCutCountdown(5);
+                entityDataSaver.sw$setGlassCutCountdown(GlassCutEffect.DAMAGE_DELAY_TICKS);
             }
         }
 

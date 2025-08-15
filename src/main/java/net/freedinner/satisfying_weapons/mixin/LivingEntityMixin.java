@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons.mixin;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
+import net.freedinner.satisfying_weapons.effect.custom.GlassCutEffect;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
 import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
@@ -25,6 +26,7 @@ import java.util.logging.Logger;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements ILivingEntityDataSaver {
+
     @Unique
     private int glassCutCountdown;
     @Unique
@@ -58,8 +60,16 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
             this.sw$setGlassCutCountdown(--glassCutCountdown);
 
             if (glassCutCountdown == 0) {
-                DamageSource glassCutSource = CombatHelper.getDamageSource(ModDamageTypes.GLASS_CUT, entity.getWorld(), entity.getLastAttacker());
-                entity.damage(glassCutSource, 2);
+                DamageSource glassCutDamageSource;
+
+                if (entity.getLastAttacker() != null && entity.age - entity.getLastAttackedTime() <= GlassCutEffect.DAMAGE_DELAY_TICKS + 1) {
+                    glassCutDamageSource = CombatHelper.getDamageSource(ModDamageTypes.GLASS_CUT, entity.getWorld(), entity.getLastAttacker());
+                }
+                else {
+                    glassCutDamageSource = CombatHelper.getDamageSource(ModDamageTypes.GLASS_CUT, entity.getWorld(), null);
+                }
+
+                entity.damage(glassCutDamageSource, 2);
             }
         }
 
