@@ -2,13 +2,11 @@ package net.freedinner.satisfying_weapons;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.freedinner.satisfying_weapons.block.ModBlocks;
 import net.freedinner.satisfying_weapons.datagen.ModTags;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.event.ModEvents;
-import net.freedinner.satisfying_weapons.event.custom.GlassSwordDeathHandler;
 import net.freedinner.satisfying_weapons.gui.ModScreenHandlers;
 import net.freedinner.satisfying_weapons.loot.ModLootConditions;
 import net.freedinner.satisfying_weapons.loot.ModLootTablesModifier;

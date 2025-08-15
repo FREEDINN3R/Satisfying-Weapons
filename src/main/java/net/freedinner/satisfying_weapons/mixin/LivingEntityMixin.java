@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.effect.custom.GlassCutEffect;
+import net.freedinner.satisfying_weapons.event.custom.CustomLivingEntityEvents;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
 import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements ILivingEntityDataSaver {
@@ -73,6 +75,13 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
         int dropAttempts = this.sw$getDropAttemptsBH();
         if (dropAttempts > 0 && entity instanceof PlayerEntity && MathUtils.takeChance(0.05)) {
             this.sw$setDropAttemptsBH(dropAttempts - 1);
+        }
+    }
+
+    @Inject(method = "damage", at = @At("RETURN"))
+    private void afterDamageEvent(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue()) {
+            CustomLivingEntityEvents.AFTER_DAMAGE.invoker().afterDamage((LivingEntity)(Object) this, source);
         }
     }
 
