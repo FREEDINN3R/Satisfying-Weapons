@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements ILivingEntityDataSaver {
-
     @Unique
     private int glassCutCountdown;
     @Unique
