@@ -19,7 +19,6 @@ public final class CustomLivingEntityEvents {
          *
          * @param entity the entity
          * @param source the source of the damage
-         * @param amount the amount of damage that the entity takes (after armor / mitigations)
          */
         void afterDamage(LivingEntity entity, DamageSource source);
     }
