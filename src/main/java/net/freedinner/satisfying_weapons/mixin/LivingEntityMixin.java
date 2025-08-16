@@ -5,7 +5,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.effect.custom.GlassCutEffect;
 import net.freedinner.satisfying_weapons.event.custom.CustomLivingEntityEvents;
-import net.freedinner.satisfying_weapons.util.CombatHelper;
 import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.NbtUtils;
@@ -55,25 +54,16 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
 
         LivingEntity entity = (LivingEntity) (Object) this;
 
-        int glassCutCountdown = this.sw$getGlassCutCountdown();
-        if (glassCutCountdown > 0) {
-            this.sw$setGlassCutCountdown(--glassCutCountdown);
+        int gcCountdown = this.sw$getGlassCutCountdown();
+        if (gcCountdown > 0) {
+            this.sw$setGlassCutCountdown(--gcCountdown);
 
-            if (glassCutCountdown == 0) {
-                DamageSource glassCutDamageSource;
-
-                if (entity.getLastAttacker() != null && entity.age - entity.getLastAttackedTime() <= GlassCutEffect.DAMAGE_DELAY_TICKS + 1) {
-                    glassCutDamageSource = CombatHelper.getDamageSource(ModDamageTypes.GLASS_CUT, entity.getWorld(), entity.getLastAttacker());
-                }
-                else {
-                    glassCutDamageSource = CombatHelper.getDamageSource(ModDamageTypes.GLASS_CUT, entity.getWorld(), null);
-                }
-
-                entity.damage(glassCutDamageSource, 2);
+            if (gcCountdown == 0) {
+                GlassCutEffect.applyDamageTo(entity);
             }
         }
 
-        // Takes approx. 60 seconds to reach 0
+        // Takes approx. 60 seconds to reach 0 (players only)
         int dropAttempts = this.sw$getDropAttemptsBH();
         if (dropAttempts > 0 && entity instanceof PlayerEntity && MathUtils.takeChance(0.05)) {
             this.sw$setDropAttemptsBH(dropAttempts - 1);
