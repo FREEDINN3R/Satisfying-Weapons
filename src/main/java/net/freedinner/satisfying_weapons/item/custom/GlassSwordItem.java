@@ -127,14 +127,18 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
     }
 
     public static void inflictGlassCut(LivingEntity target, int duration, int swordLevel) {
+        int amplifier = 0;
+
         StatusEffectInstance existingGlassCut = target.getStatusEffect(ModEffects.GLASS_CUT);
+        if (existingGlassCut != null) {
+            int maxAmplifier = (swordLevel < 5) ? 0 : 2;
+            amplifier = Math.min(existingGlassCut.getAmplifier() + 1, maxAmplifier);
+            duration = Math.max(existingGlassCut.getDuration(), duration);
 
-        int maxAmplifier = (swordLevel < 5) ? 0 : 2;
-        int actualAmplifier = (existingGlassCut == null) ? 0 : Math.min(existingGlassCut.getAmplifier() + 1, maxAmplifier);
+            target.removeStatusEffect(ModEffects.GLASS_CUT);
+        }
 
-        duration = (existingGlassCut == null) ? duration : Math.max(existingGlassCut.getDuration(), duration);
-
-        target.addStatusEffect(new StatusEffectInstance(ModEffects.GLASS_CUT, duration, actualAmplifier, false, true, true));
+        target.addStatusEffect(new StatusEffectInstance(ModEffects.GLASS_CUT, duration, amplifier, false, true, true));
     }
 
     public static GlassState getGlassState(ItemStack itemStack) {
