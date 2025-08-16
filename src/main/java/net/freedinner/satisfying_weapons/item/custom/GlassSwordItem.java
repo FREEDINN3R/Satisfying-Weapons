@@ -6,17 +6,22 @@ import net.fabricmc.fabric.api.item.v1.FabricItem;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.freedinner.satisfying_weapons.effect.ModEffects;
+import net.freedinner.satisfying_weapons.entity.custom.BlackHoleEntity;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.freedinner.satisfying_weapons.util.PosUtils;
 import net.minecraft.block.StainedGlassPaneBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -27,10 +32,15 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import java.util.List;
+
 public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
+    private static final double SHATTER_EFFECT_RADIUS = 2.5;
     private static final String GLASS_STATE_NBT_KEY = "glass_state";
 
     private static final Multimap<EntityAttribute, EntityAttributeModifier> brokenAttributeModifiers;
@@ -93,14 +103,38 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         }
 
         setGlassState(itemStack, GlassState.BROKEN);
-
         holder.setHealth(1.0F);
-        holder.clearStatusEffects();
+
+        Vec3d pos = holder.getPos();
+        Box box = new Box(pos, pos).expand(SHATTER_EFFECT_RADIUS);
+        int swordLevel = ((GlassSwordItem) itemStack.getItem()).getLevel();
+
+        List<LivingEntity> affectedEntities = holder.getWorld().getOtherEntities(holder, box)
+                .stream()
+                .filter(e -> e instanceof LivingEntity)
+                .map(e -> (LivingEntity) e)
+                .filter(e -> e.distanceTo(holder) <= SHATTER_EFFECT_RADIUS) // Cuz it's a sphere, not a cube
+                .toList();
+
+        for (LivingEntity entity : affectedEntities) {
+            inflictGlassCut(entity, 1800, swordLevel);
+        }
 
         holder.getWorld().playSound(null, holder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get());
         sendParticlesPacket(holder);
 
         return true;
+    }
+
+    public static void inflictGlassCut(LivingEntity target, int duration, int swordLevel) {
+        StatusEffectInstance existingGlassCut = target.getStatusEffect(ModEffects.GLASS_CUT);
+
+        int maxAmplifier = (swordLevel < 5) ? 0 : 2;
+        int actualAmplifier = (existingGlassCut == null) ? 0 : Math.min(existingGlassCut.getAmplifier() + 1, maxAmplifier);
+
+        duration = (existingGlassCut == null) ? duration : Math.max(existingGlassCut.getDuration(), duration);
+
+        target.addStatusEffect(new StatusEffectInstance(ModEffects.GLASS_CUT, duration, actualAmplifier, false, true, true));
     }
 
     public static GlassState getGlassState(ItemStack itemStack) {
