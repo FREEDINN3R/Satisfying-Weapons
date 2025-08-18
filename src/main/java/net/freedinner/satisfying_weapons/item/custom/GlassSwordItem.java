@@ -7,13 +7,12 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
-import net.freedinner.satisfying_weapons.entity.custom.BlackHoleEntity;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
+import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.freedinner.satisfying_weapons.util.PosUtils;
 import net.minecraft.block.StainedGlassPaneBlock;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -21,7 +20,6 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -65,11 +63,29 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (isIntactSword(stack)) {
-            return super.postHit(stack, target, attacker); // for durability and injected behaviors
+        int swordLevel = ((GlassSwordItem) stack.getItem()).getLevel();
+
+        if (swordLevel >= 2) {
+            double chance = 0.3;
+
+            if (swordLevel >= 4) {
+                chance += 0.5 * (1 - attacker.getHealth() / attacker.getMaxHealth());
+
+                if (isBrokenSword(stack)) {
+                    chance = 1.0;
+                }
+            }
+
+            if (MathUtils.takeChance(chance)) {
+                inflictGlassCut(target, 400, swordLevel);
+            }
         }
 
-        return true;
+        if (!isIntactSword(stack)) {
+             return true; // skipping durability and other checks
+        }
+
+        return super.postHit(stack, target, attacker);
     }
 
     @Override
