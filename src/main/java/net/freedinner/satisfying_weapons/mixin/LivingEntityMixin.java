@@ -2,7 +2,9 @@ package net.freedinner.satisfying_weapons.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
+import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.effect.custom.GlassCutEffect;
 import net.freedinner.satisfying_weapons.event.custom.CustomLivingEntityEvents;
 import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
@@ -12,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
@@ -67,6 +70,22 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
         int dropAttempts = this.sw$getDropAttemptsBH();
         if (dropAttempts > 0 && entity instanceof PlayerEntity && MathUtils.takeChance(0.05)) {
             this.sw$setDropAttemptsBH(dropAttempts - 1);
+        }
+    }
+
+    @Inject(method = "heal", at = @At("HEAD"))
+    private void reduceRegenGlassCut(float amount, CallbackInfo ci, @Local(argsOnly = true) LocalFloatRef mutableAmount) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        StatusEffectInstance glassCut = entity.getStatusEffect(ModEffects.GLASS_CUT);
+
+        if (glassCut != null) {
+            float multiplier = switch(glassCut.getAmplifier()) {
+                case 0 -> 1f;
+                case 1 -> 0.75f;
+                default -> 0.5f;
+            };
+
+            mutableAmount.set(amount * multiplier);
         }
     }
 

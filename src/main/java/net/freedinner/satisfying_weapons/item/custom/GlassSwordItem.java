@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItem;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
@@ -155,6 +156,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         }
 
         target.addStatusEffect(new StatusEffectInstance(ModEffects.GLASS_CUT, duration, amplifier, false, true, true));
+        SatisfyingWeapons.LOGGER.info("Inflicted Glass Cut " + (amplifier + 1) + " for " + (duration / 20) + " seconds");
     }
 
     public static GlassState getGlassState(ItemStack itemStack) {
