@@ -23,6 +23,10 @@ public class ModEffects {
             new Color(192, 247, 255),
             StatusEffectCategory.HARMFUL,
             GlassCutEffect::new);
+    public static StatusEffect BROKEN_SOUL = registerStatusEffect("broken_soul",
+            new Color(255, 255, 255),
+            StatusEffectCategory.BENEFICIAL,
+            BrokenSoulEffect::new);
     public static StatusEffect BIRTHDAY_PARTY = registerStatusEffect("birthday_party",
             new Color(241, 35, 222),
             StatusEffectCategory.HARMFUL,
