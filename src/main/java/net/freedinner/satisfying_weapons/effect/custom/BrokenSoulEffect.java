@@ -44,6 +44,10 @@ public class BrokenSoulEffect extends StatusEffect {
         if (entity.isAlive() && entity.getHealth() != 1) {
             entity.setHealth(1);
         }
+
+        if (entity.getAbsorptionAmount() > 0) {
+            entity.setAbsorptionAmount(0);
+        }
     }
 
     @Override
