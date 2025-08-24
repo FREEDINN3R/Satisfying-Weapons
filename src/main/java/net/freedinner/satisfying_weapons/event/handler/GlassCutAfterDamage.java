@@ -8,7 +8,7 @@ import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 
-public class GlassCutDamageHandler implements CustomLivingEntityEvents.AfterDamage {
+public class GlassCutAfterDamage implements CustomLivingEntityEvents.AfterDamage {
     @Override
     public void afterDamage(LivingEntity entity, DamageSource source) {
         if (!entity.hasStatusEffect(ModEffects.GLASS_CUT) || source.isOf(ModDamageTypes.GLASS_CUT)) {

@@ -7,6 +7,8 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
+import virtuoel.pehkui.api.ScaleData;
+import virtuoel.pehkui.api.ScaleTypes;
 
 import java.util.UUID;
 
@@ -35,7 +37,10 @@ public class BrokenSoulEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-
+        // Substitute for heal reduction through mixins, also works as a failsafe
+        if (entity.isAlive()) {
+            entity.setHealth(1);
+        }
     }
 
     @Override

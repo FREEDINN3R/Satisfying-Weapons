@@ -6,7 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.registry.tag.DamageTypeTags;
 
-public class GlassSwordDeathHandler implements ServerLivingEntityEvents.AllowDeath {
+public class GlassSwordAllowDeath implements ServerLivingEntityEvents.AllowDeath {
     @Override
     public boolean allowDeath(LivingEntity entity, DamageSource damageSource, float damageAmount) {
         if (damageSource.isIn(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
