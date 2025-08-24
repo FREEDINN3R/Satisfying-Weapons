@@ -39,7 +39,7 @@ import org.joml.Vector3f;
 import java.util.List;
 
 public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
-    private static final double SHATTER_EFFECT_RADIUS = 2.5;
+    private static final double SHATTER_EFFECT_RADIUS = 4;
     private static final String GLASS_STATE_NBT_KEY = "glass_state";
 
     private static final Multimap<EntityAttribute, EntityAttributeModifier> brokenAttributeModifiers;
@@ -156,7 +156,6 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         }
 
         target.addStatusEffect(new StatusEffectInstance(ModEffects.GLASS_CUT, duration, amplifier, false, true, true));
-        SatisfyingWeapons.LOGGER.info("Inflicted Glass Cut " + (amplifier + 1) + " for " + (duration / 20) + " seconds");
     }
 
     public static GlassState getGlassState(ItemStack itemStack) {
