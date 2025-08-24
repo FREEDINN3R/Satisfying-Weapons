@@ -3,7 +3,6 @@ package net.freedinner.satisfying_weapons.event;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.event.custom.CustomLivingEntityEvents;
-import net.freedinner.satisfying_weapons.event.handler.BrokenSoulAllowDamage;
 import net.freedinner.satisfying_weapons.event.handler.GlassCutAfterDamage;
 import net.freedinner.satisfying_weapons.event.handler.GlassSwordAllowDeath;
 
@@ -13,7 +12,6 @@ public class ModEvents {
 
         ServerLivingEntityEvents.ALLOW_DEATH.register(new GlassSwordAllowDeath());
         CustomLivingEntityEvents.AFTER_DAMAGE.register(new GlassCutAfterDamage());
-        ServerLivingEntityEvents.ALLOW_DAMAGE.register(new BrokenSoulAllowDamage());
     }
 
     public static void registerEventsClient() {

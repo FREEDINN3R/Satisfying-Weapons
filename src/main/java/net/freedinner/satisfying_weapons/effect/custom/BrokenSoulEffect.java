@@ -33,6 +33,9 @@ public class BrokenSoulEffect extends StatusEffect {
         if (movementSpeedAttribute != null) {
             movementSpeedAttribute.addPersistentModifier(movementSpeedModifier);
         }
+
+        ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
+        defenseData.setScale(defenseData.getScale() * 10000f);
     }
 
     @Override
@@ -49,6 +52,9 @@ public class BrokenSoulEffect extends StatusEffect {
         if (movementSpeedAttribute != null) {
             movementSpeedAttribute.removeModifier(movementSpeedModifier);
         }
+
+        ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
+        defenseData.setScale(defenseData.getScale() / 10000f);
 
         super.onRemoved(entity, attributes, amplifier);
     }
