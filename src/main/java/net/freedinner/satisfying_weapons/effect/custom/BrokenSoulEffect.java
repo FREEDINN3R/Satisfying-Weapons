@@ -40,8 +40,8 @@ public class BrokenSoulEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        // Substitute for heal reduction through mixins, also works as a failsafe
-        if (entity.isAlive()) {
+        // Mostly works as a failsafe
+        if (entity.isAlive() && entity.getHealth() != 1) {
             entity.setHealth(1);
         }
     }

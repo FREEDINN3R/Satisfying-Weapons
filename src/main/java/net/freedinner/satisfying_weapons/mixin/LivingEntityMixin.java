@@ -74,7 +74,7 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
     }
 
     @Inject(method = "heal", at = @At("HEAD"))
-    private void reduceRegenGlassCut(float amount, CallbackInfo ci, @Local(argsOnly = true) LocalFloatRef mutableAmount) {
+    private void reduceHealGlassCut(float amount, CallbackInfo ci, @Local(argsOnly = true) LocalFloatRef mutableAmount) {
         LivingEntity entity = (LivingEntity) (Object) this;
         StatusEffectInstance glassCut = entity.getStatusEffect(ModEffects.GLASS_CUT);
 
@@ -86,6 +86,15 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
             };
 
             mutableAmount.set(amount * multiplier);
+        }
+    }
+
+    @Inject(method = "heal", at = @At("HEAD"))
+    private void reduceHealBrokenSoul(float amount, CallbackInfo ci, @Local(argsOnly = true) LocalFloatRef mutableAmount) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+
+        if (entity.hasStatusEffect(ModEffects.BROKEN_SOUL)) {
+            mutableAmount.set(0f);
         }
     }
 
