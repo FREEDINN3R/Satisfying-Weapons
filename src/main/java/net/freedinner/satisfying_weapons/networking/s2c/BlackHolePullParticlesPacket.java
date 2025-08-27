@@ -7,14 +7,17 @@ import net.freedinner.satisfying_weapons.util.PosUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+@SuppressWarnings("deprecation")
 public class BlackHolePullParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
         Vec3d center = new Vec3d(buf.readVector3f());
@@ -75,14 +78,16 @@ public class BlackHolePullParticlesPacket {
                 pos = pos.add(0, (pos.y < 0) ? 1 : -1, 0);
                 Vec3d v = direction.multiply(-0.1).multiply(MathUtils.randomNumber(0.2, 1.0));
 
-                BlockState blockState1 = world.getBlockState(PosUtils.toBlockPos(pos));
-                pos = pos.add(0, (pos.y < 0) ? 1 : -1, 0);
-                BlockState blockState2 = world.getBlockState(PosUtils.toBlockPos(pos));
+                BlockState block = world.getBlockState(PosUtils.toBlockPos(pos));
+                pos = pos.add(0, (v.y > 0) ? 1 : -1, 0);
+                BlockState blockAbove = world.getBlockState(PosUtils.toBlockPos(pos));
 
-                if (blockState1.isAir() || !blockState2.isAir()) {
+                if (block.isAir() || !blockAbove.isAir()) {
                     continue;
                 }
-                ParticleEffect particle = new ItemStackParticleEffect(ParticleTypes.ITEM, new ItemStack(blockState1.getBlock()));
+
+                ParticleEffect particle = (block.isLiquid()) ? new BlockStateParticleEffect(ParticleTypes.BLOCK, block)
+                        : new ItemStackParticleEffect(ParticleTypes.ITEM, new ItemStack(block.getBlock()));
 
                 world.addParticle(particle, pos.x, pos.y, pos.z, v.x, v.y, v.z);
             }
