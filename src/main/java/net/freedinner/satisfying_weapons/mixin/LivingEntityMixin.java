@@ -90,7 +90,16 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
     }
 
     @Inject(method = "heal", at = @At("HEAD"))
-    private void reduceHealBrokenSoul(float amount, CallbackInfo ci, @Local(argsOnly = true) LocalFloatRef mutableAmount) {
+    private void preventHealBrokenSoul(float amount, CallbackInfo ci, @Local(argsOnly = true) LocalFloatRef mutableAmount) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+
+        if (entity.hasStatusEffect(ModEffects.BROKEN_SOUL)) {
+            mutableAmount.set(0f);
+        }
+    }
+
+    @Inject(method = "setAbsorptionAmount", at = @At("HEAD"))
+    private void preventAbsorptionBrokenSoul(float amount, CallbackInfo ci, @Local(argsOnly = true) LocalFloatRef mutableAmount) {
         LivingEntity entity = (LivingEntity) (Object) this;
 
         if (entity.hasStatusEffect(ModEffects.BROKEN_SOUL)) {
