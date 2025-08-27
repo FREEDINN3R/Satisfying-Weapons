@@ -1,5 +1,7 @@
 package net.freedinner.satisfying_weapons.effect.custom;
 
+import net.freedinner.satisfying_weapons.effect.ModEffects;
+import net.freedinner.satisfying_weapons.item.custom.GlassSwordItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
@@ -7,6 +9,8 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
 
@@ -40,6 +44,13 @@ public class BrokenSoulEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+        ItemStack stackInHand = entity.getStackInHand(Hand.MAIN_HAND);
+
+        if (!GlassSwordItem.isCrackedSword(stackInHand)) {
+            entity.removeStatusEffect(this);
+            return;
+        }
+
         // Mostly works as a failsafe
         if (entity.isAlive() && entity.getHealth() != 1) {
             entity.setHealth(1);

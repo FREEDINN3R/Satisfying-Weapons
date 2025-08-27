@@ -201,6 +201,10 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         return stack.getItem() instanceof GlassSwordItem && getGlassState(stack) == state;
     }
 
+    public static boolean isCrackedSword(ItemStack stack) {
+        return isOfState(stack, State.CRACKED);
+    }
+
     public static boolean isBrokenSword(ItemStack stack) {
         return isOfState(stack, State.BROKEN);
     }
