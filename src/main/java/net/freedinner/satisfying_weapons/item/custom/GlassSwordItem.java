@@ -64,25 +64,10 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        int swordLevel = ((GlassSwordItem) stack.getItem()).getLevel();
+        // On-hit cut from Level 2
+        tryToCut(stack, target, attacker);
 
-        if (swordLevel >= 2) {
-            double chance = 0.3;
-
-            if (swordLevel >= 4) {
-                chance += 0.5 * (1 - attacker.getHealth() / attacker.getMaxHealth());
-
-                if (isBrokenSword(stack)) {
-                    chance = 1.0;
-                }
-            }
-
-            if (MathUtils.takeChance(chance)) {
-                inflictGlassCut(target, 400, swordLevel);
-            }
-        }
-
-        if (!isIntactSword(stack)) {
+        if (isOfState(stack, State.CRACKED) || isOfState(stack, State.BROKEN)) {
              return true; // skipping durability and other checks
         }
 
@@ -91,40 +76,55 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
 
     @Override
     public String getTranslationKey(ItemStack stack) {
-        if (getGlassState(stack) == GlassState.BROKEN) {
-            return "item.satisfying_weapons.broken_glass_sword";
-        }
-
-        return super.getTranslationKey(stack);
+        return switch (getGlassState(stack)) {
+            case INTACT -> super.getTranslationKey(stack);
+            case CRACKED -> "item.satisfying_weapons.cracked_glass_sword";
+            case BROKEN -> "item.satisfying_weapons.broken_glass_sword";
+        };
     }
 
     @Override
     public boolean isItemBarVisible(ItemStack stack) {
-        return super.isItemBarVisible(stack) && getGlassState(stack) == GlassState.INTACT;
+        return super.isItemBarVisible(stack) && getGlassState(stack) == State.INTACT;
     }
 
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-        if (isBrokenSword(stack) && slot == EquipmentSlot.MAINHAND) {
+        if (isOfState(stack, State.BROKEN) && slot == EquipmentSlot.MAINHAND) {
             return brokenAttributeModifiers;
         }
 
         return super.getAttributeModifiers(stack, slot);
     }
 
-    public static boolean tryBreakSword(LivingEntity holder) {
+    public static boolean tryShatter(LivingEntity holder) {
         ItemStack itemStack = holder.getStackInHand(Hand.MAIN_HAND);
 
-        if (!isIntactSword(itemStack)) {
+        if (!isOfState(itemStack, State.INTACT)) {
             return false;
         }
 
-        setGlassState(itemStack, GlassState.BROKEN);
-        holder.setHealth(1.0F);
+        int swordLevel = ((GlassSwordItem) itemStack.getItem()).getLevel();
+        if (swordLevel >= 3) {
+            holder.addStatusEffect(new StatusEffectInstance(ModEffects.BROKEN_SOUL, 240, 0, false, false));
+            setGlassState(itemStack, State.CRACKED);
+
+            holder.getWorld().playSound(null, holder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get() + 0.3f);
+        }
+        else {
+            finallyShatter(holder, itemStack);
+        }
+
+        return true;
+    }
+
+    public static void finallyShatter(LivingEntity holder, ItemStack sword) {
+        holder.removeStatusEffect(ModEffects.GLASS_CUT);
+        holder.setHealth(1f);
 
         Vec3d pos = holder.getPos();
         Box box = new Box(pos, pos).expand(SHATTER_EFFECT_RADIUS);
-        int swordLevel = ((GlassSwordItem) itemStack.getItem()).getLevel();
+        int swordLevel = ((GlassSwordItem) sword.getItem()).getLevel();
 
         List<LivingEntity> affectedEntities = holder.getWorld().getOtherEntities(holder, box)
                 .stream()
@@ -134,21 +134,39 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
                 .toList();
 
         for (LivingEntity entity : affectedEntities) {
-            inflictGlassCut(entity, 1800, swordLevel);
+            addGlassCutStack(entity, 1800, swordLevel);
         }
 
         holder.getWorld().playSound(null, holder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get());
         sendParticlesPacket(holder);
-
-        return true;
     }
 
-    public static void inflictGlassCut(LivingEntity target, int duration, int swordLevel) {
+    public static void tryToCut(ItemStack sword, LivingEntity target, LivingEntity attacker) {
+        int swordLevel = ((GlassSwordItem) sword.getItem()).getLevel();
+        double chance = 0;
+
+        if (swordLevel >= 4) {
+            chance = 0.3 +  0.5 * (1 - attacker.getHealth() / attacker.getMaxHealth());
+
+            if (isOfState(sword, State.BROKEN)) {
+                chance = 1.0;
+            }
+        }
+        else if (swordLevel >= 2) {
+            chance = 0.3;
+        }
+
+        if (MathUtils.takeChance(chance)) {
+            addGlassCutStack(target, 400, swordLevel);
+        }
+    }
+
+    public static void addGlassCutStack(LivingEntity target, int duration, int swordLevel) {
+        StatusEffectInstance existingGlassCut = target.getStatusEffect(ModEffects.GLASS_CUT);
         int amplifier = 0;
 
-        StatusEffectInstance existingGlassCut = target.getStatusEffect(ModEffects.GLASS_CUT);
         if (existingGlassCut != null) {
-            int maxAmplifier = (swordLevel < 5) ? 0 : 2;
+            int maxAmplifier = (swordLevel >= 5) ? 2 : 0;
             amplifier = Math.min(existingGlassCut.getAmplifier() + 1, maxAmplifier);
             duration = Math.max(existingGlassCut.getDuration(), duration);
 
@@ -158,24 +176,33 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         target.addStatusEffect(new StatusEffectInstance(ModEffects.GLASS_CUT, duration, amplifier, false, true, true));
     }
 
-    public static GlassState getGlassState(ItemStack itemStack) {
+    public static State getGlassState(ItemStack itemStack) {
+        if (!(itemStack.getItem() instanceof GlassSwordItem)) {
+            SatisfyingWeapons.LOGGER.warn("Trying to read GlassState from an item which is not GlassSword");
+        }
+
         NbtCompound stackNbt = itemStack.getOrCreateNbt();
         int stateId = stackNbt.getInt(GLASS_STATE_NBT_KEY); // if doesn't exist, returns 0 by default
 
-        return GlassState.values()[stateId];
+        return State.values()[stateId];
     }
 
-    public static void setGlassState(ItemStack itemStack, GlassState state) {
+    public static void setGlassState(ItemStack itemStack, State state) {
+        if (!(itemStack.getItem() instanceof GlassSwordItem)) {
+            SatisfyingWeapons.LOGGER.warn("Trying to set GlassState for an item which is not GlassSword");
+            return;
+        }
+
         NbtCompound stackNbt = itemStack.getOrCreateNbt();
         stackNbt.putInt(GLASS_STATE_NBT_KEY, state.ordinal());
     }
 
-    public static boolean isBrokenSword(ItemStack stack) {
-        return stack.getItem() instanceof GlassSwordItem && getGlassState(stack) == GlassState.BROKEN;
+    public static boolean isOfState(ItemStack stack, State state) {
+        return stack.getItem() instanceof GlassSwordItem && getGlassState(stack) == state;
     }
 
-    public static boolean isIntactSword(ItemStack stack) {
-        return stack.getItem() instanceof GlassSwordItem && getGlassState(stack) == GlassState.INTACT;
+    public static boolean isBrokenSword(ItemStack stack) {
+        return isOfState(stack, State.BROKEN);
     }
 
     public static boolean isGlassPane(ItemStack stack) {
@@ -196,7 +223,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         }
     }
 
-    public enum GlassState {
+    public enum State {
         INTACT,
         CRACKED,
         BROKEN

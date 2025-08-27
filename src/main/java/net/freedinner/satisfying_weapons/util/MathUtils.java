@@ -49,10 +49,18 @@ public class MathUtils {
     }
 
     public static boolean takeChance(double chance) {
+        if (chance <= 0) {
+            return false;
+        }
+
         return random.nextDouble() < chance;
     }
 
     public static boolean takeChance(double chance, World world) {
+        if (chance <= 0) {
+            return false;
+        }
+
         return world.getRandom().nextDouble() < chance;
     }
 }

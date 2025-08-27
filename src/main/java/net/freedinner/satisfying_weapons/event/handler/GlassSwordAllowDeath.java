@@ -13,6 +13,6 @@ public class GlassSwordAllowDeath implements ServerLivingEntityEvents.AllowDeath
             return true;
         }
 
-        return !GlassSwordItem.tryBreakSword(entity);
+        return !GlassSwordItem.tryShatter(entity);
     }
 }

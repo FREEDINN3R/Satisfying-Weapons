@@ -44,7 +44,7 @@ public abstract class AnvilScreenHandlerMixin {
             ) {
         if (GlassSwordItem.isBrokenSword(slot1) && GlassSwordItem.isGlassPane(slot2)) {
             ItemStack repairedSword = slot1.copy();
-            GlassSwordItem.setGlassState(repairedSword, GlassSwordItem.GlassState.INTACT);
+            GlassSwordItem.setGlassState(repairedSword, GlassSwordItem.State.INTACT);
             result.set(repairedSword);
 
             this.repairItemUsage = 1;
