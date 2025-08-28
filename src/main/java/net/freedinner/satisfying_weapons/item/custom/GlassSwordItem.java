@@ -10,15 +10,18 @@ import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
+import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.freedinner.satisfying_weapons.util.PosUtils;
 import net.minecraft.block.StainedGlassPaneBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -33,6 +36,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -67,7 +71,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         // On-hit cut from Level 2
         tryToCut(stack, target, attacker);
 
-        if (isOfState(stack, State.CRACKED) || isOfState(stack, State.BROKEN)) {
+        if (isCrackedSword(stack) || isBrokenSword(stack)) {
              return true; // skipping durability and other checks
         }
 
@@ -84,61 +88,79 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
     }
 
     @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+
+        // TODO: double check server client interactions
+        // TODO: mixin into ItemEntity to update cracked sword
+        if (!isCrackedSword(stack)) {
+            return;
+        }
+
+        if (!(entity instanceof LivingEntity livingEntity) || livingEntity.getStackInHand(Hand.MAIN_HAND) != stack
+        || !entity.isAlive() || !livingEntity.hasStatusEffect(ModEffects.BROKEN_SOUL)) {
+            GlassSwordItem.setGlassState(stack, State.BROKEN);
+        }
+    }
+
+    @Override
     public boolean isItemBarVisible(ItemStack stack) {
         return super.isItemBarVisible(stack) && getGlassState(stack) == State.INTACT;
     }
 
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-        if (isOfState(stack, State.BROKEN) && slot == EquipmentSlot.MAINHAND) {
+        if (isBrokenSword(stack) && slot == EquipmentSlot.MAINHAND) {
             return brokenAttributeModifiers;
         }
 
         return super.getAttributeModifiers(stack, slot);
     }
 
-    public static boolean tryShatter(LivingEntity holder) {
-        ItemStack itemStack = holder.getStackInHand(Hand.MAIN_HAND);
+    public static boolean trySaveFromDeath(LivingEntity swordHolder) {
+        ItemStack itemStack = swordHolder.getStackInHand(Hand.MAIN_HAND);
 
-        if (!isOfState(itemStack, State.INTACT)) {
+        if (!isIntactSword(itemStack)) {
             return false;
         }
 
         int swordLevel = ((GlassSwordItem) itemStack.getItem()).getLevel();
-        if (swordLevel >= 3) {
-            holder.addStatusEffect(new StatusEffectInstance(ModEffects.BROKEN_SOUL, 240, 0, false, false));
-            setGlassState(itemStack, State.CRACKED);
 
-            holder.getWorld().playSound(null, holder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get() + 0.3f);
+        if (swordLevel >= 3) {
+            setGlassState(itemStack, State.CRACKED);
+            swordHolder.addStatusEffect(new StatusEffectInstance(ModEffects.BROKEN_SOUL, 240, 0, false, false));
+            ((ILivingEntityDataSaver) swordHolder).sw$setBrokenSoulSwordLevel(swordLevel);
+
+            swordHolder.getWorld().playSound(null, swordHolder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get() + 0.3f);
         }
         else {
-            finallyShatter(holder, itemStack);
+            setGlassState(itemStack, State.BROKEN);
+            applyShatterEffects(swordHolder, swordLevel);
         }
 
         return true;
     }
 
-    public static void finallyShatter(LivingEntity holder, ItemStack sword) {
-        holder.removeStatusEffect(ModEffects.GLASS_CUT);
-        holder.setHealth(1f);
+    public static void applyShatterEffects(LivingEntity entity, int swordLevel) {
+        entity.removeStatusEffect(ModEffects.GLASS_CUT);
+        entity.setHealth(1f);
 
-        Vec3d pos = holder.getPos();
+        Vec3d pos = entity.getPos();
         Box box = new Box(pos, pos).expand(SHATTER_EFFECT_RADIUS);
-        int swordLevel = ((GlassSwordItem) sword.getItem()).getLevel();
 
-        List<LivingEntity> affectedEntities = holder.getWorld().getOtherEntities(holder, box)
+        List<LivingEntity> affectedEntities = entity.getWorld().getOtherEntities(entity, box)
                 .stream()
                 .filter(e -> e instanceof LivingEntity)
                 .map(e -> (LivingEntity) e)
-                .filter(e -> e.distanceTo(holder) <= SHATTER_EFFECT_RADIUS) // Cuz it's a sphere, not a cube
+                .filter(e -> e.distanceTo(entity) <= SHATTER_EFFECT_RADIUS) // Cuz it's a sphere, not a cube
                 .toList();
 
-        for (LivingEntity entity : affectedEntities) {
-            addGlassCutStack(entity, 1800, swordLevel);
+        for (LivingEntity affectedEntity : affectedEntities) {
+            addGlassCutStack(affectedEntity, 1800, swordLevel);
         }
 
-        holder.getWorld().playSound(null, holder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get());
-        sendParticlesPacket(holder);
+        entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get());
+        sendParticlesPacket(entity);
     }
 
     public static void tryToCut(ItemStack sword, LivingEntity target, LivingEntity attacker) {
@@ -148,7 +170,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         if (swordLevel >= 4) {
             chance = 0.3 +  0.5 * (1 - attacker.getHealth() / attacker.getMaxHealth());
 
-            if (isOfState(sword, State.BROKEN)) {
+            if (isBrokenSword(sword)) {
                 chance = 1.0;
             }
         }
@@ -199,6 +221,10 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
 
     public static boolean isOfState(ItemStack stack, State state) {
         return stack.getItem() instanceof GlassSwordItem && getGlassState(stack) == state;
+    }
+
+    public static boolean isIntactSword(ItemStack stack) {
+        return isOfState(stack, State.INTACT);
     }
 
     public static boolean isCrackedSword(ItemStack stack) {

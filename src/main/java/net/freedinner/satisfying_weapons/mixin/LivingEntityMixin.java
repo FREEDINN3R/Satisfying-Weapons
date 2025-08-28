@@ -32,12 +32,16 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
     @Unique
     private int glassCutCountdown;
     @Unique
+    private int brokenSoulSwordLevel;
+    @Unique
     private int dropAttemptsBH;
 
     @Unique
-    private final static String GLASS_CUT_COUNTDOWN_NBT_KEY = "satisfying_weapons_glass_cut_countdown";
+    private final static String GLASS_CUT_COUNTDOWN_NBT_KEY = "sw_glass_cut_countdown";
     @Unique
-    private final static String DROP_ATTEMPTS_BH_NBT_KEY = "satisfying_weapons_drop_attempts_bh";
+    private final static String BROKEN_SOUL_SWORD_LEVEL_NBT_KEY = "sw_broken_soul_sword_level";
+    @Unique
+    private final static String DROP_ATTEMPTS_BH_NBT_KEY = "sw_drop_attempts_bh";
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -46,6 +50,7 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onConstructor(EntityType<? extends LivingEntity> entityType, World world, CallbackInfo ci) {
         this.glassCutCountdown = 0;
+        this.brokenSoulSwordLevel = 0;
         this.dropAttemptsBH = 0;
     }
 
@@ -144,6 +149,16 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
     }
 
     @Override
+    public int sw$getBrokenSoulSwordLevel() {
+        return brokenSoulSwordLevel;
+    }
+
+    @Override
+    public void sw$setBrokenSoulSwordLevel(int level) {
+        brokenSoulSwordLevel = level;
+    }
+
+    @Override
     public int sw$getDropAttemptsBH() {
         return dropAttemptsBH;
     }
@@ -156,12 +171,14 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
     @Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))
     private void onWriteCustomDataToNbt(NbtCompound nbt, CallbackInfo info) {
         nbt.putInt(GLASS_CUT_COUNTDOWN_NBT_KEY, glassCutCountdown);
+        nbt.putInt(BROKEN_SOUL_SWORD_LEVEL_NBT_KEY, brokenSoulSwordLevel);
         nbt.putInt(DROP_ATTEMPTS_BH_NBT_KEY, dropAttemptsBH);
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("HEAD"))
     private void onReadCustomDataFromNbt(NbtCompound nbt, CallbackInfo info) {
         glassCutCountdown = NbtUtils.getOrCreate(nbt, GLASS_CUT_COUNTDOWN_NBT_KEY, 0);
+        brokenSoulSwordLevel = NbtUtils.getOrCreate(nbt, BROKEN_SOUL_SWORD_LEVEL_NBT_KEY, 0);
         dropAttemptsBH = NbtUtils.getOrCreate(nbt, DROP_ATTEMPTS_BH_NBT_KEY, 0);
     }
 }

@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons.effect.custom;
 
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.item.custom.GlassSwordItem;
+import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
@@ -70,6 +71,9 @@ public class BrokenSoulEffect extends StatusEffect {
 
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
         defenseData.setScale(defenseData.getScale() / 10000f);
+
+        int swordLevel = ((ILivingEntityDataSaver) entity).sw$getBrokenSoulSwordLevel();
+        GlassSwordItem.applyShatterEffects(entity, swordLevel);
 
         super.onRemoved(entity, attributes, amplifier);
     }

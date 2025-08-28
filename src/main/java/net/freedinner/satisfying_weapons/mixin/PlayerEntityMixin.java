@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin implements IPlayerDataSaver {
     @Unique
-    private final static String LAST_DROP_TIME_NBT_KEY = "satisfying_weapons_last_drop_time";
+    private final static String LAST_DROP_TIME_NBT_KEY = "sw_last_drop_time";
     @Unique
-    private final static String ON_GROUND_TIME_FS_NBT_KEY = "satisfying_weapons_on_ground_time_fs";
+    private final static String ON_GROUND_TIME_FS_NBT_KEY = "sw_on_ground_time_fs";
 
     @Unique
     private long lastDropTime;
