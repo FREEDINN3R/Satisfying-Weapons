@@ -28,14 +28,12 @@ public class GlassCutEffect extends StatusEffect {
             return;
         }
 
-        DamageSource glassCutDamageSource;
-
+        LivingEntity lastAttacker = null;
         if (target.getLastAttacker() != null && target.age - target.getLastAttackedTime() <= DAMAGE_DELAY_TICKS + 1) {
-            glassCutDamageSource = CombatHelper.getDamageSource(ModDamageTypes.GLASS_CUT, target.getWorld(), target.getLastAttacker());
+            lastAttacker = target.getLastAttacker();
         }
-        else {
-            glassCutDamageSource = CombatHelper.getDamageSource(ModDamageTypes.GLASS_CUT, target.getWorld(), null);
-        }
+
+        DamageSource glassCutDamageSource = CombatHelper.getDamageSource(ModDamageTypes.GLASS_CUT, target.getWorld(), lastAttacker);
 
         float amplifier = target.getStatusEffect(ModEffects.GLASS_CUT).getAmplifier();
         target.damage(glassCutDamageSource, 2 * (amplifier + 1));

@@ -1,6 +1,5 @@
 package net.freedinner.satisfying_weapons.effect.custom;
 
-import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.item.custom.GlassSwordItem;
 import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
 import net.minecraft.entity.LivingEntity;
@@ -52,7 +51,7 @@ public class BrokenSoulEffect extends StatusEffect {
             return;
         }
 
-        // Mostly works as a failsafe
+        // Both ifs mostly work as a failsafe
         if (entity.isAlive() && entity.getHealth() != 1) {
             entity.setHealth(1);
         }

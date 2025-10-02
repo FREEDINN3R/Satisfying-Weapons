@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
-public class GlassSwordParticlesPacket {
+public class GlassShatterParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
         Vector3f particlesPos = buf.readVector3f();
         ParticleEffect particle = new ItemStackParticleEffect(ParticleTypes.ITEM, new ItemStack(Blocks.GLASS));

@@ -21,13 +21,13 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -56,7 +56,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         );
         builder.put(
                 EntityAttributes.GENERIC_ATTACK_SPEED,
-                new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", 1, EntityAttributeModifier.Operation.ADDITION)
+                new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", -0.8, EntityAttributeModifier.Operation.ADDITION)
         );
 
         brokenAttributeModifiers = builder.build();
@@ -91,6 +91,11 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
+        if (world.isClient) {
+            return;
+        }
+
+        // TODO: fix effect client sync
         // TODO: double check server client interactions
         // TODO: mixin into ItemEntity to update cracked sword
         if (!isCrackedSword(stack)) {
@@ -98,7 +103,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         }
 
         if (!(entity instanceof LivingEntity livingEntity) || livingEntity.getStackInHand(Hand.MAIN_HAND) != stack
-        || !entity.isAlive() || !livingEntity.hasStatusEffect(ModEffects.BROKEN_SOUL)) {
+        || !livingEntity.isAlive() || !livingEntity.hasStatusEffect(ModEffects.BROKEN_SOUL)) {
             GlassSwordItem.setGlassState(stack, State.BROKEN);
         }
     }
@@ -128,7 +133,12 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
 
         if (swordLevel >= 3) {
             setGlassState(itemStack, State.CRACKED);
-            swordHolder.addStatusEffect(new StatusEffectInstance(ModEffects.BROKEN_SOUL, 240, 0, false, false));
+
+            swordHolder.setHealth(1);
+            swordHolder.setAbsorptionAmount(0);
+
+            StatusEffectInstance effectInstance = new StatusEffectInstance(ModEffects.BROKEN_SOUL, 240, 0, false, false);
+            swordHolder.addStatusEffect(effectInstance);
             ((ILivingEntityDataSaver) swordHolder).sw$setBrokenSoulSwordLevel(swordLevel);
 
             swordHolder.getWorld().playSound(null, swordHolder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get() + 0.3f);
@@ -160,22 +170,23 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         }
 
         entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get());
-        sendParticlesPacket(entity);
+        sendShatterParticlesPacket(entity);
     }
 
     public static void tryToCut(ItemStack sword, LivingEntity target, LivingEntity attacker) {
         int swordLevel = ((GlassSwordItem) sword.getItem()).getLevel();
         double chance = 0;
 
+        if (swordLevel >= 2) {
+            chance = 0.3;
+        }
+
         if (swordLevel >= 4) {
-            chance = 0.3 +  0.5 * (1 - attacker.getHealth() / attacker.getMaxHealth());
+            chance += 0.5 * (1 - attacker.getHealth() / attacker.getMaxHealth());
 
             if (isBrokenSword(sword)) {
                 chance = 1.0;
             }
-        }
-        else if (swordLevel >= 2) {
-            chance = 0.3;
         }
 
         if (MathUtils.takeChance(chance)) {
@@ -204,7 +215,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         }
 
         NbtCompound stackNbt = itemStack.getOrCreateNbt();
-        int stateId = stackNbt.getInt(GLASS_STATE_NBT_KEY); // if doesn't exist, returns 0 by default
+        int stateId = stackNbt.getInt(GLASS_STATE_NBT_KEY); // if doesn't exist, returns 0 (INTACT) by default
 
         return State.values()[stateId];
     }
@@ -239,7 +250,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         return stack.isOf(Items.GLASS_PANE) ||(stack.getItem() instanceof BlockItem blockMaterial && blockMaterial.getBlock() instanceof StainedGlassPaneBlock);
     }
 
-    private static void sendParticlesPacket(LivingEntity attacker) {
+    private static void sendShatterParticlesPacket(LivingEntity attacker) {
         Vector3f particlePos = attacker.getPos().toVector3f();
         particlePos.add(0, attacker.getHeight() * 0.3f, 0);
 
@@ -249,7 +260,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         BlockPos blockPos = PosUtils.toBlockPos(attacker.getPos());
 
         for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)attacker.getWorld(), blockPos)) {
-            ServerPlayNetworking.send(player, ModNetworking.GLASS_SWORD_PARTICLES_ID, buf);
+            ServerPlayNetworking.send(player, ModNetworking.GLASS_SHATTER_PARTICLES_ID, buf);
         }
     }
 

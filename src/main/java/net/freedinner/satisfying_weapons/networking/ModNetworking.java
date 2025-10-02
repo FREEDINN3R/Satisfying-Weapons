@@ -23,7 +23,7 @@ public class ModNetworking {
     public static final Identifier ENTROPY_PARTICLES_ID = SatisfyingWeapons.id("entropy_particles");
     public static final Identifier BLACK_HOLE_EXPLOSION_PARTICLES_ID = SatisfyingWeapons.id("black_hole_explosion_particles");
 
-    public static final Identifier GLASS_SWORD_PARTICLES_ID = SatisfyingWeapons.id("glass_sword_particles");
+    public static final Identifier GLASS_SHATTER_PARTICLES_ID = SatisfyingWeapons.id("glass_sword_shatter_particles");
 
     public static void registerS2CPackets() {
         SatisfyingWeapons.LOGGER.info("Registering S2C packets");
@@ -43,7 +43,7 @@ public class ModNetworking {
         ClientPlayNetworking.registerGlobalReceiver(ENTROPY_PARTICLES_ID, EntropyParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(BLACK_HOLE_EXPLOSION_PARTICLES_ID, BlackHoleExplosionParticlesPacket::receive);
 
-        ClientPlayNetworking.registerGlobalReceiver(GLASS_SWORD_PARTICLES_ID, GlassSwordParticlesPacket::receive);
+        ClientPlayNetworking.registerGlobalReceiver(GLASS_SHATTER_PARTICLES_ID, GlassShatterParticlesPacket::receive);
     }
 
     public static final Identifier FIREWORK_JUMP_CLIENT_PACKET = SatisfyingWeapons.id("firework_jump_client");

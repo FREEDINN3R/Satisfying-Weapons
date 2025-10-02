@@ -29,7 +29,7 @@ public class ModItemPredicates {
         });
 
         registerItemPredicate(ModItems.GLASS_SWORD, "glass_state", (itemStack, clientWorld, entity, seed) -> {
-            return GlassSwordItem.getGlassState(itemStack).ordinal() / 2f; // predicates can only return values from 0 to 1
+            return GlassSwordItem.getGlassState(itemStack).ordinal() / 2f; // returns 0, 0.5, or 1
         });
 
         ClampedModelPredicateProvider pulling = (itemStack, world, entity, seed) -> {
