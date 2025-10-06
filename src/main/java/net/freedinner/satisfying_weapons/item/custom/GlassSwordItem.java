@@ -141,6 +141,12 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
             swordHolder.addStatusEffect(effectInstance);
             ((ILivingEntityDataSaver) swordHolder).sw$setBrokenSoulSwordLevel(swordLevel);
 
+            if (swordHolder instanceof ServerPlayerEntity serverPlayer) {
+                serverPlayer.getServerWorld().getServer().execute(() -> {
+                    serverPlayer.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(serverPlayer.getId(), effectInstance));
+                });
+            }
+
             swordHolder.getWorld().playSound(null, swordHolder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get() + 0.3f);
         }
         else {
