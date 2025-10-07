@@ -27,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -68,8 +67,11 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        // On-hit cut from Level 2
-        tryToCut(stack, target, attacker);
+        int swordLevel = ((GlassSwordItem) stack.getItem()).getLevel();
+
+        if (shouldApplyGlassCut(attacker, swordLevel, getGlassState(stack))) {
+            addGlassCutStack(target, 400, swordLevel);
+        }
 
         if (isCrackedSword(stack) || isBrokenSword(stack)) {
              return true; // skipping durability and other checks
@@ -95,9 +97,6 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
             return;
         }
 
-        // TODO: fix effect client sync
-        // TODO: double check server client interactions
-        // TODO: mixin into ItemEntity to update cracked sword
         if (!isCrackedSword(stack)) {
             return;
         }
@@ -110,7 +109,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
 
     @Override
     public boolean isItemBarVisible(ItemStack stack) {
-        return super.isItemBarVisible(stack) && getGlassState(stack) == State.INTACT;
+        return super.isItemBarVisible(stack) && isIntactSword(stack);
     }
 
     @Override
@@ -122,6 +121,8 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         return super.getAttributeModifiers(stack, slot);
     }
 
+    // This is the main "revive" method, called at any sword lvl
+    // Branches into actuallyShatter() or applying BS first
     public static boolean trySaveFromDeath(LivingEntity swordHolder) {
         ItemStack itemStack = swordHolder.getStackInHand(Hand.MAIN_HAND);
 
@@ -129,32 +130,32 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
             return false;
         }
 
+        // Reviving starts here
+        swordHolder.clearStatusEffects();
+        swordHolder.setHealth(1f);
+
         int swordLevel = ((GlassSwordItem) itemStack.getItem()).getLevel();
 
-        if (swordLevel >= 3) {
-            setGlassState(itemStack, State.CRACKED);
-
-            swordHolder.setHealth(1);
-            swordHolder.setAbsorptionAmount(0);
-
-            StatusEffectInstance effectInstance = new StatusEffectInstance(ModEffects.BROKEN_SOUL, 240, 0, false, false);
-            swordHolder.addStatusEffect(effectInstance);
-            ((ILivingEntityDataSaver) swordHolder).sw$setBrokenSoulSwordLevel(swordLevel);
-
-            swordHolder.getWorld().playSound(null, swordHolder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get() + 0.3f);
+        if (swordLevel <= 2) {
+            // Just shatter immediately
+            setGlassState(itemStack, State.BROKEN);
+            actuallyShatter(swordHolder, swordLevel);
         }
         else {
-            setGlassState(itemStack, State.BROKEN);
-            applyShatterEffects(swordHolder, swordLevel);
+            // Apply Broken Soul first
+            setGlassState(itemStack, State.CRACKED);
+
+            swordHolder.addStatusEffect(new StatusEffectInstance(ModEffects.BROKEN_SOUL, 240, 0, false, false));
+            ((ILivingEntityDataSaver) swordHolder).sw$setBrokenSoulSwordLevel(swordLevel); // Saving lvl to apply GC properly
+
+            swordHolder.getWorld().playSound(null, swordHolder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get() + 0.3f);
         }
 
         return true;
     }
 
-    public static void applyShatterEffects(LivingEntity entity, int swordLevel) {
-        entity.removeStatusEffect(ModEffects.GLASS_CUT);
-        entity.setHealth(1f);
-
+    // This one is called when the sword actually shatters, applies GC to all nearby entities
+    public static void actuallyShatter(LivingEntity entity, int swordLevel) {
         Vec3d pos = entity.getPos();
         Box box = new Box(pos, pos).expand(SHATTER_EFFECT_RADIUS);
 
@@ -173,8 +174,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         sendShatterParticlesPacket(entity);
     }
 
-    public static void tryToCut(ItemStack sword, LivingEntity target, LivingEntity attacker) {
-        int swordLevel = ((GlassSwordItem) sword.getItem()).getLevel();
+    public static boolean shouldApplyGlassCut(LivingEntity attacker, int swordLevel, State swordState) {
         double chance = 0;
 
         if (swordLevel >= 2) {
@@ -184,14 +184,12 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         if (swordLevel >= 4) {
             chance += 0.5 * (1 - attacker.getHealth() / attacker.getMaxHealth());
 
-            if (isBrokenSword(sword)) {
+            if (swordState == State.BROKEN) {
                 chance = 1.0;
             }
         }
 
-        if (MathUtils.takeChance(chance)) {
-            addGlassCutStack(target, 400, swordLevel);
-        }
+        return MathUtils.takeChance(chance);
     }
 
     public static void addGlassCutStack(LivingEntity target, int duration, int swordLevel) {
@@ -246,7 +244,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         return isOfState(stack, State.BROKEN);
     }
 
-    public static boolean isGlassPane(ItemStack stack) {
+    public static boolean isOfGlassPane(ItemStack stack) {
         return stack.isOf(Items.GLASS_PANE) ||(stack.getItem() instanceof BlockItem blockMaterial && blockMaterial.getBlock() instanceof StainedGlassPaneBlock);
     }
 

@@ -42,7 +42,7 @@ public abstract class AnvilScreenHandlerMixin {
             boolean original, @Local(ordinal = 0) ItemStack slot1, @Local(ordinal = 2) ItemStack slot2,
             @Local(ordinal = 1) LocalRef<ItemStack> result, @Local(ordinal = 0) LocalIntRef expCost
             ) {
-        if (GlassSwordItem.isBrokenSword(slot1) && GlassSwordItem.isGlassPane(slot2)) {
+        if (GlassSwordItem.isBrokenSword(slot1) && GlassSwordItem.isOfGlassPane(slot2)) {
             ItemStack repairedSword = slot1.copy();
             GlassSwordItem.setGlassState(repairedSword, GlassSwordItem.State.INTACT);
             result.set(repairedSword);
@@ -59,7 +59,7 @@ public abstract class AnvilScreenHandlerMixin {
     @WrapOperation(method = "updateResult",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/Property;set(I)V", ordinal = 5))
     private void reduceGlassRepairCost(Property levelCost, int originalValue, Operation<Void> operation, @Local(ordinal = 0) ItemStack slot1, @Local(ordinal = 2) ItemStack slot2, @Local(ordinal = 0) LocalIntRef i, @Local(ordinal = 1) LocalIntRef j, @Local(ordinal = 2) LocalIntRef k) {
-        if (!GlassSwordItem.isBrokenSword(slot1) || !GlassSwordItem.isGlassPane(slot2)) {
+        if (!GlassSwordItem.isBrokenSword(slot1) || !GlassSwordItem.isOfGlassPane(slot2)) {
             operation.call(levelCost, originalValue);
             return;
         }
@@ -77,7 +77,7 @@ public abstract class AnvilScreenHandlerMixin {
     @ModifyExpressionValue(method = "updateResult",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/AnvilScreenHandler;getNextCost(I)I"))
     private int preventGlassCostIncrease(int original, @Local(ordinal = 0) ItemStack slot1, @Local(ordinal = 2) ItemStack slot2) {
-        if (!GlassSwordItem.isBrokenSword(slot1) || !GlassSwordItem.isGlassPane(slot2)) {
+        if (!GlassSwordItem.isBrokenSword(slot1) || !GlassSwordItem.isOfGlassPane(slot2)) {
             return original;
         }
 

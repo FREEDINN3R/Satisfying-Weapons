@@ -24,10 +24,13 @@ public class GlassCutEffect extends StatusEffect {
     }
 
     public static void applyDamageTo(LivingEntity target) {
+        // Prevents players revived by totems from immediately dying again
+        // Technically I could leave it, but that would be too OP
         if (target.getWorld().isClient() || !target.hasStatusEffect(ModEffects.GLASS_CUT)) {
             return;
         }
 
+        // Inherits the attacker if the original instance of damage had one
         LivingEntity lastAttacker = null;
         if (target.getLastAttacker() != null && target.age - target.getLastAttackedTime() <= DAMAGE_DELAY_TICKS + 1) {
             lastAttacker = target.getLastAttacker();
@@ -35,6 +38,7 @@ public class GlassCutEffect extends StatusEffect {
 
         DamageSource glassCutDamageSource = CombatHelper.getDamageSource(ModDamageTypes.GLASS_CUT, target.getWorld(), lastAttacker);
 
+        // Damage = 2 * lvl
         float amplifier = target.getStatusEffect(ModEffects.GLASS_CUT).getAmplifier();
         target.damage(glassCutDamageSource, 2 * (amplifier + 1));
     }

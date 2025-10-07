@@ -38,6 +38,8 @@ public class BrokenSoulEffect extends StatusEffect {
             movementSpeedAttribute.addPersistentModifier(movementSpeedModifier);
         }
 
+        // De facto locks the player HP to 1
+        // No, cancelling AllowDeath is not the same, because it doesn't prevent totems from activating
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
         defenseData.setScale(defenseData.getScale() * 10000f);
     }
@@ -51,7 +53,7 @@ public class BrokenSoulEffect extends StatusEffect {
             return;
         }
 
-        // Both ifs mostly work as a failsafe
+        // Both ifs are just failsafes, there are mixins preventing healing / absorption
         if (entity.isAlive() && entity.getHealth() != 1) {
             entity.setHealth(1);
         }
@@ -71,8 +73,9 @@ public class BrokenSoulEffect extends StatusEffect {
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
         defenseData.setScale(defenseData.getScale() / 10000f);
 
+        // Retrieving it like that because player could've switched out / dropped the sword
         int swordLevel = ((ILivingEntityDataSaver) entity).sw$getBrokenSoulSwordLevel();
-        GlassSwordItem.applyShatterEffects(entity, swordLevel);
+        GlassSwordItem.actuallyShatter(entity, swordLevel);
 
         super.onRemoved(entity, attributes, amplifier);
     }

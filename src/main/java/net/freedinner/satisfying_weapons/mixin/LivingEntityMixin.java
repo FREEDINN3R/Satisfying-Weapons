@@ -62,16 +62,16 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
 
         LivingEntity entity = (LivingEntity) (Object) this;
 
+        // Counts down the delay for GC after receiving damage
         int gcCountdown = this.sw$getGlassCutCountdown();
         if (gcCountdown > 0) {
             this.sw$setGlassCutCountdown(--gcCountdown);
-
             if (gcCountdown == 0) {
                 GlassCutEffect.applyDamageTo(entity);
             }
         }
 
-        // Takes approx. 60 seconds to reach 0 (players only)
+        // Equipment drop attempts for BH; takes approx. 60 seconds to reset to 0 (players only)
         int dropAttempts = this.sw$getDropAttemptsBH();
         if (dropAttempts > 0 && entity instanceof PlayerEntity && MathUtils.takeChance(0.05)) {
             this.sw$setDropAttemptsBH(dropAttempts - 1);

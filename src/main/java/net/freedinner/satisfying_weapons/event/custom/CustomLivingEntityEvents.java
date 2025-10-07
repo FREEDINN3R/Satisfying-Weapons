@@ -15,7 +15,7 @@ public final class CustomLivingEntityEvents {
     @FunctionalInterface
     public interface AfterDamage {
         /**
-         * Called when a living entity actually takes damage. Called when damage(...) returns true
+         * Called when a living entity actually takes damage, i.e., when damage(...) returns true
          *
          * @param entity the entity
          * @param source the source of the damage
