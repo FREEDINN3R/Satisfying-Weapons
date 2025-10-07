@@ -46,7 +46,7 @@ public class BrokenSoulEffect extends StatusEffect {
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         ItemStack stackInHand = entity.getStackInHand(Hand.MAIN_HAND);
 
-        if (!GlassSwordItem.isCrackedSword(stackInHand)) {
+        if (!entity.getWorld().isClient() && !GlassSwordItem.isCrackedSword(stackInHand)) {
             entity.removeStatusEffect(this);
             return;
         }
