@@ -29,6 +29,7 @@
   "item.satisfying_weapons.firework_sword.skill_desc_5": "{ED1D6D}Festivity{AAAAAA} can now go up to 10_stacks. Also, {ED1D6D}Festivity{AAAAAA} recovered from {EEEE66}Level_3{AAAAAA} is no longer limited to 2_stacks per plunge attack.",
 
   "item.satisfying_weapons.glass_sword": "Glass Sword",
+  "item.satisfying_weapons.cracked_glass_sword": "Cracked Glass Sword",
   "item.satisfying_weapons.broken_glass_sword": "Broken Glass Sword",
   "item.satisfying_weapons.glass_sword.skill_name_1": "Skill 1",
   "item.satisfying_weapons.glass_sword.skill_desc_1": "Receiving fatal damage while holding this sword will shatter the sword instead, and inflict surrounding entities with Glass Cut for 90s. Entities with Glass Cut receive +2 damage from melee attacks. Broken Glass Sword can be repaired with Glass Panes using Anvil.",
