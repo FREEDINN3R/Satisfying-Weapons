@@ -22,6 +22,7 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -110,6 +111,12 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
     @Override
     public boolean isItemBarVisible(ItemStack stack) {
         return super.isItemBarVisible(stack) && isIntactSword(stack);
+    }
+
+    @Override
+    public boolean allowNbtUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
+        setGlassState(oldStack, getGlassState(newStack));
+        return !(oldStack == newStack); // Blocks NBT update animation if only glass state has changed
     }
 
     @Override
