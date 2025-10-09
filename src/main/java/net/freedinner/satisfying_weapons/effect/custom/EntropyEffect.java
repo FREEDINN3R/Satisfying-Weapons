@@ -36,7 +36,7 @@ public class EntropyEffect extends StatusEffect {
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         // Once per 1.5 seconds spawn a particle
         if (!entity.getWorld().isClient && MathUtils.takeChance(0.03)) {
-            this.sendParticlesPacket(entity);
+            this.sendEntropyParticlesPacket(entity);
         }
     }
 
@@ -56,7 +56,7 @@ public class EntropyEffect extends StatusEffect {
         return true;
     }
 
-    private void sendParticlesPacket(LivingEntity entity) {
+    private void sendEntropyParticlesPacket(LivingEntity entity) {
         double posX = entity.getParticleX(0.5);
         double posY = entity.getRandomBodyY();
         double posZ = entity.getParticleZ(0.5);

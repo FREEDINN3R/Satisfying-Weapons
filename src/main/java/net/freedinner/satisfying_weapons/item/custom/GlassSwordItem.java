@@ -211,7 +211,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
             target.removeStatusEffect(ModEffects.GLASS_CUT);
         }
 
-        target.addStatusEffect(new StatusEffectInstance(ModEffects.GLASS_CUT, duration, amplifier, false, true, true));
+        target.addStatusEffect(new StatusEffectInstance(ModEffects.GLASS_CUT, duration, amplifier, false, false, true));
     }
 
     public static State getGlassState(ItemStack itemStack) {

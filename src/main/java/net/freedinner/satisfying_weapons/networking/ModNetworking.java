@@ -15,6 +15,9 @@ public class ModNetworking {
     public static final Identifier FIREWORK_TRAIL_PARTICLES_ID = SatisfyingWeapons.id("firework_trail_particles");
     public static final Identifier PLUNGE_ATTACK_PARTICLES_ID = SatisfyingWeapons.id("plunge_attack_particles");
 
+    public static final Identifier GLASS_SHATTER_PARTICLES_ID = SatisfyingWeapons.id("glass_sword_shatter_particles");
+    public static final Identifier BLOOD_DRIP_PARTICLES_ID = SatisfyingWeapons.id("blood_drip_particles");
+
     public static final Identifier CONFETTI_PARTICLES_ID = SatisfyingWeapons.id("confetti_particles");
     public static final Identifier GIFT_SMOKE_PARTICLES_ID = SatisfyingWeapons.id("gift_smoke_particles");
     public static final Identifier GIFT_EXPLOSION_PARTICLES_ID = SatisfyingWeapons.id("gift_explosion_particles");
@@ -22,8 +25,6 @@ public class ModNetworking {
     public static final Identifier BLACK_HOLE_PULL_PARTICLES_ID = SatisfyingWeapons.id("black_hole_pull_particles");
     public static final Identifier ENTROPY_PARTICLES_ID = SatisfyingWeapons.id("entropy_particles");
     public static final Identifier BLACK_HOLE_EXPLOSION_PARTICLES_ID = SatisfyingWeapons.id("black_hole_explosion_particles");
-
-    public static final Identifier GLASS_SHATTER_PARTICLES_ID = SatisfyingWeapons.id("glass_sword_shatter_particles");
 
     public static void registerS2CPackets() {
         SatisfyingWeapons.LOGGER.info("Registering S2C packets");
@@ -35,6 +36,9 @@ public class ModNetworking {
         ClientPlayNetworking.registerGlobalReceiver(FIREWORK_TRAIL_PARTICLES_ID, FireworkTrailParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(PLUNGE_ATTACK_PARTICLES_ID, PlungeAttackParticlesPacket::receive);
 
+        ClientPlayNetworking.registerGlobalReceiver(GLASS_SHATTER_PARTICLES_ID, GlassShatterParticlesPacket::receive);
+        ClientPlayNetworking.registerGlobalReceiver(BLOOD_DRIP_PARTICLES_ID, BloodDripParticlesPacket::receive);
+
         ClientPlayNetworking.registerGlobalReceiver(CONFETTI_PARTICLES_ID, ConfettiParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(GIFT_SMOKE_PARTICLES_ID, GiftSmokeParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(GIFT_EXPLOSION_PARTICLES_ID, GiftExplosionParticlesPacket::receive);
@@ -42,8 +46,6 @@ public class ModNetworking {
         ClientPlayNetworking.registerGlobalReceiver(BLACK_HOLE_PULL_PARTICLES_ID, BlackHolePullParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(ENTROPY_PARTICLES_ID, EntropyParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(BLACK_HOLE_EXPLOSION_PARTICLES_ID, BlackHoleExplosionParticlesPacket::receive);
-
-        ClientPlayNetworking.registerGlobalReceiver(GLASS_SHATTER_PARTICLES_ID, GlassShatterParticlesPacket::receive);
     }
 
     public static final Identifier FIREWORK_JUMP_CLIENT_PACKET = SatisfyingWeapons.id("firework_jump_client");
