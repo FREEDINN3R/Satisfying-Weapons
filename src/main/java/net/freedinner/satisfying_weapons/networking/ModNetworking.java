@@ -17,6 +17,7 @@ public class ModNetworking {
 
     public static final Identifier GLASS_SHATTER_PARTICLES_ID = SatisfyingWeapons.id("glass_sword_shatter_particles");
     public static final Identifier BLOOD_DRIP_PARTICLES_ID = SatisfyingWeapons.id("blood_drip_particles");
+    public static final Identifier GLASS_CUT_DAMAGE_PARTICLES_ID = SatisfyingWeapons.id("glass_cut_damage_particles");
 
     public static final Identifier CONFETTI_PARTICLES_ID = SatisfyingWeapons.id("confetti_particles");
     public static final Identifier GIFT_SMOKE_PARTICLES_ID = SatisfyingWeapons.id("gift_smoke_particles");
@@ -38,6 +39,7 @@ public class ModNetworking {
 
         ClientPlayNetworking.registerGlobalReceiver(GLASS_SHATTER_PARTICLES_ID, GlassShatterParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(BLOOD_DRIP_PARTICLES_ID, BloodDripParticlesPacket::receive);
+        ClientPlayNetworking.registerGlobalReceiver(GLASS_CUT_DAMAGE_PARTICLES_ID, GlassCutDamageParticlesPacket::receive);
 
         ClientPlayNetworking.registerGlobalReceiver(CONFETTI_PARTICLES_ID, ConfettiParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(GIFT_SMOKE_PARTICLES_ID, GiftSmokeParticlesPacket::receive);

@@ -47,9 +47,13 @@ public class GlassCutEffect extends StatusEffect {
     }
 
     public static void applyDamageTo(LivingEntity target) {
+        if (target.getWorld().isClient() || !target.isAlive() || target.isRemoved()) {
+            return;
+        }
+
         // Prevents players revived by totems from immediately dying again
         // Technically I could leave it, but that would be too OP
-        if (target.getWorld().isClient() || !target.hasStatusEffect(ModEffects.GLASS_CUT)) {
+        if (!target.hasStatusEffect(ModEffects.GLASS_CUT)) {
             return;
         }
 
@@ -62,11 +66,13 @@ public class GlassCutEffect extends StatusEffect {
         DamageSource glassCutDamageSource = CombatHelper.getDamageSource(ModDamageTypes.GLASS_CUT, target.getWorld(), lastAttacker);
 
         // Damage = 2 * lvl
-        float amplifier = target.getStatusEffect(ModEffects.GLASS_CUT).getAmplifier();
+        int amplifier = target.getStatusEffect(ModEffects.GLASS_CUT).getAmplifier();
         target.damage(glassCutDamageSource, 2 * (amplifier + 1));
+
+        sendDamageParticlesPacket(target, amplifier);
     }
 
-    private void sendBloodParticlesPacket(LivingEntity entity) {
+    private static void sendBloodParticlesPacket(LivingEntity entity) {
         double posX = entity.getParticleX(0.1);
         double posY = entity.getBodyY(0.4 + MathUtils.randomNumber(0.4));
         double posZ = entity.getParticleZ(0.1);
@@ -82,6 +88,18 @@ public class GlassCutEffect extends StatusEffect {
 
         for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
             ServerPlayNetworking.send(player, ModNetworking.BLOOD_DRIP_PARTICLES_ID, buf);
+        }
+    }
+
+    private static void sendDamageParticlesPacket(LivingEntity entity, int amplifier) {
+        Vec3d pos = entity.getPos().add(0, 0.5 * entity.getHeight(), 0);
+
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVector3f(pos.toVector3f());
+        buf.writeInt(amplifier);
+
+        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
+            ServerPlayNetworking.send(player, ModNetworking.GLASS_CUT_DAMAGE_PARTICLES_ID, buf);
         }
     }
 }
