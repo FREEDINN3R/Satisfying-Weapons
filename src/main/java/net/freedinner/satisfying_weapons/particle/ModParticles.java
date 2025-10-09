@@ -3,10 +3,7 @@ package net.freedinner.satisfying_weapons.particle;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
-import net.freedinner.satisfying_weapons.particle.custom.ConfettiParticle;
-import net.freedinner.satisfying_weapons.particle.custom.EntropyParticle;
-import net.freedinner.satisfying_weapons.particle.custom.FestivityCountParticle;
-import net.freedinner.satisfying_weapons.particle.custom.LineParticle;
+import net.freedinner.satisfying_weapons.particle.custom.*;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -16,6 +13,7 @@ import java.util.List;
 
 public class ModParticles {
     public static final List<DefaultParticleType> FESTIVITY_COUNT = registerMany("festivity_count", 10);
+    public static final DefaultParticleType BLOOD = register("blood");
     public static final DefaultParticleType CONFETTI = register("confetti");
     public static final DefaultParticleType WHITE_LINE = register("white_line");
     public static final DefaultParticleType DARK_LINE = register("dark_line");
@@ -48,6 +46,7 @@ public class ModParticles {
             ParticleFactoryRegistry.getInstance().register(particle, FestivityCountParticle.Factory::new);
         }
 
+        ParticleFactoryRegistry.getInstance().register(BLOOD, BloodParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(CONFETTI, ConfettiParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(WHITE_LINE, LineParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(DARK_LINE, LineParticle.Factory::new);

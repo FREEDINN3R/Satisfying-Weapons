@@ -3,7 +3,9 @@ package net.freedinner.satisfying_weapons.effect.custom;
 import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
+import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -13,6 +15,13 @@ public class GlassCutEffect extends StatusEffect {
 
     public GlassCutEffect(StatusEffectCategory category, int color) {
         super(category, color);
+    }
+
+    @Override
+    public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+        super.onApplied(entity, attributes, amplifier);
+
+        ((ILivingEntityDataSaver) entity).sw$setGlassCutCountdown(DAMAGE_DELAY_TICKS);
     }
 
     @Override
