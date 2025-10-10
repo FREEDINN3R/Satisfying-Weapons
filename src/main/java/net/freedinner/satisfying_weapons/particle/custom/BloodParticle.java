@@ -21,8 +21,8 @@ public class BloodParticle extends SpriteBillboardParticle {
         this.maxAge = MathUtils.randomNumber(40, 100);
         this.setSpriteForAge(spriteSet);
 
-        this.red = 0.95f;
-        this.green = 0.1f;
+        this.red = 0.8f;
+        this.green = 0.05f;
         this.blue = 0f;
     }
 
