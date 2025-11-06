@@ -6,6 +6,13 @@
     ]
   },
 
+  "glass_cut_damage": {
+    "subtitle": "sound.satisfying_weapons.glass_cut_damage",
+    "sounds": [
+      "satisfying_weapons:glass_cut_damage"
+    ]
+  },
+
   "party_horn": {
     "subtitle": "sound.satisfying_weapons.party_horn",
     "sounds": [

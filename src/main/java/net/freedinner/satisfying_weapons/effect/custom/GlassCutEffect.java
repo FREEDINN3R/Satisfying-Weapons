@@ -6,9 +6,11 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
+import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
 import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
+import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
@@ -17,6 +19,8 @@ import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 
 public class GlassCutEffect extends StatusEffect {
@@ -69,6 +73,7 @@ public class GlassCutEffect extends StatusEffect {
         int amplifier = target.getStatusEffect(ModEffects.GLASS_CUT).getAmplifier();
         target.damage(glassCutDamageSource, 2 * (amplifier + 1));
 
+        target.getWorld().playSound(null, target.getBlockPos(), ModSounds.GLASS_CUT_DAMAGE, SoundCategory.MASTER, 1.0f, PitchUtils.get());
         sendDamageParticlesPacket(target, amplifier);
     }
 

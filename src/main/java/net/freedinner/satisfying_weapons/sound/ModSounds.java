@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier;
 
 public class ModSounds {
     public static SoundEvent PLUNGE_ATTACK = register("plunge_attack");
+    public static SoundEvent GLASS_CUT_DAMAGE = register("glass_cut_damage");
     public static SoundEvent PARTY_HORN = register("party_horn");
     public static SoundEvent BIRTHDAY_GIFT_PRIMED = register("birthday_gift_primed");
     public static SoundEvent BIRTHDAY_GIFT_EXPLOSION = register("birthday_gift_explosion");
