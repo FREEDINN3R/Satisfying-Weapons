@@ -32,7 +32,7 @@ public class FestivityCountParticle extends SpriteBillboardParticle {
 
     @Override
     protected int getBrightness(float tint) {
-        return 0xF000F0;
+        return 255;
     }
 
     public static class Factory implements ParticleFactory<DefaultParticleType> {

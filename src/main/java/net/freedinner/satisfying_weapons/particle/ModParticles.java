@@ -14,6 +14,7 @@ import java.util.List;
 public class ModParticles {
     public static final List<DefaultParticleType> FESTIVITY_COUNT = registerMany("festivity_count", 10);
     public static final DefaultParticleType BLOOD = register("blood");
+    public static final DefaultParticleType GLASS_CUT_SLASH = register("glass_cut_slash");
     public static final DefaultParticleType CONFETTI = register("confetti");
     public static final DefaultParticleType WHITE_LINE = register("white_line");
     public static final DefaultParticleType DARK_LINE = register("dark_line");
@@ -47,7 +48,10 @@ public class ModParticles {
         }
 
         ParticleFactoryRegistry.getInstance().register(BLOOD, BloodParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(GLASS_CUT_SLASH, GlassCutSlashParticle.Factory::new);
+
         ParticleFactoryRegistry.getInstance().register(CONFETTI, ConfettiParticle.Factory::new);
+
         ParticleFactoryRegistry.getInstance().register(WHITE_LINE, LineParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(DARK_LINE, LineParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ENTROPY, EntropyParticle.Factory::new);

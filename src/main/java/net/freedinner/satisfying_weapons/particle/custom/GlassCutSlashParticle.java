@@ -6,29 +6,26 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.util.math.MathHelper;
 
-public class EntropyParticle extends SpriteBillboardParticle {
+public class GlassCutSlashParticle extends SpriteBillboardParticle {
     private final SpriteProvider spriteProvider;
-    protected EntropyParticle(ClientWorld clientWorld, double x, double y, double z, SpriteProvider spriteProvider, double dx, double dy, double dz) {
+    protected GlassCutSlashParticle(ClientWorld clientWorld, double x, double y, double z, SpriteProvider spriteProvider, double dx, double dy, double dz) {
         super(clientWorld, x, y, z, dx, dy, dz);
 
-        this.velocityMultiplier = 0.96f;
-        this.gravityStrength = -0.15f;
+        this.velocityMultiplier = 1f;
+        this.gravityStrength = 0f;
         this.x = x;
         this.y = y;
         this.z = z;
-        this.velocityX = dx;
-        this.velocityY = dy;
-        this.velocityZ = dz;
+        this.velocityX = 0;
+        this.velocityY = 0;
+        this.velocityZ = 0;
         this.scale = 0.3f;
 
         this.spriteProvider = spriteProvider;
         this.setSpriteForAge(spriteProvider);
 
-        this.ascending = true;
-        this.collidesWithWorld = false;
-        this.maxAge = 8 * MathUtils.randomNumber(2, 3);
+        this.maxAge = 5;
     }
 
     @Override
@@ -38,7 +35,7 @@ public class EntropyParticle extends SpriteBillboardParticle {
 
     @Override
     protected int getBrightness(float tint) {
-        return 255;
+        return Math.max(128, super.getBrightness(tint));
     }
 
     @Override
@@ -74,7 +71,7 @@ public class EntropyParticle extends SpriteBillboardParticle {
 
         @Override
         public Particle createParticle(DefaultParticleType particleType, ClientWorld world, double x, double y, double z, double dx, double dy, double dz) {
-            return new EntropyParticle(world, x, y, z, spriteProvider, dx, dy, dz);
+            return new GlassCutSlashParticle(world, x, y, z, spriteProvider, dx, dy, dz);
         }
     }
 }

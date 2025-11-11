@@ -28,7 +28,7 @@ public class LineParticle extends SpriteBillboardParticle {
 
     @Override
     protected int getBrightness(float tint) {
-        return 0x0000D0;
+        return 255;
     }
 
     @Override
