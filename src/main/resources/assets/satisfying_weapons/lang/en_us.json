@@ -60,11 +60,11 @@
   "item.satisfying_weapons.sword_of_dying_star.skill_name_2": "Transmission",
   "item.satisfying_weapons.sword_of_dying_star.skill_desc_2": "Durability cost is reduced to_1. Throwing a {C1BFFF}Black Hole{AAAAAA} while sneaking will cause it to collect all items and experience into your inventory.",
   "item.satisfying_weapons.sword_of_dying_star.skill_name_3": "Destruction",
-  "item.satisfying_weapons.sword_of_dying_star.skill_desc_3": "Entities affected by a {C1BFFF}Black Hole{AAAAAA} are inflicted with {6C3FE0}Entropy{AAAAAA}, lasting for 16s. Entities with {6C3FE0}Entropy{AAAAAA} receive 50%_more fall damage, and 20%_more overall damage.",
+  "item.satisfying_weapons.sword_of_dying_star.skill_desc_3": "Entities affected by a {C1BFFF}Black Hole{AAAAAA} are inflicted with {6C3FE0}Entropy{AAAAAA} for 16s. Entities with {6C3FE0}Entropy{AAAAAA} receive 50%_more fall damage, and 20%_more overall damage.",
   "item.satisfying_weapons.sword_of_dying_star.skill_name_4": "Attraction",
   "item.satisfying_weapons.sword_of_dying_star.skill_desc_4": "Greatly decreases the cooldown for throwing {C1BFFF}Black Holes{AAAAAA}. Entities affected by a {C1BFFF}Black Hole{AAAAAA} now have a small chance to drop their equipment while being pulled in.",
   "item.satisfying_weapons.sword_of_dying_star.skill_name_5": "Recreation",
-  "item.satisfying_weapons.sword_of_dying_star.skill_desc_5": "You can now ignore the cooldown for throwing {C1BFFF}Black Holes{AAAAAA} at the cost of 4_HP. Colliding two {C1BFFF}Black Holes{AAAAAA} creates a massive explosion, which doesn't damage the user.",
+  "item.satisfying_weapons.sword_of_dying_star.skill_desc_5": "You can now ignore the cooldown for throwing {C1BFFF}Black Holes{AAAAAA} at the cost of 4_HP. Colliding two {C1BFFF}Black Holes{AAAAAA} creates a massive explosion, which can't damage the user nor items.",
 
   "entity.satisfying_weapons.toy_arrow": "Toy Arrow",
   "entity.satisfying_weapons.birthday_gift": "Birthday Gift",
