@@ -13,7 +13,7 @@ public class ModConfigs {
     private static final String BLACK_HOLE_IGNORE_PETS_DEFAULT = "only_your_own";
 
     public static ArrayList<String> BLACK_HOLE_IGNORED_ENTITIES;
-    private static final String BLACK_HOLE_IGNORED_ENTITIES_KEY = "black_hole_ignore_entities";
+    private static final String BLACK_HOLE_IGNORED_ENTITIES_KEY = "black_hole_ignored_entities";
     private static final String BLACK_HOLE_IGNORED_ENTITIES_DEFAULT = "[ 'minecraft:armor_stand', 'some_mod:another_entity' ]";
 
     public static void registerConfigs() {

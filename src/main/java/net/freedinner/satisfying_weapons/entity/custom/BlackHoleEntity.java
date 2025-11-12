@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons.entity.custom;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.freedinner.satisfying_weapons.config.ModConfigs;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.entity.misc.NonDestructiveExplosionBehavior;
@@ -24,6 +25,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -35,6 +38,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -111,7 +115,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
             // If active and not shrinking yet
             if (this.getActiveAge() <= BLACK_HOLE_MAX_ACTIVE_AGE - BLACK_HOLE_SHRINKING_DURATION) {
-                suckInEntities();
+                attractEntities();
 
                 // Visuals & SFX
                 sendPullParticlesPacket();
@@ -191,7 +195,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
         this.setVelocity(0, 0,0);
     }
 
-    private void suckInEntities() {
+    private void attractEntities() {
         Vec3d pos = this.getPos();
         Box box = new Box(pos, pos).expand(BLACK_HOLE_EFFECT_RANGE);
 
@@ -199,6 +203,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
                 .stream()
                 .filter(e -> e != this.getOwner())
                 .filter(e -> e.squaredDistanceTo(pos) <= BLACK_HOLE_EFFECT_RANGE_SQR) // Cuz it's a sphere, not a cube
+                .filter(e -> !ModConfigs.BLACK_HOLE_IGNORED_ENTITIES.contains(Registries.ENTITY_TYPE.getId(e.getType()).toString()))
                 .filter(e -> !(e instanceof BlackHoleEntity otherBlackHole) || this.shouldCollapseWith(otherBlackHole)) // Ignore BHs not legible for collapse
                 .toList();
 
