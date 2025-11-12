@@ -1,5 +1,7 @@
 package net.freedinner.satisfying_weapons.util;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -62,6 +64,35 @@ public class MathUtils {
         }
 
         return world.getRandom().nextDouble() < chance;
+    }
+
+    public static Vec3d getViewHitboxIntersection(Entity target, Entity viewer) {
+        // This method gives the point where the "view" vector from viewer to target intersects the hitbox
+        // Honestly idk what exactly is happening here, I use it for particles
+
+        Vec3d targetPos = target.getPos().add(0, target.getHeight() / 2, 0);
+        Vec3d viewerPos = viewer.getEyePos();
+
+        Vec3d dist = viewerPos.subtract(targetPos);
+        Vec3d dir = dist.normalize();
+
+        if (dist.lengthSquared() == 0) {
+            return targetPos;
+        }
+
+        Box hitbox = target.getBoundingBox();
+        double hx = (hitbox.maxX - hitbox.minX) * 0.5;
+        double hy = (hitbox.maxY - hitbox.minY) * 0.5;
+        double hz = (hitbox.maxZ - hitbox.minZ) * 0.5;
+
+        double tx = dir.x != 0 ? hx / Math.abs(dir.x) : Double.POSITIVE_INFINITY;
+        double ty = dir.y != 0 ? hy / Math.abs(dir.y) : Double.POSITIVE_INFINITY;
+        double tz = dir.z != 0 ? hz / Math.abs(dir.z) : Double.POSITIVE_INFINITY;
+
+        // Smallest t gives the first interior face hit
+        double t = Math.min(tx, Math.min(ty, tz));
+
+        return targetPos.add(dir.multiply(t));
     }
 }
 

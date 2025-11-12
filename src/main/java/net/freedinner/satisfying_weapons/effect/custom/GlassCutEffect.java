@@ -20,7 +20,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 
 public class GlassCutEffect extends StatusEffect {
@@ -41,7 +40,7 @@ public class GlassCutEffect extends StatusEffect {
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         // Once per 4 ticks spawn a particle
         if (!entity.getWorld().isClient && MathUtils.takeChance(0.25)) {
-            this.sendBloodParticlesPacket(entity);
+            sendBloodDripParticlesPacket(entity);
         }
     }
 
@@ -74,37 +73,36 @@ public class GlassCutEffect extends StatusEffect {
         target.damage(glassCutDamageSource, 2 * (amplifier + 1));
 
         target.getWorld().playSound(null, target.getBlockPos(), ModSounds.GLASS_CUT_DAMAGE, SoundCategory.MASTER, 1.0f, PitchUtils.get());
-        sendDamageParticlesPacket(target, amplifier);
+        sendDamageParticlesPacket(target);
     }
 
-    private static void sendBloodParticlesPacket(LivingEntity entity) {
+    private static void sendBloodDripParticlesPacket(LivingEntity entity) {
         double posX = entity.getParticleX(0.1);
         double posY = entity.getBodyY(0.4 + MathUtils.randomNumber(0.4));
         double posZ = entity.getParticleZ(0.1);
-        Vec3d pos = new Vec3d(posX, posY, posZ);
-
-        Vec3d v = pos.subtract(entity.getPos());
-        v = v.multiply(1, 0, 1).normalize();
-        v = v.multiply(MathUtils.randomNumber(0.05, 0.08));
+        Vec3d particlePos = new Vec3d(posX, posY, posZ);
 
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(pos.toVector3f());
-        buf.writeVector3f(v.toVector3f());
+        buf.writeVector3f(particlePos.toVector3f());
+        buf.writeVector3f(entity.getPos().toVector3f());
 
         for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
             ServerPlayNetworking.send(player, ModNetworking.BLOOD_DRIP_PARTICLES_ID, buf);
         }
     }
 
-    private static void sendDamageParticlesPacket(LivingEntity entity, int amplifier) {
-        Vec3d pos = entity.getPos().add(0, 0.5 * entity.getHeight(), 0);
+    private static void sendDamageParticlesPacket(LivingEntity entity) {
+        Vec3d bloodPos = entity.getPos().add(0, 0.5 * entity.getHeight(), 0);
 
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(pos.toVector3f());
-        buf.writeInt(amplifier);
+        buf.writeVector3f(bloodPos.toVector3f());
 
         for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
-            ServerPlayNetworking.send(player, ModNetworking.GLASS_CUT_DAMAGE_PARTICLES_ID, buf);
+            PacketByteBuf bufCopy = PacketByteBufs.copy(buf);
+            Vec3d slashPos = MathUtils.getViewHitboxIntersection(entity, player);
+            bufCopy.writeVector3f(slashPos.toVector3f());
+
+            ServerPlayNetworking.send(player, ModNetworking.GLASS_CUT_DAMAGE_PARTICLES_ID, bufCopy);
         }
     }
 }

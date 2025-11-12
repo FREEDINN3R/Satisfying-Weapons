@@ -17,9 +17,8 @@ import org.joml.Vector3f;
 
 public class GlassCutDamageParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
-        Vector3f pos = buf.readVector3f();
-        int amplifier = buf.readInt();
-        ParticleEffect glassParticle = new ItemStackParticleEffect(ParticleTypes.ITEM, new ItemStack(Blocks.GLASS));
+        Vec3d targetPos = new Vec3d(buf.readVector3f());
+        Vec3d slashPos = new Vec3d(buf.readVector3f());
 
         client.execute(() -> {
             World world = client.world;
@@ -29,20 +28,17 @@ public class GlassCutDamageParticlesPacket {
             }
 
             // Blood splatter
+
             for (int i = 0; i < 10; i++) {
                 Vec3d v = MathUtils.randomPointInSphere().multiply(1, 0.3, 1);
                 v = v.normalize().multiply(MathUtils.randomNumber(0.1, 0.25));
 
-                world.addParticle(ModParticles.BLOOD, pos.x, pos.y, pos.z, v.x, v.y, v.z);
+                world.addParticle(ModParticles.BLOOD, targetPos.x, targetPos.y, targetPos.z, v.x, v.y, v.z);
             }
 
-            // Glass shards
-            for (int i = 0; i < amplifier; i++) {
-                Vec3d v = MathUtils.randomPointInSphere().multiply(1, 0.2, 1);
-                v = v.normalize().multiply(MathUtils.randomNumber(0.2, 0.3));
+            // Slash particle
 
-                world.addParticle(glassParticle, pos.x, pos.y, pos.z, v.x, v.y, v.z);
-            }
+            world.addParticle(ModParticles.GLASS_CUT_SLASH, slashPos.x, slashPos.y, slashPos.z, 0, 0, 0);
         });
     }
 }
