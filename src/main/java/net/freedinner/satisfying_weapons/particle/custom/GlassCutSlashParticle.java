@@ -25,7 +25,7 @@ public class GlassCutSlashParticle extends SpriteBillboardParticle {
         this.spriteProvider = spriteProvider;
         this.setSpriteForAge(spriteProvider);
 
-        this.maxAge = 5;
+        this.maxAge = 6;
     }
 
     @Override
