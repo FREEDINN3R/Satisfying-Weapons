@@ -21,6 +21,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Vector3f;
 
 public class GlassCutEffect extends StatusEffect {
     public static final int DAMAGE_DELAY_TICKS = 5;
@@ -91,16 +92,25 @@ public class GlassCutEffect extends StatusEffect {
         }
     }
 
-    private static void sendDamageParticlesPacket(LivingEntity entity) {
-        Vec3d bloodPos = entity.getPos().add(0, 0.5 * entity.getHeight(), 0);
+    private static void sendDamageParticlesPacket(LivingEntity target) {
+        Vec3d bloodPos = target.getPos().add(0, 0.5 * target.getHeight(), 0);
 
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVector3f(bloodPos.toVector3f());
 
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
+        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)target.getWorld(), target.getBlockPos())) {
             PacketByteBuf bufCopy = PacketByteBufs.copy(buf);
-            Vec3d slashPos = MathUtils.getViewHitboxIntersection(entity, player);
-            bufCopy.writeVector3f(slashPos.toVector3f());
+
+            // Produce slash particle only if the player isn't the target of the slash
+            if (!player.equals(target)) {
+                Vec3d slashPos = MathUtils.getViewHitboxIntersection(target, player);
+                bufCopy.writeVector3f(slashPos.toVector3f());
+                bufCopy.writeBoolean(true);
+            }
+            else {
+                bufCopy.writeVector3f(new Vector3f());
+                bufCopy.writeBoolean(false);
+            }
 
             ServerPlayNetworking.send(player, ModNetworking.GLASS_CUT_DAMAGE_PARTICLES_ID, bufCopy);
         }

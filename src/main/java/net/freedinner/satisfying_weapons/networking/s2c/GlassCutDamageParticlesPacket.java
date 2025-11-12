@@ -8,6 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -19,6 +20,7 @@ public class GlassCutDamageParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
         Vec3d targetPos = new Vec3d(buf.readVector3f());
         Vec3d slashPos = new Vec3d(buf.readVector3f());
+        boolean shouldSlash = buf.readBoolean();
 
         client.execute(() -> {
             World world = client.world;
@@ -38,7 +40,10 @@ public class GlassCutDamageParticlesPacket {
 
             // Slash particle
 
-            world.addParticle(ModParticles.GLASS_CUT_SLASH, slashPos.x, slashPos.y, slashPos.z, 0, 0, 0);
+            if (shouldSlash) {
+                DefaultParticleType slashParticle = MathUtils.getRandomElement(ModParticles.GLASS_CUT_SLASH);
+                world.addParticle(slashParticle, slashPos.x, slashPos.y, slashPos.z, 0, 0, 0);
+            }
         });
     }
 }

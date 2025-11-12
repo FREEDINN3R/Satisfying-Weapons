@@ -5,6 +5,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Random;
 
 public class MathUtils {
@@ -93,6 +94,10 @@ public class MathUtils {
         double t = Math.min(tx, Math.min(ty, tz));
 
         return targetPos.add(dir.multiply(t));
+    }
+
+    public static <T> T getRandomElement(List<T> list) {
+        return list.get(randomNumber(list.size()));
     }
 }
 

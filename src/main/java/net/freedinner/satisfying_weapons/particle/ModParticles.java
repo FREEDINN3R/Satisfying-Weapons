@@ -14,7 +14,7 @@ import java.util.List;
 public class ModParticles {
     public static final List<DefaultParticleType> FESTIVITY_COUNT = registerMany("festivity_count", 10);
     public static final DefaultParticleType BLOOD = register("blood");
-    public static final DefaultParticleType GLASS_CUT_SLASH = register("glass_cut_slash");
+    public static final List<DefaultParticleType> GLASS_CUT_SLASH = registerMany("glass_cut_slash", 2);
     public static final DefaultParticleType CONFETTI = register("confetti");
     public static final DefaultParticleType WHITE_LINE = register("white_line");
     public static final DefaultParticleType DARK_LINE = register("dark_line");
@@ -43,17 +43,21 @@ public class ModParticles {
     public static void registerParticlesClient() {
         SatisfyingWeapons.LOGGER.info("Registering client-side particles");
 
-        for (DefaultParticleType particle : FESTIVITY_COUNT) {
-            ParticleFactoryRegistry.getInstance().register(particle, FestivityCountParticle.Factory::new);
-        }
+        registerManyClient(FESTIVITY_COUNT, FestivityCountParticle.Factory::new);
 
         ParticleFactoryRegistry.getInstance().register(BLOOD, BloodParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(GLASS_CUT_SLASH, GlassCutSlashParticle.Factory::new);
+        registerManyClient(GLASS_CUT_SLASH, GlassCutSlashParticle.Factory::new);
 
         ParticleFactoryRegistry.getInstance().register(CONFETTI, ConfettiParticle.Factory::new);
 
         ParticleFactoryRegistry.getInstance().register(WHITE_LINE, LineParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(DARK_LINE, LineParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ENTROPY, EntropyParticle.Factory::new);
+    }
+
+    private static void registerManyClient(List<DefaultParticleType> particleList, ParticleFactoryRegistry.PendingParticleFactory<DefaultParticleType> factory) {
+        for (DefaultParticleType particle : particleList) {
+            ParticleFactoryRegistry.getInstance().register(particle, factory);
+        }
     }
 }
