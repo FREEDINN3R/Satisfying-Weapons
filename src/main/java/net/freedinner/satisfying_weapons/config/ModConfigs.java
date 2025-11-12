@@ -29,7 +29,7 @@ public class ModConfigs {
         ModConfigProvider configProvider = new ModConfigProvider();
 
         configProvider.addComment("Whether Black Holes should ignore all pets, attract all pets, or ignore only your own pets");
-        configProvider.addComment("May not work perfectly with pets from other mods");
+        configProvider.addComment("May not work perfectly with modded pets and some weird cases like foxes");
         configProvider.addComment("Values: yes / no / only_your_own");
         configProvider.addField(BLACK_HOLE_IGNORE_PETS_KEY, BLACK_HOLE_IGNORE_PETS_DEFAULT);
         configProvider.addComment("");

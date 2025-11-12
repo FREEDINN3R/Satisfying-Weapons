@@ -9,6 +9,7 @@ import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.entity.misc.NonDestructiveExplosionBehavior;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.mixin.LivingEntityAccessor;
+import net.freedinner.satisfying_weapons.mixin.ProjectileEntityAccessor;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.*;
@@ -19,6 +20,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
@@ -204,6 +206,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
                 .filter(e -> e != this.getOwner())
                 .filter(e -> e.squaredDistanceTo(pos) <= BLACK_HOLE_EFFECT_RANGE_SQR) // Cuz it's a sphere, not a cube
                 .filter(e -> !ModConfigs.BLACK_HOLE_IGNORED_ENTITIES.contains(Registries.ENTITY_TYPE.getId(e.getType()).toString()))
+                .filter(e -> !this.shouldIgnorePet(e)) // As dictated by config
                 .filter(e -> !(e instanceof BlackHoleEntity otherBlackHole) || this.shouldCollapseWith(otherBlackHole)) // Ignore BHs not legible for collapse
                 .toList();
 
@@ -321,6 +324,24 @@ public class BlackHoleEntity extends ThrownItemEntity {
         }
 
         return occupiedSlots;
+    }
+
+    private boolean shouldIgnorePet(Entity entity) {
+        if (ModConfigs.BLACK_HOLE_IGNORE_PETS.equals("no")) {
+            return false;
+        }
+
+        if (!(entity instanceof Tameable tameableEntity) || tameableEntity.getOwnerUuid() == null) {
+            return false;
+        }
+
+        if (ModConfigs.BLACK_HOLE_IGNORE_PETS.equals("yes")) {
+            return true;
+        }
+
+        // From this point, we assume IGNORE_PETS == "only_your_own"
+
+        return tameableEntity.getOwnerUuid() == ((ProjectileEntityAccessor) this).getOwnerUuid(); // Weird comparison because .getOwner() may return null if the owner is offline
     }
 
     private boolean shouldCollapseWith(BlackHoleEntity otherBlackHole) {

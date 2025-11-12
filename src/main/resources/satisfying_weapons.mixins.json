@@ -9,6 +9,7 @@
     "LivingEntityMixin",
     "LootTableBuilderAccessor",
     "PlayerEntityMixin",
+    "ProjectileEntityAccessor",
     "ServerPlayerInteractionManagerMixin"
   ],
   "injectors": {
