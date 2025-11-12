@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons;
 import net.fabricmc.api.ModInitializer;
 
 import net.freedinner.satisfying_weapons.block.ModBlocks;
+import net.freedinner.satisfying_weapons.config.ModConfigs;
 import net.freedinner.satisfying_weapons.datagen.ModTags;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
@@ -29,6 +30,8 @@ public class SatisfyingWeapons implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		ModConfigs.registerConfigs();
+
 		ModItems.registerItems();
 		ModBlocks.registerBlocks();
 		ModItemGroups.registerItemGroups();
