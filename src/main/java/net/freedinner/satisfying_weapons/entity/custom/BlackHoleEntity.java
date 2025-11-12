@@ -11,6 +11,7 @@ import net.freedinner.satisfying_weapons.mixin.LivingEntityAccessor;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.*;
+import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -252,12 +253,17 @@ public class BlackHoleEntity extends ThrownItemEntity {
         }
     }
 
-    private void tryPickUpLoot(Entity entity) {
+    private void tryPickUpLoot(Entity lootEntity) {
         PlayerEntity owner = (PlayerEntity) this.getOwner();
-        boolean canPickUp = entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity;
+        boolean canPickUp = lootEntity instanceof ItemEntity || lootEntity instanceof ExperienceOrbEntity;
 
         if (owner != null && canPickUp) {
-            entity.onPlayerCollision(owner);
+            lootEntity.onPlayerCollision(owner);
+
+            // Reset EXP pickup cooldown because it's annoying
+            if (lootEntity instanceof ExperienceOrbEntity) {
+                owner.experiencePickUpDelay = 0;
+            }
         }
     }
 

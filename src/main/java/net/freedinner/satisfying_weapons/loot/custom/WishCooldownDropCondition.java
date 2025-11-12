@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.loot.ModLootConditions;
-import net.freedinner.satisfying_weapons.util.IPlayerDataSaver;
+import net.freedinner.satisfying_weapons.util.data.IPlayerDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.loot.condition.LootCondition;

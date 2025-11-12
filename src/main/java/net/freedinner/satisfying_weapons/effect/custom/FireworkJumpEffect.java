@@ -7,7 +7,7 @@ import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
-import net.freedinner.satisfying_weapons.util.IPlayerDataSaver;
+import net.freedinner.satisfying_weapons.util.data.IPlayerDataSaver;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;

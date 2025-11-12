@@ -1,7 +1,7 @@
 package net.freedinner.satisfying_weapons.mixin;
 
 import com.mojang.authlib.GameProfile;
-import net.freedinner.satisfying_weapons.util.IPlayerDataSaver;
+import net.freedinner.satisfying_weapons.util.data.IPlayerDataSaver;
 import net.freedinner.satisfying_weapons.util.NbtUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;

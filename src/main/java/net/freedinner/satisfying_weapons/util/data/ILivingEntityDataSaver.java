@@ -1,4 +1,4 @@
-package net.freedinner.satisfying_weapons.util;
+package net.freedinner.satisfying_weapons.util.data;
 
 public interface ILivingEntityDataSaver {
     int sw$getGlassCutCountdown();

@@ -7,7 +7,7 @@ import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.effect.custom.GlassCutEffect;
 import net.freedinner.satisfying_weapons.event.custom.CustomLivingEntityEvents;
-import net.freedinner.satisfying_weapons.util.ILivingEntityDataSaver;
+import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.NbtUtils;
 import net.minecraft.entity.Entity;
