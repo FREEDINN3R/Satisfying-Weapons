@@ -162,7 +162,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
             // Apply Broken Soul first
             setGlassState(itemStack, State.CRACKED);
 
-            swordHolder.addStatusEffect(new StatusEffectInstance(ModEffects.BROKEN_SOUL, 240, 0, false, false));
+            swordHolder.addStatusEffect(new StatusEffectInstance(ModEffects.BROKEN_SOUL, 240, 0, false, false, true));
             ((ILivingEntityDataSaver) swordHolder).sw$setBrokenSoulSwordLevel(swordLevel); // Saving lvl to apply GC properly
 
             swordHolder.getWorld().playSound(null, swordHolder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get() + 0.3f);
