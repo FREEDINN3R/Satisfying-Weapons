@@ -43,7 +43,7 @@ public class ModBlocks {
             new LofsBlock(AbstractBlock.Settings
                     .create()
                     .mapColor(MapColor.TERRACOTTA_YELLOW)
-                    .strength(4f)
+                    .strength(0.5f)
                     .sounds(BlockSoundGroup.ROOTED_DIRT)
             ));
 

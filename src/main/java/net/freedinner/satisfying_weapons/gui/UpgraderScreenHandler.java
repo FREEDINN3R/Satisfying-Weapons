@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons.gui;
 
 import net.freedinner.satisfying_weapons.block.ModBlocks;
 import net.freedinner.satisfying_weapons.datagen.ModTags;
+import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.item.custom.IUpgradeableWeapon;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.screen.ForgingScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.ForgingSlotsManager;
@@ -47,6 +49,12 @@ public class UpgraderScreenHandler extends ForgingScreenHandler {
     public void updateResult() {
         ItemStack primaryStack = this.input.getStack(0);
         ItemStack secondaryStack = this.input.getStack(1);
+
+        if (primaryStack.isOf(Items.LAPIS_ORE) && secondaryStack.getItem() instanceof FireworkSwordItem) {
+            this.output.setStack(0, new ItemStack(ModBlocks.BLOCK_OF_LOFS, 64));
+            this.sendContentUpdates();
+            return;
+        }
 
         if (primaryStack.isEmpty() || secondaryStack.isEmpty() || !(primaryStack.getItem() instanceof IUpgradeableWeapon weapon)) {
             this.output.setStack(0, ItemStack.EMPTY);
