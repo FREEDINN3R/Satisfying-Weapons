@@ -41,8 +41,8 @@ public class ModTags {
         protected void configure(RegistryWrapper.WrapperLookup arg) {
             FabricTagBuilder builder = this.getOrCreateTagBuilder(MOD_WEAPONS);
             addAll(ModItems.FIREWORK_SWORD, builder);
-            addAll(ModItems.TOY_BOW, builder);
             addAll(ModItems.GLASS_SWORD, builder);
+            addAll(ModItems.TOY_BOW, builder);
             addAll(ModItems.SWORD_OF_DYING_STAR, builder);
 
             builder = this.getOrCreateTagBuilder(MOD_BOWS);

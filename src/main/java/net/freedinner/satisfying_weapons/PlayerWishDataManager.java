@@ -98,7 +98,9 @@ public class PlayerWishDataManager extends PersistentState {
             playerData.wishesSinceEpicDrop = 0;
         }
         else if (seed < rareChance + epicChance + legendaryChance) {
-            rolledStack = new ItemStack(ModItems.FIREWORK_SWORD.get(0));
+            rolledStack = MathUtils.takeChance(0.5f) ?
+                    new ItemStack(ModItems.FIREWORK_SWORD.get(0)) :
+                    new ItemStack(ModItems.GLASS_SWORD.get(0));
             playerData.wishesSinceRareDrop = 0;
         }
         else {
