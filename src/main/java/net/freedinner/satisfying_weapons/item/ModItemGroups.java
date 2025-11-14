@@ -27,7 +27,9 @@ public class ModItemGroups {
                         .entries(((displayContext, entries) -> {
                             entries.add(ModItems.UNFULFILLED_WISH);
                             entries.add(ModItems.WISHING_STAR);
+
                             entries.add(ModBlocks.UPGRADER);
+                            entries.add(ModBlocks.DECONSTRUCTOR);
 
                             addAll(entries, ModItems.FIREWORK_SWORD);
                             addAll(entries, ModItems.GLASS_SWORD);
