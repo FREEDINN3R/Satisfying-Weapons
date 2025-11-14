@@ -11,6 +11,11 @@ public class ModScreenHandlers {
                     SatisfyingWeapons.id("upgrader_screen_handler"),
                     UpgraderScreenHandler::new
             );
+    public static final ScreenHandlerType<DeconstructorScreenHandler> DECONSTRUCTOR_SCREEN_HANDLER =
+            ScreenHandlerRegistry.registerSimple(
+                    SatisfyingWeapons.id("deconstructor_screen_handler"),
+                    DeconstructorScreenHandler::new
+            );
 
     public static void registerScreenHandlers() {
         SatisfyingWeapons.LOGGER.info("Registering screen handlers");
@@ -20,5 +25,6 @@ public class ModScreenHandlers {
         SatisfyingWeapons.LOGGER.info("Registering client-side screen handlers");
 
         HandledScreens.register(UPGRADER_SCREEN_HANDLER, UpgraderScreen::new);
+        HandledScreens.register(DECONSTRUCTOR_SCREEN_HANDLER, DeconstructorScreen::new);
     }
 }

@@ -1,6 +1,7 @@
 package net.freedinner.satisfying_weapons.block;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
+import net.freedinner.satisfying_weapons.block.custom.DeconstructorBlock;
 import net.freedinner.satisfying_weapons.block.custom.UpgraderBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -17,8 +18,14 @@ public class ModBlocks {
             new UpgraderBlock(AbstractBlock.Settings
                     .create()
                     .mapColor(MapColor.BLUE)
-                    .instrument(Instrument.BASS)
-                    .strength(2.5f)
+                    .strength(1.5f)
+                    .sounds(BlockSoundGroup.WOOD)
+            ));
+    public static final Block DECONSTRUCTOR = registerBlock("deconstructor",
+            new DeconstructorBlock(AbstractBlock.Settings
+                    .create()
+                    .mapColor(MapColor.RED)
+                    .strength(1.5f)
                     .sounds(BlockSoundGroup.WOOD)
             ));
     public static final Block BLOCK_OF_LFOS = registerBlock("block_of_lfos",

@@ -1,8 +1,10 @@
 package net.freedinner.satisfying_weapons.gui;
 
+import net.freedinner.satisfying_weapons.block.ModBlocks;
 import net.freedinner.satisfying_weapons.datagen.ModTags;
 import net.freedinner.satisfying_weapons.item.custom.IUpgradeableWeapon;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
@@ -27,7 +29,7 @@ public class UpgraderScreenHandler extends ForgingScreenHandler {
 
     @Override
     protected boolean canUse(BlockState state) {
-        return true;
+        return canUse(this.context, player, ModBlocks.UPGRADER);
     }
 
     @Override

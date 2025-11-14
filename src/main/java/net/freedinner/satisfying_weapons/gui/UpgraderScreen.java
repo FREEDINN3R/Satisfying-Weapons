@@ -14,12 +14,9 @@ import org.lwjgl.glfw.GLFW;
 @Environment(EnvType.CLIENT)
 public class UpgraderScreen extends ForgingScreen<UpgraderScreenHandler> {
     private static final Identifier TEXTURE = new Identifier("textures/gui/container/anvil.png");
-    private final PlayerEntity player;
 
     public UpgraderScreen(UpgraderScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title, TEXTURE);
-
-        this.player = inventory.player;
         this.titleX = 60;
     }
 

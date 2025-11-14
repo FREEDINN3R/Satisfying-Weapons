@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "satisfying_weapons:block/deconstructor_bottom",
+    "east": "satisfying_weapons:block/deconstructor_side",
+    "north": "satisfying_weapons:block/deconstructor_front",
+    "particle": "satisfying_weapons:block/deconstructor_front",
+    "south": "satisfying_weapons:block/deconstructor_side",
+    "up": "satisfying_weapons:block/deconstructor_top",
+    "west": "satisfying_weapons:block/deconstructor_front"
+  }
+}
