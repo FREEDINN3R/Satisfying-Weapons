@@ -79,6 +79,27 @@ public class ModRecipes {
                     .criterion(FabricRecipeProvider.hasItem(Items.POTION),
                             FabricRecipeProvider.conditionsFromItem(Items.POTION))
                     .offerTo(exporter);
+
+            ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.BLOCK_OF_LOFS)
+                    .pattern(" o ")
+                    .pattern("@#P")
+                    .pattern(" & ")
+                    .input('o', Items.SLIME_BALL)
+                    .input('@', Items.HONEYCOMB)
+                    .input('#', Blocks.BEDROCK)
+                    .input('P', Items.PAPER)
+                    .input('&', Items.POTION)
+                    .criterion(FabricRecipeProvider.hasItem(Items.SLIME_BALL),
+                            FabricRecipeProvider.conditionsFromItem(Items.SLIME_BALL))
+                    .criterion(FabricRecipeProvider.hasItem(Items.HONEYCOMB),
+                            FabricRecipeProvider.conditionsFromItem(Items.HONEYCOMB))
+                    .criterion(FabricRecipeProvider.hasItem(Blocks.BEDROCK),
+                            FabricRecipeProvider.conditionsFromItem(Blocks.BEDROCK))
+                    .criterion(FabricRecipeProvider.hasItem(Items.PAPER),
+                            FabricRecipeProvider.conditionsFromItem(Items.PAPER))
+                    .criterion(FabricRecipeProvider.hasItem(Items.POTION),
+                            FabricRecipeProvider.conditionsFromItem(Items.POTION))
+                    .offerTo(exporter);
         }
     }
 }

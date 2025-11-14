@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons.block;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.block.custom.DeconstructorBlock;
+import net.freedinner.satisfying_weapons.block.custom.LofsBlock;
 import net.freedinner.satisfying_weapons.block.custom.UpgraderBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -12,6 +13,8 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
+
+import java.util.function.BiFunction;
 
 public class ModBlocks {
     public static final Block UPGRADER = registerBlock("upgrader",
@@ -32,9 +35,16 @@ public class ModBlocks {
             new Block(AbstractBlock.Settings
                     .create()
                     .mapColor(MapColor.DARK_GREEN)
-                    .instrument(Instrument.IRON_XYLOPHONE)
                     .strength(4f)
                     .sounds(BlockSoundGroup.STONE)
+            ));
+
+    public static final Block BLOCK_OF_LOFS = registerBlock("block_of_lofs",
+            new LofsBlock(AbstractBlock.Settings
+                    .create()
+                    .mapColor(MapColor.TERRACOTTA_YELLOW)
+                    .strength(4f)
+                    .sounds(BlockSoundGroup.ROOTED_DIRT)
             ));
 
     private static Block registerBlock(String name, Block block) {
