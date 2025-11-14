@@ -10,6 +10,7 @@ import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
+import net.freedinner.satisfying_weapons.util.NbtUtils;
 import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
@@ -32,6 +33,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -98,6 +100,12 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
             return;
         }
 
+        // A very ugly fix for a very annoying but rare problem
+        // Try to guess what it does lol
+        if (!stack.getOrCreateNbt().contains("glass_sword_serial_number")) {
+            stack.getOrCreateNbt().putInt("glass_sword_serial_number", MathUtils.randomNumber(10000));
+        }
+
         if (!isCrackedSword(stack)) {
             return;
         }
@@ -115,8 +123,10 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
 
     @Override
     public boolean allowNbtUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
-        setGlassState(oldStack, getGlassState(newStack));
-        return !(oldStack == newStack); // Blocks NBT update animation if only glass state has changed
+        ItemStack oldStackCopy = oldStack.copy();
+        setGlassState(oldStackCopy, getGlassState(newStack));
+
+        return !ItemStack.areEqual(oldStackCopy, newStack); // Cancels update animation if only glass state has changed
     }
 
     @Override
@@ -129,7 +139,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
     }
 
     // This is the main "revive" method, called at any sword lvl
-    // Branches into actuallyShatter() or applying BS first
+    // Branches into actuallyShatter() or applying Broken Soul first
     public static boolean trySaveFromDeath(LivingEntity swordHolder) {
         ItemStack itemStack = swordHolder.getStackInHand(Hand.MAIN_HAND);
 
