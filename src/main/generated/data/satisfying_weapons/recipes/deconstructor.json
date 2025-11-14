@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "minecraft:furnace"
+    },
+    "*": {
+      "item": "satisfying_weapons:unfulfilled_wish"
+    }
+  },
+  "pattern": [
+    "*",
+    "#"
+  ],
+  "result": {
+    "item": "satisfying_weapons:deconstructor"
+  },
+  "show_notification": true
+}

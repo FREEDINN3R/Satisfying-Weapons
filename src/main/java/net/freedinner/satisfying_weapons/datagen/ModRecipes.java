@@ -48,6 +48,17 @@ public class ModRecipes {
                             FabricRecipeProvider.conditionsFromItem(Blocks.CRAFTING_TABLE))
                     .offerTo(exporter);
 
+            ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.DECONSTRUCTOR)
+                    .pattern("*")
+                    .pattern("#")
+                    .input('*', ModItems.UNFULFILLED_WISH)
+                    .input('#', Blocks.FURNACE)
+                    .criterion(FabricRecipeProvider.hasItem(ModItems.UNFULFILLED_WISH),
+                            FabricRecipeProvider.conditionsFromItem(ModItems.UNFULFILLED_WISH))
+                    .criterion(FabricRecipeProvider.hasItem(Blocks.FURNACE),
+                            FabricRecipeProvider.conditionsFromItem(Blocks.FURNACE))
+                    .offerTo(exporter);
+
             ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.BLOCK_OF_LFOS)
                     .pattern(" U ")
                     .pattern("@#P")
