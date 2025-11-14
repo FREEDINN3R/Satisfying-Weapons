@@ -24,7 +24,7 @@ public class LofsBlock extends Block {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
-        tooltip.add(Text.literal("Let's Object For Something").formatted(Formatting.DARK_GRAY));
+        tooltip.add(Text.literal("Let's Object For Something").formatted(Formatting.GRAY));
     }
 
     @Override
