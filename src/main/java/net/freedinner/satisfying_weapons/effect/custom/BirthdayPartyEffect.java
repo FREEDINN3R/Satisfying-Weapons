@@ -47,7 +47,7 @@ public class BirthdayPartyEffect extends StatusEffect {
             }
 
             ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
-            defenseData.setScale(defenseData.getScale() * 0.85f);
+            defenseData.setScale(defenseData.getScale() / 1.15f);
         }
     }
 
@@ -94,7 +94,7 @@ public class BirthdayPartyEffect extends StatusEffect {
             }
 
             ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
-            defenseData.setScale(defenseData.getScale() / 0.85f);
+            defenseData.setScale(defenseData.getScale() * 1.15f);
         }
 
         super.onRemoved(entity, attributes, amplifier);

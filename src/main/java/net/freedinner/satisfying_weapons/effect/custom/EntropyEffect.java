@@ -29,7 +29,7 @@ public class EntropyEffect extends StatusEffect {
         ScaleData fallDamageData = ScaleTypes.FALLING.getScaleData(entity);
         fallDamageData.setScale(fallDamageData.getScale() * 1.5f * 0.8f); // Not exactly 50%, since it modifies fall distance, but close
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
-        defenseData.setScale(defenseData.getScale() * 0.8f);
+        defenseData.setScale(defenseData.getScale() / 1.2f);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class EntropyEffect extends StatusEffect {
         ScaleData fallDamageData = ScaleTypes.FALLING.getScaleData(entity);
         fallDamageData.setScale(fallDamageData.getScale() / 1.5f / 0.8f);
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(entity);
-        defenseData.setScale(defenseData.getScale() / 0.8f);
+        defenseData.setScale(defenseData.getScale() * 1.2f);
 
         super.onRemoved(entity, attributes, amplifier);
     }
