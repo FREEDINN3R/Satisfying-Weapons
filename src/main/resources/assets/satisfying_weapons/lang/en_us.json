@@ -8,9 +8,6 @@
   "block.satisfying_weapons.upgrader": "Upgrader",
   "block.satisfying_weapons.deconstructor": "Deconstructor",
 
-  "block.satisfying_weapons.block_of_lfos": "Block of LFOS",
-  "block.satisfying_weapons.block_of_lofs": "Block of LOFS",
-
   "item.satisfying_weapons.desc.hold_shift": "Hold Shift for more info",
   "item.satisfying_weapons.desc.level": "Level",
   "item.satisfying_weapons.desc.rare": "Rare",
