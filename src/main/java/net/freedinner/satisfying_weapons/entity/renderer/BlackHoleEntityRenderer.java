@@ -38,8 +38,8 @@ public class BlackHoleEntityRenderer<T extends Entity & FlyingItemEntity> extend
             scale = 1.0f + 0.5f * activeAge / BlackHoleEntity.BLACK_HOLE_GROWING_DURATION;
         }
         else if (activeAge <= BlackHoleEntity.BLACK_HOLE_MAX_ACTIVE_AGE - BlackHoleEntity.BLACK_HOLE_SHRINKING_DURATION) {
-            // Alternates between 1.4 and 1.5
-            scale = 1.0f + ((activeAge % 2 == 1) ? 0.4f : 0.5f);
+            // Alternates between 1.4 and 1.55
+            scale = 1.0f + ((activeAge % 2 == 1) ? 0.4f : 0.55f);
         }
         else {
             // Goes from 1.5 to 0
