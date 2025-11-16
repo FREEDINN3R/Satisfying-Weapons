@@ -22,9 +22,6 @@ public class ModLoot {
         public void generate() {
             addDrop(ModBlocks.UPGRADER, drops(ModBlocks.UPGRADER));
             addDrop(ModBlocks.DECONSTRUCTOR, drops(ModBlocks.DECONSTRUCTOR));
-
-            addDrop(ModBlocks.BLOCK_OF_LFOS, drops(ModBlocks.BLOCK_OF_LFOS));
-            //addDrop(ModBlocks.BLOCK_OF_LOFS, drops(ModBlocks.BLOCK_OF_LOFS)); You lost the game :D
         }
     }
 }

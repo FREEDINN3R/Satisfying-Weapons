@@ -58,48 +58,6 @@ public class ModRecipes {
                     .criterion(FabricRecipeProvider.hasItem(Blocks.FURNACE),
                             FabricRecipeProvider.conditionsFromItem(Blocks.FURNACE))
                     .offerTo(exporter);
-
-            ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.BLOCK_OF_LFOS)
-                    .pattern(" U ")
-                    .pattern("@#P")
-                    .pattern(" & ")
-                    .input('U', Items.FLOWER_POT)
-                    .input('@', Items.HONEYCOMB)
-                    .input('#', Blocks.NETHERITE_BLOCK)
-                    .input('P', Blocks.QUARTZ_PILLAR)
-                    .input('&', Items.POTION)
-                    .criterion(FabricRecipeProvider.hasItem(Items.FLOWER_POT),
-                            FabricRecipeProvider.conditionsFromItem(Items.FLOWER_POT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.HONEYCOMB),
-                            FabricRecipeProvider.conditionsFromItem(Items.HONEYCOMB))
-                    .criterion(FabricRecipeProvider.hasItem(Blocks.DIAMOND_BLOCK),
-                            FabricRecipeProvider.conditionsFromItem(Blocks.DIAMOND_BLOCK))
-                    .criterion(FabricRecipeProvider.hasItem(Items.BOOK),
-                            FabricRecipeProvider.conditionsFromItem(Items.BOOK))
-                    .criterion(FabricRecipeProvider.hasItem(Items.POTION),
-                            FabricRecipeProvider.conditionsFromItem(Items.POTION))
-                    .offerTo(exporter);
-
-            ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.BLOCK_OF_LOFS)
-                    .pattern(" o ")
-                    .pattern("@#P")
-                    .pattern(" & ")
-                    .input('o', Items.SLIME_BALL)
-                    .input('@', Items.HONEYCOMB)
-                    .input('#', Blocks.BEDROCK)
-                    .input('P', Items.PAPER)
-                    .input('&', Items.POTION)
-                    .criterion(FabricRecipeProvider.hasItem(Items.SLIME_BALL),
-                            FabricRecipeProvider.conditionsFromItem(Items.SLIME_BALL))
-                    .criterion(FabricRecipeProvider.hasItem(Items.HONEYCOMB),
-                            FabricRecipeProvider.conditionsFromItem(Items.HONEYCOMB))
-                    .criterion(FabricRecipeProvider.hasItem(Blocks.BEDROCK),
-                            FabricRecipeProvider.conditionsFromItem(Blocks.BEDROCK))
-                    .criterion(FabricRecipeProvider.hasItem(Items.PAPER),
-                            FabricRecipeProvider.conditionsFromItem(Items.PAPER))
-                    .criterion(FabricRecipeProvider.hasItem(Items.POTION),
-                            FabricRecipeProvider.conditionsFromItem(Items.POTION))
-                    .offerTo(exporter);
         }
     }
 }

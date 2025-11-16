@@ -50,12 +50,6 @@ public class UpgraderScreenHandler extends ForgingScreenHandler {
         ItemStack primaryStack = this.input.getStack(0);
         ItemStack secondaryStack = this.input.getStack(1);
 
-        if (primaryStack.isOf(Items.LAPIS_ORE) && secondaryStack.getItem() instanceof FireworkSwordItem) {
-            this.output.setStack(0, new ItemStack(ModBlocks.BLOCK_OF_LOFS, 64));
-            this.sendContentUpdates();
-            return;
-        }
-
         if (primaryStack.isEmpty() || secondaryStack.isEmpty() || !(primaryStack.getItem() instanceof IUpgradeableWeapon weapon)) {
             this.output.setStack(0, ItemStack.EMPTY);
             return;
