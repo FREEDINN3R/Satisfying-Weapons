@@ -54,6 +54,18 @@
   "item.satisfying_weapons.toy_bow.skill_name_5": "Party Crasher",
   "item.satisfying_weapons.toy_bow.skill_desc_5": "Hitting a {F53C0F}Birthday Gift{AAAAAA} with a {1E90FF}Toy Arrow{AAAAAA} will cause it to explode and fire 5_identical {1E90FF}Toy Arrows{AAAAAA} in random directions, prioritizing other mobs as targets.",
 
+  "item.satisfying_weapons.mechanical_greatsword": "Mechanical Greatsword",
+  "item.satisfying_weapons.mechanical_greatsword.skill_name_1": "Level 1",
+  "item.satisfying_weapons.mechanical_greatsword.skill_desc_1": "Hold to charge. One charge per 3s, max 4 charges. Release to create an Energy Discharge. Costs durability. Explosions can hurt you",
+  "item.satisfying_weapons.mechanical_greatsword.skill_name_2": "Level 2",
+  "item.satisfying_weapons.mechanical_greatsword.skill_desc_2": "While charging, gain Metal Heart: 60% all DMG RES. Will persist for 1-3s after shooting.",
+  "item.satisfying_weapons.mechanical_greatsword.skill_name_3": "Level 3",
+  "item.satisfying_weapons.mechanical_greatsword.skill_desc_3": "Explosions no longer hurt you. Also, when being damaged under Metal Heart: 33% chance to immediately gain 1 charge.",
+  "item.satisfying_weapons.mechanical_greatsword.skill_name_4": "Level 4",
+  "item.satisfying_weapons.mechanical_greatsword.skill_desc_4": "Charge cooldown 2s, max 5 charges",
+  "item.satisfying_weapons.mechanical_greatsword.skill_name_5": "Level 5",
+  "item.satisfying_weapons.mechanical_greatsword.skill_desc_5": "Can continue to charge infinitely. All charges beyond 5 will be immediately consumed to fire a Level 2 Discharge, with no durability cost. Won't happen while sneaking.",
+
   "item.satisfying_weapons.sword_of_dying_star": "Sword of Dying Star",
   "item.satisfying_weapons.sword_of_dying_star.skill_name_1": "Collapsing Star",
   "item.satisfying_weapons.sword_of_dying_star.skill_desc_1": "Right-click to throw a {C1BFFF}Black Hole{AAAAAA}, which will continuously pull in surrounding entities before disappearing. Costs 3_durability.",
@@ -68,6 +80,7 @@
 
   "entity.satisfying_weapons.toy_arrow": "Toy Arrow",
   "entity.satisfying_weapons.birthday_gift": "Birthday Gift",
+  "entity.satisfying_weapons.energy_discharge": "Energy Discharge",
   "entity.satisfying_weapons.black_hole": "Black Hole",
 
   "effect.satisfying_weapons.festivity": "Festivity",
@@ -92,6 +105,7 @@
   "sound.satisfying_weapons.party_horn": "Party horn blown",
   "sound.satisfying_weapons.birthday_gift_primed": "Birthday gift primed",
   "sound.satisfying_weapons.birthday_gift_explosion": "Birthday gift explodes",
+  "satisfying_weapons.metallic_thud": "Metallic thud",
   "sound.satisfying_weapons.black_hole_thrown": "Black hole thrown",
   "sound.satisfying_weapons.black_hole_active": "Black hole active"
 }

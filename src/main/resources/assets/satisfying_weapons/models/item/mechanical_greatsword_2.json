@@ -1,0 +1,19 @@
+{
+  "parent": "item/handheld",
+  "gui_light": "front",
+  "textures": {
+    "layer0": "satisfying_weapons:item/mechanical_greatsword_2"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [ 180, -90, 55 ],
+      "translation": [ 0, -9.0, 3.0 ],
+      "scale": [ 1, 1, 1 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [ -15, -90, 55 ],
+      "translation": [ 8, 10, -5],
+      "scale": [ 1, 1, 1 ]
+    }
+  }
+}

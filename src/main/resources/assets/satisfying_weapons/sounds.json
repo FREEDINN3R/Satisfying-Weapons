@@ -34,6 +34,13 @@
     ]
   },
 
+  "metallic_thud": {
+    "subtitle": "satisfying_weapons.metallic_thud",
+    "sounds": [
+      "satisfying_weapons:metallic_thud"
+    ]
+  },
+
   "black_hole_thrown": {
     "sound.subtitle": "satisfying_weapons.black_hole_thrown",
     "sounds": [
