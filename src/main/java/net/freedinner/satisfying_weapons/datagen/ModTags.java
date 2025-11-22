@@ -17,8 +17,14 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class ModTags {
+    // General tags
     public static final TagKey<Item> ALL_MOD_WEAPONS = registerItemTag("all_mod_weapons");
     public static final TagKey<Item> MOD_BOWS = registerItemTag("mod_bows");
+
+    // Weapon rarity tags
+    public static final TagKey<Item> RARE_DROPS = registerItemTag("rare_drops");
+    public static final TagKey<Item> EPIC_DROPS = registerItemTag("epic_drops");
+    public static final TagKey<Item> LEGENDARY_DROPS = registerItemTag("legendary_drops");
 
     public static void registerTags() {
         SatisfyingWeapons.LOGGER.info("Registering tags");
@@ -51,6 +57,17 @@ public class ModTags {
 
             addAllToTag(this.getOrCreateTagBuilder(MOD_BOWS),
                     ModItems.TOY_BOW);
+
+            addAllToTag(this.getOrCreateTagBuilder(RARE_DROPS),
+                    ModItems.FIREWORK_SWORD,
+                    ModItems.GLASS_SWORD);
+
+            addAllToTag(this.getOrCreateTagBuilder(EPIC_DROPS),
+                    ModItems.TOY_BOW,
+                    ModItems.MECHANICAL_GREATSWORD);
+
+            addAllToTag(this.getOrCreateTagBuilder(LEGENDARY_DROPS),
+                    ModItems.SWORD_OF_DYING_STAR);
         }
 
         private static void addAllToTag(FabricTagBuilder tag, Item... items) {
@@ -59,6 +76,7 @@ public class ModTags {
             }
         }
 
+        @SafeVarargs
         private static void addAllToTag(FabricTagBuilder tag, List<Item>... items) {
             for (List<Item> itemList : items) {
                 for (Item item : itemList) {
