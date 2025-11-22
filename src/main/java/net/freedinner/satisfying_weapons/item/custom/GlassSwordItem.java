@@ -149,6 +149,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
 
         // Reviving starts here
         swordHolder.clearStatusEffects();
+        swordHolder.extinguish();
         swordHolder.setHealth(1f);
 
         int swordLevel = ((GlassSwordItem) itemStack.getItem()).getLevel();
