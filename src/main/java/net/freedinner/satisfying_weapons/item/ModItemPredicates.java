@@ -46,7 +46,7 @@ public class ModItemPredicates {
 
         registerItemPredicate(ModItems.MECHANICAL_SWORD, "charge_level", (itemStack, clientWorld, entity, seed) -> {
             if (entity instanceof PlayerEntity player) {
-                return ((IPlayerDataSaver) player).getGreatswordChargeLevel() / EnergyDischargeEntity.CHARGE_TICKS * 0.1f;
+                return ((IPlayerDataSaver) player).sw$getChargeMS() / EnergyDischargeEntity.CHARGE_TICKS * 0.1f;
             }
 
             return 0;

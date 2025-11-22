@@ -9,42 +9,35 @@
         "satisfying_weapons:charging": 1,
         "satisfying_weapons:charge_level": 0.0
       },
-      "model": "satisfying_weapons:item/mechanical_sword_charge_50"
+      "model": "satisfying_weapons:item/mechanical_sword_charge_40"
     },
     {
       "predicate": {
         "satisfying_weapons:charging": 1,
         "satisfying_weapons:charge_level": 0.1
       },
-      "model": "satisfying_weapons:item/mechanical_sword_charge_51"
+      "model": "satisfying_weapons:item/mechanical_sword_charge_41"
     },
     {
       "predicate": {
         "satisfying_weapons:charging": 1,
         "satisfying_weapons:charge_level": 0.2
       },
-      "model": "satisfying_weapons:item/mechanical_sword_charge_52"
+      "model": "satisfying_weapons:item/mechanical_sword_charge_42"
     },
     {
       "predicate": {
         "satisfying_weapons:charging": 1,
         "satisfying_weapons:charge_level": 0.3
       },
-      "model": "satisfying_weapons:item/mechanical_sword_charge_53"
+      "model": "satisfying_weapons:item/mechanical_sword_charge_43"
     },
     {
       "predicate": {
         "satisfying_weapons:charging": 1,
         "satisfying_weapons:charge_level": 0.4
       },
-      "model": "satisfying_weapons:item/mechanical_sword_charge_54"
-    },
-    {
-      "predicate": {
-        "satisfying_weapons:charging": 1,
-        "satisfying_weapons:charge_level": 0.5
-      },
-      "model": "satisfying_weapons:item/mechanical_sword_charge_55"
+      "model": "satisfying_weapons:item/mechanical_sword_charge_44"
     }
   ]
 }

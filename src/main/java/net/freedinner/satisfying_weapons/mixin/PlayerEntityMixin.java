@@ -1,6 +1,7 @@
 package net.freedinner.satisfying_weapons.mixin;
 
 import com.mojang.authlib.GameProfile;
+import net.freedinner.satisfying_weapons.item.custom.MechanicalSwordItem;
 import net.freedinner.satisfying_weapons.util.data.IPlayerDataSaver;
 import net.freedinner.satisfying_weapons.util.NbtUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,13 +26,13 @@ public abstract class PlayerEntityMixin implements IPlayerDataSaver {
     @Unique
     private int onGroundTimeFS;
     @Unique
-    private int greatswordChargeLevel;
+    private int energyChargeMS; // Does not require nbt saving
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onConstructor(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
         lastDropTime = world.getTime();
         onGroundTimeFS = 0;
-        greatswordChargeLevel = 0;
+        energyChargeMS = MechanicalSwordItem.STARTING_CHARGE;
     }
 
     @Override
@@ -55,12 +56,12 @@ public abstract class PlayerEntityMixin implements IPlayerDataSaver {
     }
 
     @Override
-    public int getGreatswordChargeLevel() {
-        return greatswordChargeLevel;
+    public int sw$getChargeMS() {
+        return energyChargeMS;
     }
     @Override
-    public void setGreatswordChargeLevel(int i) {
-        greatswordChargeLevel = i;
+    public void sw$setChargeMS(int i) {
+        energyChargeMS = i;
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))

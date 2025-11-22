@@ -60,7 +60,7 @@
   "item.satisfying_weapons.mechanical_sword.skill_name_2": "Level 2",
   "item.satisfying_weapons.mechanical_sword.skill_desc_2": "While charging, gain Metal Heart: 60% all DMG RES. Will persist for 1-3s after shooting.",
   "item.satisfying_weapons.mechanical_sword.skill_name_3": "Level 3",
-  "item.satisfying_weapons.mechanical_sword.skill_desc_3": "Explosions no longer hurt you. Also, when being damaged under Metal Heart: 33% chance to immediately gain 1 charge.",
+  "item.satisfying_weapons.mechanical_sword.skill_desc_3": "Explosions no longer hurt you. Also, when being damaged while charging: 33% chance to immediately gain 1 charge.",
   "item.satisfying_weapons.mechanical_sword.skill_name_4": "Level 4",
   "item.satisfying_weapons.mechanical_sword.skill_desc_4": "Charge cooldown 2s, max 5 charges",
   "item.satisfying_weapons.mechanical_sword.skill_name_5": "Level 5",
