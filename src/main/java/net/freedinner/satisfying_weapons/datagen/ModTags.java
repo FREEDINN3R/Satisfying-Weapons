@@ -48,36 +48,36 @@ public class ModTags {
 
         @Override
         protected void configure(RegistryWrapper.WrapperLookup arg) {
-            addAllToTag(this.getOrCreateTagBuilder(ALL_MOD_WEAPONS),
+            addItemsToTag(this.getOrCreateTagBuilder(ALL_MOD_WEAPONS),
                     ModItems.FIREWORK_SWORD,
                     ModItems.GLASS_SWORD,
                     ModItems.TOY_BOW,
                     ModItems.MECHANICAL_GREATSWORD,
                     ModItems.SWORD_OF_DYING_STAR);
 
-            addAllToTag(this.getOrCreateTagBuilder(MOD_BOWS),
+            addItemsToTag(this.getOrCreateTagBuilder(MOD_BOWS),
                     ModItems.TOY_BOW);
 
-            addAllToTag(this.getOrCreateTagBuilder(RARE_DROPS),
+            addItemsToTag(this.getOrCreateTagBuilder(RARE_DROPS),
                     ModItems.FIREWORK_SWORD,
                     ModItems.GLASS_SWORD);
 
-            addAllToTag(this.getOrCreateTagBuilder(EPIC_DROPS),
+            addItemsToTag(this.getOrCreateTagBuilder(EPIC_DROPS),
                     ModItems.TOY_BOW,
                     ModItems.MECHANICAL_GREATSWORD);
 
-            addAllToTag(this.getOrCreateTagBuilder(LEGENDARY_DROPS),
+            addItemsToTag(this.getOrCreateTagBuilder(LEGENDARY_DROPS),
                     ModItems.SWORD_OF_DYING_STAR);
         }
 
-        private static void addAllToTag(FabricTagBuilder tag, Item... items) {
+        private static void addItemsToTag(FabricTagBuilder tag, Item... items) {
             for (Item item : items) {
                 tag.add(item);
             }
         }
 
         @SafeVarargs
-        private static void addAllToTag(FabricTagBuilder tag, List<Item>... items) {
+        private static void addItemsToTag(FabricTagBuilder tag, List<Item>... items) {
             for (List<Item> itemList : items) {
                 for (Item item : itemList) {
                     tag.add(item);
@@ -93,7 +93,7 @@ public class ModTags {
 
         @Override
         protected void configure(RegistryWrapper.WrapperLookup arg) {
-            addToAllTags(ModDamageTypes.GLASS_CUT,
+            addDamageToTags(ModDamageTypes.GLASS_CUT,
                     DamageTypeTags.BYPASSES_COOLDOWN,
                     DamageTypeTags.BYPASSES_ARMOR,
                     DamageTypeTags.BYPASSES_SHIELD,
@@ -102,7 +102,8 @@ public class ModTags {
             );
         }
 
-        private void addToAllTags(RegistryKey<DamageType> damageType, TagKey<DamageType> ... tags) {
+        @SafeVarargs
+        private void addDamageToTags(RegistryKey<DamageType> damageType, TagKey<DamageType> ... tags) {
             for(TagKey<DamageType> tag : tags) {
                 getOrCreateTagBuilder(tag).addOptional(damageType);
             }

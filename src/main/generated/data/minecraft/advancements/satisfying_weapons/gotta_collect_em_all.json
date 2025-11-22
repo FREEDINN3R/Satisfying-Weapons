@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "satisfying_weapons:mod_weapons"
+            "tag": "satisfying_weapons:all_mod_weapons"
           }
         ]
       },
