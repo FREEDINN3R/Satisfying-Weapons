@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons.item;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.entity.custom.EnergyDischargeEntity;
 import net.freedinner.satisfying_weapons.item.custom.GlassSwordItem;
+import net.freedinner.satisfying_weapons.item.custom.MechanicalSwordItem;
 import net.freedinner.satisfying_weapons.item.custom.WishingStarItem;
 import net.freedinner.satisfying_weapons.util.data.IPlayerDataSaver;
 import net.minecraft.client.item.ClampedModelPredicateProvider;
@@ -45,8 +46,8 @@ public class ModItemPredicates {
         });
 
         registerItemPredicate(ModItems.MECHANICAL_SWORD, "charge_level", (itemStack, clientWorld, entity, seed) -> {
-            if (entity instanceof PlayerEntity player) {
-                return ((IPlayerDataSaver) player).sw$getChargeMS() / EnergyDischargeEntity.CHARGE_TICKS * 0.1f;
+            if (entity instanceof PlayerEntity player && itemStack.getItem() instanceof MechanicalSwordItem sword) {
+                return ((IPlayerDataSaver) player).sw$getChargeMS() / sword.getChargeRate() * 0.1f;
             }
 
             return 0;
