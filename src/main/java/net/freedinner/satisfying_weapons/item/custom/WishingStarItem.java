@@ -79,8 +79,8 @@ public class WishingStarItem extends Item {
         serverPlayer.getItemCooldownManager().set(rolledStack.getItem(), 10);
 
         // Visuals & SFX
-        this.sendParticlesPacket(world, user.getEyePos().toVector3f(), rolledStack.isIn(ModTags.MOD_WEAPONS));
-        if (rolledStack.isIn(ModTags.MOD_WEAPONS)){
+        this.sendParticlesPacket(world, user.getEyePos().toVector3f(), rolledStack.isIn(ModTags.ALL_MOD_WEAPONS));
+        if (rolledStack.isIn(ModTags.ALL_MOD_WEAPONS)){
             world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 1f, 1f);
         }
         else {

@@ -43,7 +43,7 @@ public class DeconstructorScreenHandler extends ScreenHandler {
         this.addSlot(new Slot(this.input, 0, 42, 40) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                return stack.isIn(ModTags.MOD_WEAPONS);
+                return stack.isIn(ModTags.ALL_MOD_WEAPONS);
             }
         });
 

@@ -7,7 +7,6 @@ import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
-import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
@@ -18,11 +17,15 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class ModTags {
-    public static final TagKey<Item> MOD_WEAPONS = TagKey.of(RegistryKeys.ITEM, SatisfyingWeapons.id("mod_weapons"));
-    public static final TagKey<Item> MOD_BOWS = TagKey.of(RegistryKeys.ITEM, SatisfyingWeapons.id("mod_bows"));
+    public static final TagKey<Item> ALL_MOD_WEAPONS = registerItemTag("all_mod_weapons");
+    public static final TagKey<Item> MOD_BOWS = registerItemTag("mod_bows");
 
     public static void registerTags() {
         SatisfyingWeapons.LOGGER.info("Registering tags");
+    }
+
+    private static TagKey<Item> registerItemTag(String name) {
+        return TagKey.of(RegistryKeys.ITEM, SatisfyingWeapons.id(name));
     }
 
     public static void generateTags(FabricDataGenerator.Pack pack) {
@@ -39,20 +42,28 @@ public class ModTags {
 
         @Override
         protected void configure(RegistryWrapper.WrapperLookup arg) {
-            FabricTagBuilder builder = this.getOrCreateTagBuilder(MOD_WEAPONS);
-            addAll(ModItems.FIREWORK_SWORD, builder);
-            addAll(ModItems.GLASS_SWORD, builder);
-            addAll(ModItems.TOY_BOW, builder);
-            addAll(ModItems.MECHANICAL_GREATSWORD, builder);
-            addAll(ModItems.SWORD_OF_DYING_STAR, builder);
+            addAllToTag(this.getOrCreateTagBuilder(ALL_MOD_WEAPONS),
+                    ModItems.FIREWORK_SWORD,
+                    ModItems.GLASS_SWORD,
+                    ModItems.TOY_BOW,
+                    ModItems.MECHANICAL_GREATSWORD,
+                    ModItems.SWORD_OF_DYING_STAR);
 
-            builder = this.getOrCreateTagBuilder(MOD_BOWS);
-            addAll(ModItems.TOY_BOW, builder);
+            addAllToTag(this.getOrCreateTagBuilder(MOD_BOWS),
+                    ModItems.TOY_BOW);
         }
 
-        private static void addAll(List<Item> items, FabricTagBuilder builder) {
+        private static void addAllToTag(FabricTagBuilder tag, Item... items) {
             for (Item item : items) {
-                builder.add(item);
+                tag.add(item);
+            }
+        }
+
+        private static void addAllToTag(FabricTagBuilder tag, List<Item>... items) {
+            for (List<Item> itemList : items) {
+                for (Item item : itemList) {
+                    tag.add(item);
+                }
             }
         }
     }

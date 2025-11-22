@@ -65,7 +65,7 @@ public class ModAdvancements {
                     .criterion("got_unfulfilled_wish", InventoryChangedCriterion.Conditions.items(ModItems.UNFULFILLED_WISH))
                     .build(consumer, GLIMMER_OF_HOPE.getPath());
 
-            ItemPredicate anyModWeapon = ItemPredicate.Builder.create().tag(ModTags.MOD_WEAPONS).build();
+            ItemPredicate anyModWeapon = ItemPredicate.Builder.create().tag(ModTags.ALL_MOD_WEAPONS).build();
 
             Advancement.Builder.create().parent(root)
                     .display(

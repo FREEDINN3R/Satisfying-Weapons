@@ -24,7 +24,7 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
     private static final TrackedData<Integer> CHARGE_LEVEL = DataTracker.registerData(EnergyDischargeEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
     // Stats
-    public static final int CHARGE_TICKS = 30;
+    public static final int CHARGE_TICKS = 60;
     public static final double THROW_RANGE = 48;
 
     // NBT
