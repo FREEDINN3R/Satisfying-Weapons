@@ -52,7 +52,7 @@ public class ModItemPredicates {
             return 0;
         });
 
-        ClampedModelPredicateProvider pulling = (itemStack, world, entity, seed) -> {
+        ClampedModelPredicateProvider pulling = (itemStack, clientWorld, entity, seed) -> {
             if (entity != null && entity.isUsingItem() && entity.getActiveItem() == itemStack) {
                 return 1;
             }
@@ -60,7 +60,7 @@ public class ModItemPredicates {
             return 0;
         };
 
-        ClampedModelPredicateProvider pull = (itemsStack, world, entity, seed) -> {
+        ClampedModelPredicateProvider pull = (itemsStack, clientWorld, entity, seed) -> {
             if (entity != null && entity.getActiveItem() == itemsStack) {
                 return BowItem.getPullProgress(entity.getItemUseTime());
             }
