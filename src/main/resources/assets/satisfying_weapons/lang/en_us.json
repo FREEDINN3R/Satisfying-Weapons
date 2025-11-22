@@ -32,7 +32,7 @@
   "item.satisfying_weapons.cracked_glass_sword": "Cracked Glass Sword",
   "item.satisfying_weapons.broken_glass_sword": "Broken Glass Sword",
   "item.satisfying_weapons.glass_sword.skill_name_1": "Try, Try Again",
-  "item.satisfying_weapons.glass_sword.skill_desc_1": "Dying with this sword in hand will shatter it and revive you, inflicting {8CFBFF}Glass Cut{AAAAAA} on all nearby entities for 90s. Entities with {8CFBFF}Glass Cut{AAAAAA} receive +2_additional damage when hurt. Use Anvil to repair Broken Glass Sword with Glass Panes.",
+  "item.satisfying_weapons.glass_sword.skill_desc_1": "Dying with this sword in your main hand will shatter it and revive you, inflicting {8CFBFF}Glass Cut{AAAAAA} on all nearby entities for 90s. Entities with {8CFBFF}Glass Cut{AAAAAA} receive +2_additional damage when hurt. Use Anvil to repair Broken Glass Sword with Glass Panes.",
   "item.satisfying_weapons.glass_sword.skill_name_2": "Fractured Surface",
   "item.satisfying_weapons.glass_sword.skill_desc_2": "When hitting an entity, there is a 30%_chance to inflict {8CFBFF}Glass Cut{AAAAAA} for 20s. This also applies to Broken Glass Sword.",
   "item.satisfying_weapons.glass_sword.skill_name_3": "Self-Reflection",
