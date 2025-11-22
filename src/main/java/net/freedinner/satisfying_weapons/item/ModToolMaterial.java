@@ -5,9 +5,9 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 
 public enum ModToolMaterial implements ToolMaterial {
-    RARE(512, 6.0f, 3.0f, 5),
-    EPIC(1024, 7.0f, 4.0f, 12),
-    LEGENDARY(2048, 8.0f, 5.0f, 15);
+    RARE(512, 6.0f, 2.0f, 5),
+    EPIC(1024, 7.0f, 3.0f, 12),
+    LEGENDARY(2048, 8.0f, 4.0f, 15);
 
     private final int itemDurability;
     private final float miningSpeed;
