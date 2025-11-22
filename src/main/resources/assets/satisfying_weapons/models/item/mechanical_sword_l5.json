@@ -7,6 +7,13 @@
     {
       "predicate": {
         "satisfying_weapons:charging": 1,
+        "satisfying_weapons:charge_level": 0.0
+      },
+      "model": "satisfying_weapons:item/mechanical_sword_charge_50"
+    },
+    {
+      "predicate": {
+        "satisfying_weapons:charging": 1,
         "satisfying_weapons:charge_level": 0.1
       },
       "model": "satisfying_weapons:item/mechanical_sword_charge_51"
