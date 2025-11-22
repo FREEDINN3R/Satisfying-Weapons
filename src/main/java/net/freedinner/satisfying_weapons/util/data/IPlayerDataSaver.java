@@ -7,4 +7,7 @@ IPlayerDataSaver {
 
     int sw$getOnGroundTimeFS();
     void sw$setOnGroundTimeFS(int time);
+
+    int getGreatswordChargeLevel();
+    void setGreatswordChargeLevel(int i);
 }

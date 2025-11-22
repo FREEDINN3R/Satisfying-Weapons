@@ -43,6 +43,7 @@ public class ModTags {
             addAll(ModItems.FIREWORK_SWORD, builder);
             addAll(ModItems.GLASS_SWORD, builder);
             addAll(ModItems.TOY_BOW, builder);
+            addAll(ModItems.MECHANICAL_GREATSWORD, builder);
             addAll(ModItems.SWORD_OF_DYING_STAR, builder);
 
             builder = this.getOrCreateTagBuilder(MOD_BOWS);

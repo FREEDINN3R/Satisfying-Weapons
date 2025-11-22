@@ -34,6 +34,7 @@ public class ModItemGroups {
                             addAll(entries, ModItems.FIREWORK_SWORD);
                             addAll(entries, ModItems.GLASS_SWORD);
                             addAll(entries, ModItems.TOY_BOW);
+                            addAll(entries, ModItems.MECHANICAL_GREATSWORD);
                             addAll(entries, ModItems.SWORD_OF_DYING_STAR);
                         }))
                         .build()

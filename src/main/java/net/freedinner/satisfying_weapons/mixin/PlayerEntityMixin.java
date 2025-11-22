@@ -24,11 +24,14 @@ public abstract class PlayerEntityMixin implements IPlayerDataSaver {
     private long lastDropTime;
     @Unique
     private int onGroundTimeFS;
+    @Unique
+    private int greatswordChargeLevel;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onConstructor(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
         lastDropTime = world.getTime();
         onGroundTimeFS = 0;
+        greatswordChargeLevel = 0;
     }
 
     @Override
@@ -49,6 +52,15 @@ public abstract class PlayerEntityMixin implements IPlayerDataSaver {
     @Override
     public void sw$setOnGroundTimeFS(int time) {
         onGroundTimeFS = time;
+    }
+
+    @Override
+    public int getGreatswordChargeLevel() {
+        return greatswordChargeLevel;
+    }
+    @Override
+    public void setGreatswordChargeLevel(int i) {
+        greatswordChargeLevel = i;
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))

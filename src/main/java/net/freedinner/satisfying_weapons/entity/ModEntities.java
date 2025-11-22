@@ -28,6 +28,15 @@ public class ModEntities {
                     .build()
     );
 
+    public static final EntityType<EnergyDischargeEntity> ENERGY_DISCHARGE = Registry.register(
+            Registries.ENTITY_TYPE,
+            SatisfyingWeapons.id("energy_discharge"),
+            FabricEntityTypeBuilder.<EnergyDischargeEntity>create(SpawnGroup.MISC, EnergyDischargeEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.3f, 0.3f))
+                    .trackRangeChunks(4).trackedUpdateRate(10)
+                    .build()
+    );
+
     public static final EntityType<BlackHoleEntity> BLACK_HOLE = Registry.register(
             Registries.ENTITY_TYPE,
             SatisfyingWeapons.id("black_hole"),
