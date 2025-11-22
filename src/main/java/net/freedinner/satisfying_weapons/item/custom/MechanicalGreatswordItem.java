@@ -15,7 +15,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -78,23 +77,9 @@ public class MechanicalGreatswordItem extends UpgradeableSwordItem {
                 return;
             }
 
-            Vec3d playerEyePos = player.getEyePos();
-            Vec3d playerLookDirection = Vec3d.fromPolar(player.getPitch(), player.getYaw()).normalize();
-
-            // Energy discharge spawn pos
-            float yawRad = (float) Math.toRadians(player.getYaw());
-            Vec3d rightOffset = new Vec3d(Math.cos(yawRad), 0, MathHelper.sin(yawRad)).normalize().multiply(-1);
-            Vec3d upOffset = rightOffset.crossProduct(playerLookDirection).normalize();
-            Vec3d dischargeSpawnPos = playerEyePos.add(rightOffset.multiply(2)).add(upOffset.multiply(2));
-
-            // Energy discharge direction
-            Vec3d targetPos = playerEyePos.add(playerLookDirection.multiply(EnergyDischargeEntity.THROW_RANGE));
-            Vec3d direction = targetPos.subtract(dischargeSpawnPos).normalize();
-
             // Energy discharge summoning
             EnergyDischargeEntity energyDischarge = new EnergyDischargeEntity(world, player);
-            energyDischarge.setPosition(dischargeSpawnPos);
-            energyDischarge.setVelocity(direction);
+            energyDischarge.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, 1.0f, 0f);
             energyDischarge.setChargeLevel(chargeLevel);
 
             world.spawnEntity(energyDischarge);
