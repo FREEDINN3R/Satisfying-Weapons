@@ -19,8 +19,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class MechanicalGreatswordItem extends UpgradeableSwordItem {
-    public MechanicalGreatswordItem(ModToolMaterial toolMaterial, Settings settings, int level, @Nullable MechanicalGreatswordItem nextLevelWeapon) {
+public class MechanicalSwordItem extends UpgradeableSwordItem {
+    public MechanicalSwordItem(ModToolMaterial toolMaterial, Settings settings, int level, @Nullable MechanicalSwordItem nextLevelWeapon) {
         super(toolMaterial, settings, level, nextLevelWeapon);
     }
 

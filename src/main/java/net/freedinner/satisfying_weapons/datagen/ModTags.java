@@ -52,7 +52,7 @@ public class ModTags {
                     ModItems.FIREWORK_SWORD,
                     ModItems.GLASS_SWORD,
                     ModItems.TOY_BOW,
-                    ModItems.MECHANICAL_GREATSWORD,
+                    ModItems.MECHANICAL_SWORD,
                     ModItems.SWORD_OF_DYING_STAR);
 
             addItemsToTag(this.getOrCreateTagBuilder(MOD_BOWS),
@@ -64,7 +64,7 @@ public class ModTags {
 
             addItemsToTag(this.getOrCreateTagBuilder(EPIC_DROPS),
                     ModItems.TOY_BOW,
-                    ModItems.MECHANICAL_GREATSWORD);
+                    ModItems.MECHANICAL_SWORD);
 
             addItemsToTag(this.getOrCreateTagBuilder(LEGENDARY_DROPS),
                     ModItems.SWORD_OF_DYING_STAR);

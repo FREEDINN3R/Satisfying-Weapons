@@ -1,0 +1,36 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "satisfying_weapons:item/mechanical_sword"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "satisfying_weapons:charging": 1,
+        "satisfying_weapons:charge_level": 0.1
+      },
+      "model": "satisfying_weapons:item/mechanical_sword_charge_41"
+    },
+    {
+      "predicate": {
+        "satisfying_weapons:charging": 1,
+        "satisfying_weapons:charge_level": 0.2
+      },
+      "model": "satisfying_weapons:item/mechanical_sword_charge_42"
+    },
+    {
+      "predicate": {
+        "satisfying_weapons:charging": 1,
+        "satisfying_weapons:charge_level": 0.3
+      },
+      "model": "satisfying_weapons:item/mechanical_sword_charge_43"
+    },
+    {
+      "predicate": {
+        "satisfying_weapons:charging": 1,
+        "satisfying_weapons:charge_level": 0.4
+      },
+      "model": "satisfying_weapons:item/mechanical_sword_charge_44"
+    }
+  ]
+}

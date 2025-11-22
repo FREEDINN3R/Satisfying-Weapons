@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ModItems {
-    // --- GENERIC ITEMS --- //
+    // --- GENERAL ITEMS --- //
     public static final Item UNFULFILLED_WISH = register("unfulfilled_wish",
             new Item(new Item.Settings().rarity(Rarity.RARE).fireproof()));
     public static final Item WISHING_STAR = register("wishing_star",
@@ -29,8 +29,8 @@ public class ModItems {
     // Epic
     public static final List<Item> TOY_BOW = registerUpgradeableWeapon("toy_bow",
             ToyBowItem::new, ModToolMaterial.EPIC, 5, new Item.Settings());
-    public static final List<Item> MECHANICAL_GREATSWORD = registerUpgradeableWeapon("mechanical_greatsword",
-            MechanicalGreatswordItem::new, ModToolMaterial.EPIC, 5, new Item.Settings());
+    public static final List<Item> MECHANICAL_SWORD = registerUpgradeableWeapon("mechanical_sword",
+            MechanicalSwordItem::new, ModToolMaterial.EPIC, 5, new Item.Settings());
 
     // Legendary
     public static final List<Item> SWORD_OF_DYING_STAR = registerUpgradeableWeapon("sword_of_dying_star",

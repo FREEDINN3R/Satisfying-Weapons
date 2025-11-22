@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PlayerWishData;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
@@ -96,7 +95,7 @@ public class PlayerWishDataManager extends PersistentState {
         else if (seed < epicChance + legendaryChance) {
             rolledStack = MathUtils.takeChance(0.5f) ?
                     new ItemStack(ModItems.TOY_BOW.get(0)) :
-                    new ItemStack(ModItems.MECHANICAL_GREATSWORD.get(0));
+                    new ItemStack(ModItems.MECHANICAL_SWORD.get(0));
             playerData.wishesSinceEpicDrop = 0;
         }
         else if (seed < rareChance + epicChance + legendaryChance) {

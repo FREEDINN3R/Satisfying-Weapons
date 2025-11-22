@@ -2,7 +2,7 @@
   "parent": "item/handheld",
   "gui_light": "front",
   "textures": {
-    "layer0": "satisfying_weapons:item/mechanical_greatsword_0"
+    "layer0": "satisfying_weapons:item/mechanical_sword_charge_53"
   },
   "display": {
     "thirdperson_righthand": {

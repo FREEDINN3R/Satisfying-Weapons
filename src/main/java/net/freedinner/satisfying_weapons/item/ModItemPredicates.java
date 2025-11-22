@@ -36,7 +36,7 @@ public class ModItemPredicates {
             return GlassSwordItem.getGlassState(itemStack).ordinal() / 2f; // returns 0, 0.5, or 1
         });
 
-        registerItemPredicate(ModItems.MECHANICAL_GREATSWORD, "charging", (itemStack, clientWorld, entity, seed) -> {
+        registerItemPredicate(ModItems.MECHANICAL_SWORD, "charging", (itemStack, clientWorld, entity, seed) -> {
             if (entity != null && entity.isUsingItem() && entity.getActiveItem() == itemStack && entity.getActiveHand() == Hand.MAIN_HAND) {
                 return 1;
             }
@@ -44,7 +44,7 @@ public class ModItemPredicates {
             return 0;
         });
 
-        registerItemPredicate(ModItems.MECHANICAL_GREATSWORD, "charge_level", (itemStack, clientWorld, entity, seed) -> {
+        registerItemPredicate(ModItems.MECHANICAL_SWORD, "charge_level", (itemStack, clientWorld, entity, seed) -> {
             if (entity instanceof PlayerEntity player) {
                 return ((IPlayerDataSaver) player).getGreatswordChargeLevel() / EnergyDischargeEntity.CHARGE_TICKS * 0.1f;
             }
