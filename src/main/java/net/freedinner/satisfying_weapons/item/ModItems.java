@@ -22,19 +22,19 @@ public class ModItems {
     // --- WEAPONS --- //
     // Rare
     public static final List<Item> FIREWORK_SWORD = registerUpgradeableWeapon("firework_sword",
-            FireworkSwordItem::new, ModToolMaterial.RARE, 5, new Item.Settings());
+            FireworkSwordItem::new, ModToolMaterial.RARE, 5, new Item.Settings().fireproof());
     public static final List<Item> GLASS_SWORD = registerUpgradeableWeapon("glass_sword",
-            GlassSwordItem::new, ModToolMaterial.RARE, 5, new Item.Settings());
+            GlassSwordItem::new, ModToolMaterial.RARE, 5, new Item.Settings().fireproof());
 
     // Epic
     public static final List<Item> TOY_BOW = registerUpgradeableWeapon("toy_bow",
-            ToyBowItem::new, ModToolMaterial.EPIC, 5, new Item.Settings());
+            ToyBowItem::new, ModToolMaterial.EPIC, 5, new Item.Settings().fireproof());
     public static final List<Item> MECHANICAL_SWORD = registerUpgradeableWeapon("mechanical_sword",
-            MechanicalSwordItem::new, ModToolMaterial.EPIC, 5, new Item.Settings());
+            MechanicalSwordItem::new, ModToolMaterial.EPIC, 5, new Item.Settings().fireproof());
 
     // Legendary
     public static final List<Item> SWORD_OF_DYING_STAR = registerUpgradeableWeapon("sword_of_dying_star",
-            DyingStarSwordItem::new, ModToolMaterial.LEGENDARY, 5, new Item.Settings());
+            DyingStarSwordItem::new, ModToolMaterial.LEGENDARY, 5, new Item.Settings().fireproof());
 
     // --- TECHNICAL ITEMS --- //
     public static final Item ENERGY_DISCHARGE = register("energy_discharge",
@@ -55,7 +55,7 @@ public class ModItems {
 
         do {
             // Recursively adding weapon levels, in order to properly assign nextLevelWeapon
-            T currentInstance = (T) register(name + "_l" + i, constructor.apply(material, settings.fireproof(), i, nextLevelWeapon));
+            T currentInstance = (T) register(name + "_l" + i, constructor.apply(material, settings, i, nextLevelWeapon));
             list.add(currentInstance);
             nextLevelWeapon = currentInstance;
 
