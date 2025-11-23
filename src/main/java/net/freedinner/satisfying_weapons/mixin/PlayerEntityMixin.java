@@ -1,10 +1,12 @@
 package net.freedinner.satisfying_weapons.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.authlib.GameProfile;
 import net.freedinner.satisfying_weapons.item.custom.MechanicalSwordItem;
 import net.freedinner.satisfying_weapons.util.data.IPlayerDataSaver;
 import net.freedinner.satisfying_weapons.util.NbtUtils;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -33,6 +35,12 @@ public abstract class PlayerEntityMixin implements IPlayerDataSaver {
         lastDropTime = world.getTime();
         onGroundTimeFS = 0;
         energyChargeMS = MechanicalSwordItem.STARTING_CHARGE;
+    }
+
+    @ModifyExpressionValue(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getKnockback(Lnet/minecraft/entity/LivingEntity;)I"))
+    private int increaseKnockbackMS(int original) {
+        ItemStack stackInHand = ((PlayerEntity)(Object)this).getMainHandStack();
+        return (stackInHand.getItem() instanceof MechanicalSwordItem) ? original + 1 : original;
     }
 
     @Override

@@ -54,11 +54,21 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(
                 EntityAttributes.GENERIC_ATTACK_DAMAGE,
-                new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", 1, EntityAttributeModifier.Operation.ADDITION)
+                new EntityAttributeModifier(
+                        ATTACK_DAMAGE_MODIFIER_ID,
+                        "Custom damage modifier",
+                        1,
+                        EntityAttributeModifier.Operation.ADDITION
+                )
         );
         builder.put(
                 EntityAttributes.GENERIC_ATTACK_SPEED,
-                new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", -0.8, EntityAttributeModifier.Operation.ADDITION)
+                new EntityAttributeModifier(
+                        ATTACK_SPEED_MODIFIER_ID,
+                        "Custom speed modifier",
+                        -0.8,
+                        EntityAttributeModifier.Operation.ADDITION
+                )
         );
 
         brokenAttributeModifiers = builder.build();
