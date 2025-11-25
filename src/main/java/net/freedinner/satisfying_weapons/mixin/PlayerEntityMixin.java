@@ -27,14 +27,11 @@ public abstract class PlayerEntityMixin implements IPlayerDataSaver {
     private long lastDropTime;
     @Unique
     private int onGroundTimeFS;
-    @Unique
-    private int energyChargeMS; // Does not require nbt saving
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onConstructor(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
         lastDropTime = world.getTime();
         onGroundTimeFS = 0;
-        energyChargeMS = MechanicalSwordItem.STARTING_CHARGE;
     }
 
     @ModifyExpressionValue(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getKnockback(Lnet/minecraft/entity/LivingEntity;)I"))
@@ -61,15 +58,6 @@ public abstract class PlayerEntityMixin implements IPlayerDataSaver {
     @Override
     public void sw$setOnGroundTimeFS(int time) {
         onGroundTimeFS = time;
-    }
-
-    @Override
-    public int sw$getChargeMS() {
-        return energyChargeMS;
-    }
-    @Override
-    public void sw$setChargeMS(int i) {
-        energyChargeMS = i;
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))

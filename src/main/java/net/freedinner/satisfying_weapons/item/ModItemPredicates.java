@@ -46,8 +46,8 @@ public class ModItemPredicates {
         });
 
         registerItemPredicate(ModItems.MECHANICAL_SWORD, "charge_level", (itemStack, clientWorld, entity, seed) -> {
-            if (entity instanceof PlayerEntity player && itemStack.getItem() instanceof MechanicalSwordItem sword) {
-                return ((IPlayerDataSaver) player).sw$getChargeMS() / sword.getChargeRate() * 0.1f;
+            if (entity instanceof PlayerEntity && itemStack.getItem() instanceof MechanicalSwordItem sword) {
+                return sword.getChargeLevel(entity.getItemUseTime()) * 0.1f;
             }
 
             return 0;

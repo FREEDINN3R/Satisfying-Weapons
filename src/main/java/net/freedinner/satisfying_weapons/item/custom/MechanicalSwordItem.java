@@ -4,8 +4,6 @@ import net.freedinner.satisfying_weapons.entity.custom.EnergyDischargeEntity;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
-import net.freedinner.satisfying_weapons.util.data.IPlayerDataSaver;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -35,10 +33,16 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        ItemStack itemStack = user.getStackInHand(hand);
+
+        if (hand == Hand.OFF_HAND) {
+            return TypedActionResult.pass(itemStack);
+        }
+
         user.setCurrentHand(hand);
         user.setSprinting(false);
 
-        return TypedActionResult.consume(user.getStackInHand(hand));
+        return TypedActionResult.consume(itemStack);
     }
 
     @Override
@@ -47,42 +51,24 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
             return;
         }
 
-        int currentCharge = ((IPlayerDataSaver) player).sw$getChargeMS();
+        int usageTime = user.getItemUseTime();
 
-        if (currentCharge < this.getMaxCharge()) {
-            currentCharge++;
-            ((IPlayerDataSaver) player).sw$setChargeMS(currentCharge);
-
-            if (currentCharge % this.getChargeRate() == 0) {
-                float pitch = 0.6f + 0.1f * currentCharge / this.getChargeRate();
-                world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE.value(), SoundCategory.PLAYERS, 1.0f, pitch);
-            }
+        if (usageTime <= this.getMaxChargeTime() && (usageTime + STARTING_CHARGE) % this.getChargeRate() == 0) {
+            float pitch = 0.6f + 0.1f * this.getChargeLevel(usageTime);
+            world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE.value(), SoundCategory.PLAYERS, 1.0f, pitch);
         }
-    }
-
-    @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (!(entity instanceof PlayerEntity player)) {
-            return;
-        }
-
-        if (player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof MechanicalSwordItem) {
-            return;
-        }
-
-        ((IPlayerDataSaver) player).sw$setChargeMS(STARTING_CHARGE);
     }
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (!(user instanceof PlayerEntity player)) {
+        if (world.isClient() || !(user instanceof PlayerEntity player)) {
             return;
         }
 
-        int chargeLevel = ((IPlayerDataSaver) player).sw$getChargeMS() / this.getChargeRate();
-        ((IPlayerDataSaver) player).sw$setChargeMS(STARTING_CHARGE);
+        int usageTime = user.getItemUseTime();
+        int chargeLevel = this.getChargeLevel(usageTime);
 
-        if (world.isClient() || chargeLevel < 1) {
+        if (chargeLevel < 1) {
             return;
         }
 
@@ -119,7 +105,15 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
         return (this.getLevel() < 4) ? STANDARD_CHARGE_RATE : REDUCED_CHARGE_RATE;
     }
 
-    public int getMaxCharge() {
-        return (this.getLevel() < 4) ? (4 * STANDARD_CHARGE_RATE) : (5 * REDUCED_CHARGE_RATE);
+    public int getMaxChargeLevel() {
+        return (this.getLevel() < 4) ? 4 : 5;
+    }
+
+    public int getMaxChargeTime() {
+        return this.getMaxChargeLevel() * this.getChargeRate() - STARTING_CHARGE;
+    }
+
+    public int getChargeLevel(int usageTime) {
+        return Math.min((usageTime + STARTING_CHARGE) / this.getChargeRate(), this.getMaxChargeLevel());
     }
 }
