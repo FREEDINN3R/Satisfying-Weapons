@@ -18,6 +18,11 @@ public class EnergyDischargeEntityRenderer<T extends Entity & FlyingItemEntity> 
     }
 
     @Override
+    protected int getSkyLight(EnergyDischargeEntity entity, BlockPos pos) {
+        return 15;
+    }
+
+    @Override
     protected boolean hasLabel(EnergyDischargeEntity entity) {
         return false;
     }

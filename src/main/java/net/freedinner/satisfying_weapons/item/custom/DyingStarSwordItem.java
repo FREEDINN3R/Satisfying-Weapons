@@ -32,7 +32,7 @@ public class DyingStarSwordItem extends UpgradeableSwordItem {
 
             // Spawning BH
             BlackHoleEntity blackHole = new BlackHoleEntity(world, user, this.getLevel(), shouldCollectLoot);
-            blackHole.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, BlackHoleEntity.BLACK_HOLE_SPEED, 1.0f);
+            blackHole.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, BlackHoleEntity.BASE_SPEED, 1.0f);
             world.spawnEntity(blackHole);
 
             int durabilityCost = (this.getLevel() < 2) ? 3 : 1;

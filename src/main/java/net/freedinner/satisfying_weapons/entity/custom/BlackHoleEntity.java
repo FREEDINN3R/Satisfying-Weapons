@@ -20,7 +20,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
@@ -28,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -40,7 +38,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -49,15 +46,15 @@ public class BlackHoleEntity extends ThrownItemEntity {
     private static final TrackedData<Integer> ACTIVE_AGE = DataTracker.registerData(BlackHoleEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
     // Stats
-    public static final float BLACK_HOLE_SPEED = 2.5f;
-    public static final double BLACK_HOLE_THROW_RANGE = 14;
-    public static final double BLACK_HOLE_EFFECT_RANGE = 16;
-    public static final double BLACK_HOLE_EFFECT_RANGE_SQR = (int) Math.pow(BLACK_HOLE_EFFECT_RANGE, 2);
+    public static final float BASE_SPEED = 2.5f;
+    public static final double THROW_RANGE = 14;
+    public static final double EFFECT_RANGE = 16;
+    public static final double EFFECT_RANGE_SQR = (int) Math.pow(EFFECT_RANGE, 2);
 
     // Timings
-    public static final int BLACK_HOLE_MAX_ACTIVE_AGE = 26; // effectively 1.5 s, not sure why it's not 30
-    public static final int BLACK_HOLE_GROWING_DURATION = 4;
-    public static final int BLACK_HOLE_SHRINKING_DURATION = 3;
+    public static final int MAX_ACTIVE_AGE = 26; // effectively 1.5 s, not sure why it's not 30
+    public static final int GROWING_DURATION = 4;
+    public static final int SHRINKING_DURATION = 3;
 
     // NBT
     private static final String SWORD_LEVEL_NBT_KEY = "black_hole_sword_level";
@@ -102,11 +99,11 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
         if (!this.isActive()) {
             // If still flying, refresh velocity
-            this.setVelocity(this.getVelocity().normalize().multiply(BLACK_HOLE_SPEED));
+            this.setVelocity(this.getVelocity().normalize().multiply(BASE_SPEED));
 
             // Activate if exceeds throw range
-            distanceTravelled += BLACK_HOLE_SPEED;
-            if (distanceTravelled >= BLACK_HOLE_THROW_RANGE) {
+            distanceTravelled += BASE_SPEED;
+            if (distanceTravelled >= THROW_RANGE) {
                 this.activate(false);
             }
         }
@@ -116,7 +113,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
             this.setVelocity(0, 0, 0);
 
             // If active and not shrinking yet
-            if (this.getActiveAge() <= BLACK_HOLE_MAX_ACTIVE_AGE - BLACK_HOLE_SHRINKING_DURATION) {
+            if (this.getActiveAge() <= MAX_ACTIVE_AGE - SHRINKING_DURATION) {
                 attractEntities();
 
                 // Visuals & SFX
@@ -125,7 +122,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
             }
 
             // If finished shrinking
-            if (this.getActiveAge() > BLACK_HOLE_MAX_ACTIVE_AGE) {
+            if (this.getActiveAge() > MAX_ACTIVE_AGE) {
                 this.discard();
             }
         }
@@ -189,7 +186,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
         // If needed, go back slightly to be visible
         if (backtrack) {
             Vec3d direction = this.getVelocity().normalize();
-            Vec3d newPos = this.getPos().subtract(direction.multiply(BLACK_HOLE_SPEED * 0.025));
+            Vec3d newPos = this.getPos().subtract(direction.multiply(BASE_SPEED * 0.025));
             this.setPosition(newPos);
         }
 
@@ -199,12 +196,12 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
     private void attractEntities() {
         Vec3d pos = this.getPos();
-        Box box = new Box(pos, pos).expand(BLACK_HOLE_EFFECT_RANGE);
+        Box box = new Box(pos, pos).expand(EFFECT_RANGE);
 
         List<Entity> affectedEntities = this.getWorld().getOtherEntities(this, box)
                 .stream()
                 .filter(e -> e != this.getOwner())
-                .filter(e -> e.squaredDistanceTo(pos) <= BLACK_HOLE_EFFECT_RANGE_SQR) // Cuz it's a sphere, not a cube
+                .filter(e -> e.squaredDistanceTo(pos) <= EFFECT_RANGE_SQR) // Cuz it's a sphere, not a cube
                 .filter(e -> !ModConfigs.BLACK_HOLE_IGNORED_ENTITIES.contains(Registries.ENTITY_TYPE.getId(e.getType()).toString()))
                 .filter(e -> !this.shouldIgnorePet(e)) // As dictated by config
                 .filter(e -> !(e instanceof BlackHoleEntity otherBlackHole) || this.shouldCollapseWith(otherBlackHole)) // Ignore BHs not legible for collapse
@@ -224,7 +221,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
             // Increase pull force for BHs from the same user
             if (entity instanceof BlackHoleEntity otherBlackHole && this.shouldCollapseWith(otherBlackHole)) {
-                pullForce *= Math.sqrt(BLACK_HOLE_EFFECT_RANGE) / distance;
+                pullForce *= Math.sqrt(EFFECT_RANGE) / distance;
 
                 // Collapse two BHs if they are too close
                 // Extra checks so that only one explosion is produced
@@ -347,7 +344,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
     private boolean shouldCollapseWith(BlackHoleEntity otherBlackHole) {
         return otherBlackHole.getOwner() == this.getOwner()
                 && this.getOwner() != null
-                && otherBlackHole.squaredDistanceTo(this.getPos()) < BLACK_HOLE_EFFECT_RANGE; // Not square, because BHs collapse only if very close
+                && otherBlackHole.squaredDistanceTo(this.getPos()) < EFFECT_RANGE; // Not square, because BHs collapse only if very close
     }
 
     private void produceExplosion(BlackHoleEntity otherBlackHole) {
@@ -374,17 +371,17 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVector3f(center);
-        buf.writeDouble(BLACK_HOLE_EFFECT_RANGE);
+        buf.writeDouble(EFFECT_RANGE);
 
         // List of center pos, and edge pos in each cardinal direction
         List<BlockPos> blockPosList = new ArrayList<>();
         blockPosList.add(PosUtils.toBlockPos(center));
-        blockPosList.add(blockPosList.get(0).north((int) BLACK_HOLE_EFFECT_RANGE));
-        blockPosList.add(blockPosList.get(0).south((int) BLACK_HOLE_EFFECT_RANGE));
-        blockPosList.add(blockPosList.get(0).west((int) BLACK_HOLE_EFFECT_RANGE));
-        blockPosList.add(blockPosList.get(0).east((int) BLACK_HOLE_EFFECT_RANGE));
-        blockPosList.add(blockPosList.get(0).down((int) BLACK_HOLE_EFFECT_RANGE));
-        blockPosList.add(blockPosList.get(0).up((int) BLACK_HOLE_EFFECT_RANGE));
+        blockPosList.add(blockPosList.get(0).north((int) EFFECT_RANGE));
+        blockPosList.add(blockPosList.get(0).south((int) EFFECT_RANGE));
+        blockPosList.add(blockPosList.get(0).west((int) EFFECT_RANGE));
+        blockPosList.add(blockPosList.get(0).east((int) EFFECT_RANGE));
+        blockPosList.add(blockPosList.get(0).down((int) EFFECT_RANGE));
+        blockPosList.add(blockPosList.get(0).up((int) EFFECT_RANGE));
 
         ServerWorld world = (ServerWorld) this.getWorld();
         Collection<ServerPlayerEntity> trackingPlayers = new ArrayList<>();

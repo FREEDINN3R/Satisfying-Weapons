@@ -33,17 +33,17 @@ public class BlackHoleEntityRenderer<T extends Entity & FlyingItemEntity> extend
     private static float getScaleForAge(int activeAge) {
         float scale;
 
-        if (activeAge <= BlackHoleEntity.BLACK_HOLE_GROWING_DURATION) {
+        if (activeAge <= BlackHoleEntity.GROWING_DURATION) {
             // Goes from 1.0 to 1.5
-            scale = 1.0f + 0.5f * activeAge / BlackHoleEntity.BLACK_HOLE_GROWING_DURATION;
+            scale = 1.0f + 0.5f * activeAge / BlackHoleEntity.GROWING_DURATION;
         }
-        else if (activeAge <= BlackHoleEntity.BLACK_HOLE_MAX_ACTIVE_AGE - BlackHoleEntity.BLACK_HOLE_SHRINKING_DURATION) {
+        else if (activeAge <= BlackHoleEntity.MAX_ACTIVE_AGE - BlackHoleEntity.SHRINKING_DURATION) {
             // Alternates between 1.4 and 1.55
             scale = 1.0f + ((activeAge % 2 == 1) ? 0.4f : 0.55f);
         }
         else {
             // Goes from 1.5 to 0
-            scale = 1.5f * (BlackHoleEntity.BLACK_HOLE_MAX_ACTIVE_AGE - activeAge) / BlackHoleEntity.BLACK_HOLE_SHRINKING_DURATION;
+            scale = 1.5f * (BlackHoleEntity.MAX_ACTIVE_AGE - activeAge) / BlackHoleEntity.SHRINKING_DURATION;
         }
         return scale;
     }
@@ -51,6 +51,11 @@ public class BlackHoleEntityRenderer<T extends Entity & FlyingItemEntity> extend
 
     @Override
     protected int getBlockLight(BlackHoleEntity entity, BlockPos pos) {
+        return 15;
+    }
+
+    @Override
+    protected int getSkyLight(BlackHoleEntity entity, BlockPos pos) {
         return 15;
     }
 

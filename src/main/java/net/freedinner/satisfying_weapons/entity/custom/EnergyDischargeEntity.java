@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons.entity.custom;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.entity.misc.NonDestructiveExplosionBehavior;
 import net.freedinner.satisfying_weapons.item.ModItems;
+import net.freedinner.satisfying_weapons.util.NbtUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -20,10 +21,15 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import virtuoel.pehkui.api.ScaleTypes;
 
+import java.util.List;
+
 public class EnergyDischargeEntity extends ThrownItemEntity {
     private static final TrackedData<Integer> CHARGE_LEVEL = DataTracker.registerData(EnergyDischargeEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
-    public static final double THROW_RANGE = 48;
+    public static final float BASE_SPEED = 2.5f;
+    public static final float SPEED_INCREASE = 0.3f;
+    public static final double MAX_DISTANCE_TRAVELED = 48;
+    public static final List<Double> EXPLOSION_POWER = List.of(1.4, 2.0, 2.5, 3.0, 4.0);
 
     // NBT
     private static final String CHARGE_LEVEL_NBT_KEY = "energy_discharge_charge_level";
@@ -39,37 +45,25 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
     }
 
     @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(CHARGE_LEVEL, 1);
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
-        double actualSpeed = 2.75 + this.getChargeLevel() * 0.25;
-        Vec3d actualVelocity = this.getVelocity().normalize().multiply(actualSpeed);
-        this.setVelocity(actualVelocity);
+        double targetSpeed = BASE_SPEED + this.getChargeLevel() * SPEED_INCREASE;
+        Vec3d targetVelocity = this.getVelocity().normalize().multiply(targetSpeed);
+        this.setVelocity(targetVelocity);
 
-        distanceTraveled += actualSpeed;
-        if (distanceTraveled >= THROW_RANGE) {
+        distanceTraveled += targetSpeed;
+        if (distanceTraveled >= MAX_DISTANCE_TRAVELED) {
             this.onCollision(new BlockHitResult(this.getPos(), Direction.UP, this.getBlockPos(), false));
         }
 
-        // Something something energy trail behind the discharge
-        /*if (this.getWorld().isClient) {
-            double baseOffsetY = 0.07 + 0.02 * this.getChargeLevel();
-            double baseSize = 0.13 + 0.05 * this.getChargeLevel();
-
-            Vec3d trailDir = this.getVelocity().normalize().multiply(-1);
-            double trailLength = this.getVelocity().length();
-
-            double currTrailLength = 0;
-
-            while (currTrailLength / trailLength < 0.9) {
-                Vec3d particlePos = this.getPos().add(trailDir.multiply(currTrailLength));
-                double currSize = baseSize * (1 - currTrailLength / trailLength);
-                currSize = Math.round(currSize * 1000) / 1000.0;
-
-                world.addParticle(ModParticles.ENERGY_TRAIL, particlePos.x, particlePos.y + baseOffsetY, particlePos.z, (this.getVelocity().x + 5) + Math.round(currSize * 10000), this.getVelocity().y, this.getVelocity().z);
-                currTrailLength += currSize * 0.7;
-            }
-        }*/
+        // TODO: Add energy trail
     }
 
     protected void onCollision(HitResult hitResult) {
@@ -79,33 +73,14 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
             return;
         }
 
-        if (this.getOwner() instanceof LivingEntity livingEntity && livingEntity.distanceTo(this) < 16) {
+        if (this.getOwner() instanceof LivingEntity livingEntity && livingEntity.squaredDistanceTo(this) < 256) {
             livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 2, 4, false, false));
         }
 
-        this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new NonDestructiveExplosionBehavior(), this.getPos(), 0.9f + 0.5f * this.getChargeLevel(), false, World.ExplosionSourceType.MOB);
-
-        /*double shockwaveSpeed = 0.5 + 0.4 * chargeLevel;
-
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) this.world, this.getBlockPos())) {
-            double distance = this.getPos().multiply(1, 0, 1).distanceTo(player.getPos().multiply(1, 0, 1));
-            if (distance > shockwaveSpeed * 8) {
-                continue;
-            }
-
-            int duration = 20 + (int) Math.ceil(distance / shockwaveSpeed);
-            player.addStatusEffect(new StatusEffectInstance(ModEffects.CAMERA_SHAKE, duration, chargeLevel - 1, false, false));
-        }
-
-        sendExplosionParticlesPacket();*/
+        double power = EXPLOSION_POWER.get(this.getChargeLevel() - 1);
+        this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new NonDestructiveExplosionBehavior(), this.getPos(), (float) power, false, World.ExplosionSourceType.MOB);
 
         this.discard();
-    }
-
-    @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(CHARGE_LEVEL, 1);
     }
 
     public void writeCustomDataToNbt(NbtCompound nbt) {
@@ -118,12 +93,8 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
 
-        if (nbt.contains(DISTANCE_TRAVELED_NBT_KEY)) {
-            distanceTraveled = nbt.getDouble(DISTANCE_TRAVELED_NBT_KEY);
-        }
-        if (nbt.contains(CHARGE_LEVEL_NBT_KEY)) {
-            this.setChargeLevel(nbt.getByte(CHARGE_LEVEL_NBT_KEY));
-        }
+        distanceTraveled = NbtUtils.getOrCreate(nbt, DISTANCE_TRAVELED_NBT_KEY, 0);
+        this.setChargeLevel(NbtUtils.getOrCreate(nbt, CHARGE_LEVEL_NBT_KEY, 1));
     }
 
     @Override
@@ -144,14 +115,4 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
     public int getChargeLevel() {
         return this.dataTracker.get(CHARGE_LEVEL);
     }
-
-    /*private void sendExplosionParticlesPacket() {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(this.getPos().toVector3f());
-        buf.writeInt(this.getChargeLevel());
-
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) this.world, this.getBlockPos())) {
-            ServerPlayNetworking.send(player, ModNetworkingPackets.REALISTIC_EXPLOSION_PARTICLES_ID, buf);
-        }
-    }*/
 }
