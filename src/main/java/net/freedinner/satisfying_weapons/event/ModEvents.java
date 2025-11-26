@@ -5,6 +5,7 @@ import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.event.custom.CustomLivingEntityEvents;
 import net.freedinner.satisfying_weapons.event.handler.GlassCutAfterDamage;
 import net.freedinner.satisfying_weapons.event.handler.GlassSwordPreventDeath;
+import net.freedinner.satisfying_weapons.event.handler.MechanicalSwordAfterDamage;
 
 public class ModEvents {
     public static void registerEvents() {
@@ -12,6 +13,7 @@ public class ModEvents {
 
         ServerLivingEntityEvents.ALLOW_DEATH.register(new GlassSwordPreventDeath());
         CustomLivingEntityEvents.AFTER_DAMAGE.register(new GlassCutAfterDamage());
+        CustomLivingEntityEvents.AFTER_DAMAGE.register(new MechanicalSwordAfterDamage());
     }
 
     public static void registerEventsClient() {

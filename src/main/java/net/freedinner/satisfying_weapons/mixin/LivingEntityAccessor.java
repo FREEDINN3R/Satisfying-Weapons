@@ -9,6 +9,9 @@ public interface LivingEntityAccessor {
     @Accessor("playerHitTimer")
     void setPlayerHitTimer(int playerHitTimer);
 
+    @Accessor("itemUseTimeLeft")
+    void setItemUseTimeLeft(int itemUseTimeLeft);
+
     @Accessor("lastDamageTaken")
     void setLastDamageTaken(float lastDamageTaken);
 }
