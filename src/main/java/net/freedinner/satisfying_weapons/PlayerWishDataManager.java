@@ -68,7 +68,9 @@ public class PlayerWishDataManager extends PersistentState {
 
         if (playerData.totalWishesMade == 1) {
             SatisfyingWeapons.LOGGER.info(player.getName().getString() + " makes their first wish");
-            return new ItemStack(ModItems.FIREWORK_SWORD.get(0));
+            return MathUtils.takeChance(0.5) ?
+                    new ItemStack(ModItems.FIREWORK_SWORD.get(0)) :
+                    new ItemStack(ModItems.GLASS_SWORD.get(0));
         }
 
         double rareChance = getRareChance(playerData.wishesSinceRareDrop);
@@ -89,17 +91,19 @@ public class PlayerWishDataManager extends PersistentState {
         SatisfyingWeapons.LOGGER.info("Roll seed: " + seed);
 
         if (seed < legendaryChance) {
-            rolledStack = new ItemStack(ModItems.SWORD_OF_DYING_STAR.get(0));
+            rolledStack = MathUtils.takeChance(0.33) ?
+                    new ItemStack(ModItems.NAVIA) :
+                    new ItemStack(ModItems.SWORD_OF_DYING_STAR.get(0));
             playerData.wishesSinceLegendaryDrop = 0;
         }
         else if (seed < epicChance + legendaryChance) {
-            rolledStack = MathUtils.takeChance(0.5f) ?
+            rolledStack = MathUtils.takeChance(0.5) ?
                     new ItemStack(ModItems.TOY_BOW.get(0)) :
                     new ItemStack(ModItems.MECHANICAL_SWORD.get(0));
             playerData.wishesSinceEpicDrop = 0;
         }
         else if (seed < rareChance + epicChance + legendaryChance) {
-            rolledStack = MathUtils.takeChance(0.5f) ?
+            rolledStack = MathUtils.takeChance(0.5) ?
                     new ItemStack(ModItems.FIREWORK_SWORD.get(0)) :
                     new ItemStack(ModItems.GLASS_SWORD.get(0));
             playerData.wishesSinceRareDrop = 0;

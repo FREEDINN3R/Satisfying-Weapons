@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.PlayerWishDataManager;
 import net.freedinner.satisfying_weapons.datagen.ModTags;
+import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.LivingEntity;
@@ -80,7 +81,7 @@ public class WishingStarItem extends Item {
 
         // Visuals & SFX
         this.sendParticlesPacket(world, user.getEyePos().toVector3f(), rolledStack.isIn(ModTags.ALL_MOD_WEAPONS));
-        if (rolledStack.isIn(ModTags.ALL_MOD_WEAPONS)){
+        if (rolledStack.isIn(ModTags.ALL_MOD_WEAPONS) || rolledStack.isOf(ModItems.NAVIA)){
             world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 1f, 1f);
         }
         else {
