@@ -56,8 +56,7 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
         int usageTime = user.getItemUseTime();
 
         if (usageTime <= this.getMaxChargeTime() && (usageTime + STARTING_CHARGE) % this.getChargeRate() == 0) {
-            float pitch = 0.6f + 0.1f * this.getChargeLevel(usageTime);
-            world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE.value(), SoundCategory.PLAYERS, 1.0f, pitch);
+            this.playChargeSound(user);
         }
 
         if (this.getLevel() >= 2) {
@@ -109,6 +108,15 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
     @Override
     public int getMaxUseTime(ItemStack stack) {
         return 72000;
+    }
+
+    public void playChargeSound(LivingEntity user) {
+        if (!user.isUsingItem() || !user.getStackInHand(Hand.MAIN_HAND).isOf(this)) {
+            return;
+        }
+
+        float pitch = 0.6f + 0.1f * this.getChargeLevel(user.getItemUseTime());
+        user.getWorld().playSound(null, user.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE.value(), SoundCategory.PLAYERS, 1.0f, pitch);
     }
 
     public int getChargeRate() {

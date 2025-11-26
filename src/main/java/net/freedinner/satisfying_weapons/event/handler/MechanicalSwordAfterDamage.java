@@ -31,8 +31,7 @@ public class MechanicalSwordAfterDamage implements CustomLivingEntityEvents.Afte
             itemUseTimeLeft -= mechanicalSword.getChargeRate();
             ((LivingEntityAccessor) player).setItemUseTimeLeft(itemUseTimeLeft);
 
-            float pitch = 0.6f + 0.1f * mechanicalSword.getChargeLevel(player.getItemUseTime());
-            player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE.value(), SoundCategory.PLAYERS, 1.0f, pitch);
+            mechanicalSword.playChargeSound(player);
 
             // Syncing itemUseTimeLeft with client
             PacketByteBuf buf = PacketByteBufs.create();
