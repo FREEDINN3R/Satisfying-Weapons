@@ -28,13 +28,16 @@ import java.util.List;
 public class EnergyDischargeEntity extends ThrownItemEntity {
     private static final TrackedData<Integer> CHARGE_LEVEL = DataTracker.registerData(EnergyDischargeEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
+    // Stats
     public static final float BASE_SPEED = 2.5f;
     public static final float SPEED_INCREASE = 0.3f;
     public static final double MAX_DISTANCE_TRAVELED = 48;
-    public static final List<Double> EXPLOSION_POWER = List.of(1.0, 2.0, 2.5, 3.0, 4.0);
+    public static final List<Double> EXPLOSION_POWER = List.of(1.0, 1.9, 2.5, 3.0, 4.0);
 
     // NBT
     private static final String CHARGE_LEVEL_NBT_KEY = "energy_discharge_charge_level";
+    private static final String SWORD_LEVEL_NBT_KEY = "mechanical_sword_level";
+    private int swordLevel = 1;
     private static final String DISTANCE_TRAVELED_NBT_KEY = "energy_discharge_distance_traveled";
     double distanceTraveled = 0;
 
@@ -42,8 +45,11 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
         super(entityType, world);
     }
 
-    public EnergyDischargeEntity(World world, LivingEntity owner) {
+    public EnergyDischargeEntity(World world, LivingEntity owner, int chargeLevel, int swordLevel) {
         super(ModEntities.ENERGY_DISCHARGE, owner, world);
+
+        this.setChargeLevel(chargeLevel);
+        this.swordLevel = swordLevel;
     }
 
     @Override
@@ -76,8 +82,8 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
             return;
         }
 
-        if (this.getOwner() instanceof LivingEntity livingEntity && livingEntity.squaredDistanceTo(this) < 256) {
-            livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 2, 4, false, false));
+        if (swordLevel >= 3 && this.getOwner() instanceof LivingEntity livingOwner && livingOwner.squaredDistanceTo(this) < 256) {
+            livingOwner.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 2, 4, false, false));
         }
 
         double power = EXPLOSION_POWER.get(this.getChargeLevel() - 1);
@@ -97,7 +103,9 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
         Entity owner = this.getOwner();
         Entity target = entityHitResult.getEntity();
 
-        target.damage(this.getDamageSources().explosion(this, owner), 4.0f * this.getChargeLevel());
+        if (!(swordLevel >= 3 && owner == target)) {
+            target.damage(this.getDamageSources().explosion(this, owner), 4.0f * this.getChargeLevel());
+        }
 
         if (owner instanceof LivingEntity livingOwner) {
             this.applyDamageEffects(livingOwner, target);
@@ -107,15 +115,17 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
 
-        nbt.putDouble(DISTANCE_TRAVELED_NBT_KEY, distanceTraveled);
         nbt.putByte(CHARGE_LEVEL_NBT_KEY, (byte) this.getChargeLevel());
+        nbt.putInt(SWORD_LEVEL_NBT_KEY, swordLevel);
+        nbt.putDouble(DISTANCE_TRAVELED_NBT_KEY, distanceTraveled);
     }
 
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
 
-        distanceTraveled = NbtUtils.getOrCreate(nbt, DISTANCE_TRAVELED_NBT_KEY, 0);
         this.setChargeLevel(NbtUtils.getOrCreate(nbt, CHARGE_LEVEL_NBT_KEY, 1));
+        swordLevel = NbtUtils.getOrCreate(nbt, SWORD_LEVEL_NBT_KEY, 1);
+        distanceTraveled = NbtUtils.getOrCreate(nbt, DISTANCE_TRAVELED_NBT_KEY, 0);
     }
 
     @Override

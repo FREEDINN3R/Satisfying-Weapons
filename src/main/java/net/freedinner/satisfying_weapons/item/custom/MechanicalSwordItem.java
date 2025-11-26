@@ -73,9 +73,8 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
         }
 
         // Projectile spawning
-        EnergyDischargeEntity energyDischarge = new EnergyDischargeEntity(world, player);
+        EnergyDischargeEntity energyDischarge = new EnergyDischargeEntity(world, player, chargeLevel, this.getLevel());
         energyDischarge.setVelocity(user, user.getPitch(), user.getYaw(), user.getRoll(), 1.0f, 0.5f);
-        energyDischarge.setChargeLevel(chargeLevel);
 
         world.spawnEntity(energyDischarge);
 
