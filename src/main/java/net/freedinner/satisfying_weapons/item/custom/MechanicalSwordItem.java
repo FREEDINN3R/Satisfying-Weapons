@@ -49,14 +49,20 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if (!(user instanceof PlayerEntity player)) {
+        if (!(user instanceof PlayerEntity)) {
             return;
         }
 
         int usageTime = user.getItemUseTime();
 
-        if (usageTime <= this.getMaxChargeTime() && (usageTime + STARTING_CHARGE) % this.getChargeRate() == 0) {
-            this.playChargeSound(user);
+        if ((usageTime + STARTING_CHARGE) % this.getChargeRate() == 0) {
+            if (usageTime <= this.getMaxChargeTime() || this.getLevel() == 5) {
+                this.playChargeSound(user);
+            }
+
+            if (usageTime > this.getMaxChargeTime() && this.getLevel() == 5) {
+                this.shootEnergyDischarge(2, user);
+            }
         }
 
         if (this.getLevel() >= 2) {
@@ -77,17 +83,7 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
             return;
         }
 
-        // Projectile spawning
-        EnergyDischargeEntity energyDischarge = new EnergyDischargeEntity(world, player, chargeLevel, this.getLevel());
-        energyDischarge.setVelocity(user, user.getPitch(), user.getYaw(), user.getRoll(), 1.0f, 0.5f);
-
-        world.spawnEntity(energyDischarge);
-
-        // Recoil
-        Vec3d dir = Vec3d.fromPolar(player.getPitch(), player.getYaw()).normalize();
-        Vec3d v = dir.multiply(-0.2 * (chargeLevel - 1));
-        player.addVelocity(v);
-        player.velocityModified = true;
+        this.shootEnergyDischarge(chargeLevel, user);
 
         if (this.getLevel() >= 2) {
             int duration = 30 + 10 * chargeLevel;
@@ -100,6 +96,29 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
         world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.PLAYERS, 0.6f, PitchUtils.get());
     }
 
+    public void playChargeSound(LivingEntity user) {
+        if (!user.isUsingItem() || !user.getStackInHand(Hand.MAIN_HAND).isOf(this)) {
+            return;
+        }
+
+        float pitch = 0.6f + 0.1f * this.getChargeLevel(user.getItemUseTime());
+        user.getWorld().playSound(null, user.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE.value(), SoundCategory.PLAYERS, 1.0f, pitch);
+    }
+
+    public void shootEnergyDischarge(int chargeLevel, LivingEntity user) {
+        // Creating projectile
+        EnergyDischargeEntity energyDischarge = new EnergyDischargeEntity(user.getWorld(), user, chargeLevel, this.getLevel());
+        energyDischarge.setVelocity(user, user.getPitch(), user.getYaw(), user.getRoll(), 1.0f, 0.5f);
+
+        user.getWorld().spawnEntity(energyDischarge);
+
+        // Recoil
+        Vec3d dir = Vec3d.fromPolar(user.getPitch(), user.getYaw()).normalize();
+        Vec3d v = dir.multiply(-0.2 * (chargeLevel - 1));
+        user.addVelocity(v);
+        user.velocityModified = true;
+    }
+
     @Override
     public UseAction getUseAction(ItemStack stack) {
         return UseAction.SPEAR;
@@ -108,15 +127,6 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
     @Override
     public int getMaxUseTime(ItemStack stack) {
         return 72000;
-    }
-
-    public void playChargeSound(LivingEntity user) {
-        if (!user.isUsingItem() || !user.getStackInHand(Hand.MAIN_HAND).isOf(this)) {
-            return;
-        }
-
-        float pitch = 0.6f + 0.1f * this.getChargeLevel(user.getItemUseTime());
-        user.getWorld().playSound(null, user.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE.value(), SoundCategory.PLAYERS, 1.0f, pitch);
     }
 
     public int getChargeRate() {
