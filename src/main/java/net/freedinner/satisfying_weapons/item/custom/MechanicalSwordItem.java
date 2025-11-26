@@ -1,14 +1,20 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.custom.EnergyDischargeEntity;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
+import net.freedinner.satisfying_weapons.mixin.LivingEntityAccessor;
+import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
@@ -49,20 +55,14 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if (!(user instanceof PlayerEntity)) {
+        if (!(user instanceof PlayerEntity player)) {
             return;
         }
 
         int usageTime = user.getItemUseTime();
 
         if ((usageTime + STARTING_CHARGE) % this.getChargeRate() == 0) {
-            if (usageTime <= this.getMaxChargeTime() || this.getLevel() == 5) {
-                this.playChargeSound(user);
-            }
-
-            if (usageTime > this.getMaxChargeTime() && this.getLevel() == 5) {
-                this.shootEnergyDischarge(2, user);
-            }
+            this.updateChargeLevel(player, false);
         }
 
         if (this.getLevel() >= 2) {
@@ -94,6 +94,34 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
         stack.damage(chargeLevel, player, p -> p.sendToolBreakStatus(user.getActiveHand()));
 
         world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.PLAYERS, 0.6f, PitchUtils.get());
+    }
+
+    public void updateChargeLevel(PlayerEntity player, boolean bonusCharge) {
+        if (player.getWorld().isClient) {
+            return;
+        }
+
+        if (player.getItemUseTime() > this.getMaxChargeTime() && this.getLevel() < 5) {
+            return;
+        }
+
+        if (bonusCharge) {
+            // Bonus charge means we need to manually increase itemUseTimeLeft
+            int itemUseTimeLeft = player.getItemUseTimeLeft();
+            itemUseTimeLeft -= this.getChargeRate();
+            ((LivingEntityAccessor) player).setItemUseTimeLeft(itemUseTimeLeft);
+
+            // Syncing itemUseTimeLeft with client
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeInt(itemUseTimeLeft);
+            ServerPlayNetworking.send((ServerPlayerEntity) player, ModNetworking.SYNC_USE_TIME_LEFT_ID, buf);
+        }
+
+        this.playChargeSound(player);
+
+        if (player.getItemUseTime() > this.getMaxChargeTime() && this.getLevel() == 5) {
+            this.shootEnergyDischarge(3, player);
+        }
     }
 
     public void playChargeSound(LivingEntity user) {

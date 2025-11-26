@@ -25,22 +25,9 @@ public class MechanicalSwordAfterDamage implements CustomLivingEntityEvents.Afte
             return;
         }
 
-        // If not fully charged, 33% chance to add 1 charge
-        if ((player.getItemUseTime() < mechanicalSword.getMaxChargeTime() || mechanicalSword.getLevel() == 5) && MathUtils.takeChance(0.33)) {
-            int itemUseTimeLeft = player.getItemUseTimeLeft();
-            itemUseTimeLeft -= mechanicalSword.getChargeRate();
-            ((LivingEntityAccessor) player).setItemUseTimeLeft(itemUseTimeLeft);
-
-            mechanicalSword.playChargeSound(player);
-
-            if (mechanicalSword.getLevel() == 5 && entity.getItemUseTime() > mechanicalSword.getMaxChargeTime()) {
-                mechanicalSword.shootEnergyDischarge(2, player);
-            }
-
-            // Syncing itemUseTimeLeft with client
-            PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeInt(itemUseTimeLeft);
-            ServerPlayNetworking.send((ServerPlayerEntity) player, ModNetworking.SYNC_USE_TIME_LEFT_ID, buf);
+        // 33% chance to try adding 1 bonus charge
+        if (MathUtils.takeChance(0.33)) {
+            mechanicalSword.updateChargeLevel(player, true);
         }
     }
 }
