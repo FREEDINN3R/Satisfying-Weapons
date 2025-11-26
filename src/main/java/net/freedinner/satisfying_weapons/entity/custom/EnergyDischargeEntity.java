@@ -4,6 +4,7 @@ import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.entity.misc.NonDestructiveExplosionBehavior;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.util.NbtUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -15,6 +16,7 @@ import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -29,7 +31,7 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
     public static final float BASE_SPEED = 2.5f;
     public static final float SPEED_INCREASE = 0.3f;
     public static final double MAX_DISTANCE_TRAVELED = 48;
-    public static final List<Double> EXPLOSION_POWER = List.of(1.4, 2.0, 2.5, 3.0, 4.0);
+    public static final List<Double> EXPLOSION_POWER = List.of(1.0, 2.0, 2.5, 3.0, 4.0);
 
     // NBT
     private static final String CHARGE_LEVEL_NBT_KEY = "energy_discharge_charge_level";
@@ -66,6 +68,7 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
         // TODO: Add energy trail
     }
 
+    @Override
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
 
@@ -81,6 +84,24 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
         this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new NonDestructiveExplosionBehavior(), this.getPos(), (float) power, false, World.ExplosionSourceType.MOB);
 
         this.discard();
+    }
+
+    @Override
+    protected void onEntityHit(EntityHitResult entityHitResult) {
+        super.onEntityHit(entityHitResult);
+
+        if (this.getWorld().isClient) {
+            return;
+        }
+
+        Entity owner = this.getOwner();
+        Entity target = entityHitResult.getEntity();
+
+        target.damage(this.getDamageSources().explosion(this, owner), 4.0f * this.getChargeLevel());
+
+        if (owner instanceof LivingEntity livingOwner) {
+            this.applyDamageEffects(livingOwner, target);
+        }
     }
 
     public void writeCustomDataToNbt(NbtCompound nbt) {
