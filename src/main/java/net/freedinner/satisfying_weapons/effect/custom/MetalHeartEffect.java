@@ -35,9 +35,9 @@ public class MetalHeartEffect extends StatusEffect {
             return;
         }
 
-        // 60% all damage resistance
+        // 70% all damage resistance
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(player);
-        defenseData.setScale(defenseData.getScale() / 0.4f);
+        defenseData.setScale(defenseData.getScale() / 0.3f);
 
         // Knockback resistance
         EntityAttributeInstance knockbackResAttribute = entity.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
@@ -56,7 +56,7 @@ public class MetalHeartEffect extends StatusEffect {
 
         // Remove damage resistance
         ScaleData defenseData = ScaleTypes.DEFENSE.getScaleData(player);
-        defenseData.setScale(defenseData.getScale() * 0.4f);
+        defenseData.setScale(defenseData.getScale() * 0.3f);
 
         // Remove knockback resistance
         EntityAttributeInstance knockbackResAttribute = entity.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);

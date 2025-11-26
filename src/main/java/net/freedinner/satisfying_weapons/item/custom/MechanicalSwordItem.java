@@ -1,10 +1,12 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
+import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.custom.EnergyDischargeEntity;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.PitchUtils;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
@@ -57,6 +59,10 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
             float pitch = 0.6f + 0.1f * this.getChargeLevel(usageTime);
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE.value(), SoundCategory.PLAYERS, 1.0f, pitch);
         }
+
+        if (this.getLevel() >= 2) {
+            user.addStatusEffect(new StatusEffectInstance(ModEffects.METAL_HEART, 1, 0, false, false, true));
+        }
     }
 
     @Override
@@ -83,6 +89,11 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
         Vec3d v = dir.multiply(-0.2 * (chargeLevel - 1));
         player.addVelocity(v);
         player.velocityModified = true;
+
+        if (this.getLevel() >= 2) {
+            int duration = 30 + 10 * chargeLevel;
+            user.addStatusEffect(new StatusEffectInstance(ModEffects.METAL_HEART, duration, 0, false, false, true));
+        }
 
         // Durability cost
         stack.damage(chargeLevel, player, p -> p.sendToolBreakStatus(user.getActiveHand()));
