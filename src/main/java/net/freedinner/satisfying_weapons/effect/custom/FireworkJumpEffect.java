@@ -40,7 +40,7 @@ public class FireworkJumpEffect extends StatusEffect {
     // Attribute modifier with 1.0 value increase for knockback resistance
     private static final EntityAttributeModifier knockbackResModifier = new EntityAttributeModifier(
             UUID.fromString("bc8a023f-1eff-418b-a6c8-a793940f4eed"),
-            "firework_jump_knockback_resistance_modifier",
+            "Custom knockback resistance",
             1.0,
             EntityAttributeModifier.Operation.ADDITION
     );

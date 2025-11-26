@@ -31,6 +31,10 @@ public class ModEffects {
             new Color(241, 35, 222),
             StatusEffectCategory.HARMFUL,
             BirthdayPartyEffect::new);
+    public static StatusEffect METAL_HEART = registerStatusEffect("metal_heart",
+            new Color(210, 210, 210),
+            StatusEffectCategory.BENEFICIAL,
+            MetalHeartEffect::new);
     public static StatusEffect ENTROPY = registerStatusEffect("entropy",
             new Color(108, 63, 224),
             StatusEffectCategory.HARMFUL,
