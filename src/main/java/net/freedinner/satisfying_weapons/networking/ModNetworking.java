@@ -23,6 +23,8 @@ public class ModNetworking {
     public static final Identifier GIFT_SMOKE_PARTICLES_ID = SatisfyingWeapons.id("gift_smoke_particles");
     public static final Identifier GIFT_EXPLOSION_PARTICLES_ID = SatisfyingWeapons.id("gift_explosion_particles");
 
+    public static final Identifier SYNC_USE_TIME_LEFT_ID = SatisfyingWeapons.id("sync_use_time_left");
+
     public static final Identifier BLACK_HOLE_PULL_PARTICLES_ID = SatisfyingWeapons.id("black_hole_pull_particles");
     public static final Identifier ENTROPY_PARTICLES_ID = SatisfyingWeapons.id("entropy_particles");
     public static final Identifier BLACK_HOLE_EXPLOSION_PARTICLES_ID = SatisfyingWeapons.id("black_hole_explosion_particles");
@@ -44,6 +46,8 @@ public class ModNetworking {
         ClientPlayNetworking.registerGlobalReceiver(CONFETTI_PARTICLES_ID, ConfettiParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(GIFT_SMOKE_PARTICLES_ID, GiftSmokeParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(GIFT_EXPLOSION_PARTICLES_ID, GiftExplosionParticlesPacket::receive);
+
+        ClientPlayNetworking.registerGlobalReceiver(SYNC_USE_TIME_LEFT_ID, SyncUseTimeLeftPacket::receive);
 
         ClientPlayNetworking.registerGlobalReceiver(BLACK_HOLE_PULL_PARTICLES_ID, BlackHolePullParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(ENTROPY_PARTICLES_ID, EntropyParticlesPacket::receive);
