@@ -21,14 +21,16 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 public class PlayerWishDataManager extends PersistentState {
+    @Nullable
+    private static List<Identifier> chestLootTables;
     private final HashMap<UUID, PlayerWishData> playersWishData;
-
     private static final String PLAYERS_WISH_DATA_NBT_KEY = "players_wish_data";
 
     public PlayerWishDataManager() {
@@ -77,8 +79,7 @@ public class PlayerWishDataManager extends PersistentState {
         double epicChance = getEpicChance(playerData.wishesSinceEpicDrop);
         double legendaryChance = getLegendaryChance(playerData.wishesSinceLegendaryDrop);
 
-        SatisfyingWeapons.LOGGER.info(player.getName().getString() + " makes a wish");
-        SatisfyingWeapons.LOGGER.info("This is their wish no. " + playerData.totalWishesMade);
+        SatisfyingWeapons.LOGGER.info(player.getName().getString() + " makes a wish no. " + playerData.totalWishesMade);
         SatisfyingWeapons.LOGGER.info("Rare: " + formatPercentage(rareChance) + "; Epic: " + formatPercentage(epicChance) + "; Legendary: " + formatPercentage(legendaryChance));
 
         playerData.wishesSinceRareDrop++;
@@ -144,19 +145,28 @@ public class PlayerWishDataManager extends PersistentState {
     }
 
     private static ItemStack rollRandomChestLoot(World world) {
-        // Get all existing chest loot tables
-        List<Identifier> allLootTables = LootTables.getAll()
-                .stream()
-                .filter(id -> id.getPath().contains("chests/"))
-                .toList();
+        if (chestLootTables == null) {
+            loadChestLootTables();
+        }
 
         // Pick random chest loot table
-        Identifier randomId = allLootTables.get(world.getRandom().nextInt(allLootTables.size()));
+        Identifier randomId = chestLootTables.get(world.getRandom().nextInt(chestLootTables.size()));
+        SatisfyingWeapons.LOGGER.info("Picking a random item from: " + randomId);
         LootTable lootTable = world.getServer().getLootManager().getLootTable(randomId);
 
         // Generate a random item stack from that chest
         ObjectArrayList<ItemStack> items = lootTable.generateLoot(new LootContextParameterSet.Builder((ServerWorld) world).add(LootContextParameters.ORIGIN, Vec3d.ZERO).build(LootContextTypes.CHEST));
         return items.get(world.getRandom().nextInt(items.size()));
+    }
+
+    public static void loadChestLootTables() {
+        // Get all existing chest loot tables
+        chestLootTables = LootTables.getAll()
+                .stream()
+                .filter(id -> id.getPath().contains("chests/"))
+                .toList();
+
+        SatisfyingWeapons.LOGGER.info("Loading chest loot tables. Total entries: " + chestLootTables.size());
     }
 
     private static String formatPercentage(double x) {

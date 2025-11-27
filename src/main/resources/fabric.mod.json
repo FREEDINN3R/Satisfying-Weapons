@@ -21,6 +21,9 @@
 		"client": [
 			"net.freedinner.satisfying_weapons.SatisfyingWeaponsClient"
 		],
+		"server": [
+			"net.freedinner.satisfying_weapons.SatisfyingWeaponsServer"
+		],
 		"fabric-datagen": [
 			"net.freedinner.satisfying_weapons.SatisfyingWeaponsDataGenerator"
 		]

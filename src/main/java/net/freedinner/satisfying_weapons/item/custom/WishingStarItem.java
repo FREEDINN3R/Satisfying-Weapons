@@ -77,7 +77,7 @@ public class WishingStarItem extends Item {
         ItemStack rolledStack = PlayerWishDataManager.rollForPlayer(serverPlayer);
 
         // Prevents accidentally using the new item
-        serverPlayer.getItemCooldownManager().set(rolledStack.getItem(), 10);
+        serverPlayer.getItemCooldownManager().set(rolledStack.getItem(), 15);
 
         // Visuals & SFX
         this.sendParticlesPacket(world, user.getEyePos().toVector3f(), rolledStack.isIn(ModTags.ALL_MOD_WEAPONS));
