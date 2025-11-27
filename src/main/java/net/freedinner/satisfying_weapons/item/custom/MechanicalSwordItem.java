@@ -101,11 +101,11 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
             return;
         }
 
-        if (player.getItemUseTime() > this.getMaxChargeTime() && this.getLevel() < 5) {
+        if (player.getItemUseTime() > this.getMaxChargeTime() && (this.getLevel() < 5 || player.isSneaking())) {
             return;
         }
 
-        if (bonusCharge) {
+        if (bonusCharge && player.getItemUseTime() < this.getMaxChargeTime()) {
             // Bonus charge means we need to manually increase itemUseTimeLeft
             int itemUseTimeLeft = player.getItemUseTimeLeft();
             itemUseTimeLeft -= this.getChargeRate();
@@ -119,7 +119,7 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
 
         this.playChargeSound(player);
 
-        if (player.getItemUseTime() > this.getMaxChargeTime() && this.getLevel() == 5) {
+        if (player.getItemUseTime() > this.getMaxChargeTime() && this.getLevel() == 5 && !player.isSneaking()) {
             this.shootEnergyDischarge(3, player);
         }
     }
