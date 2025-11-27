@@ -32,7 +32,7 @@ public class EnergyOrbEntity extends ThrownItemEntity {
     public static final float BASE_SPEED = 2.5f;
     public static final float SPEED_INCREASE = 0.3f;
     public static final double MAX_DISTANCE_TRAVELED = 48;
-    public static final List<Double> EXPLOSION_POWER = List.of(1.0, 1.9, 3.0, 4.5, 6.0);
+    public static final List<Double> EXPLOSION_POWER = List.of(1.0, 1.9, 3.0, 5.0, 7.0);
 
     // NBT
     private static final String CHARGE_LEVEL_NBT_KEY = "energy_orb_charge_level";
@@ -87,7 +87,8 @@ public class EnergyOrbEntity extends ThrownItemEntity {
         }
 
         double power = EXPLOSION_POWER.get(this.getChargeLevel() - 1);
-        this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new NonDestructiveExplosionBehavior(), this.getPos(), (float) power, false, World.ExplosionSourceType.MOB);
+        Vec3d pos = this.getPos().subtract(this.getVelocity().normalize().multiply(0.2)); // Backtrack a tiny bit, makes it more powerful
+        this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new NonDestructiveExplosionBehavior(), pos, (float) power, false, World.ExplosionSourceType.MOB);
 
         this.discard();
     }
