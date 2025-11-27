@@ -32,7 +32,7 @@ public class EnergyOrbEntity extends ThrownItemEntity {
     public static final float BASE_SPEED = 2.5f;
     public static final float SPEED_INCREASE = 0.3f;
     public static final double MAX_DISTANCE_TRAVELED = 48;
-    public static final List<Double> EXPLOSION_POWER = List.of(1.0, 1.9, 2.5, 3.0, 4.0);
+    public static final List<Double> EXPLOSION_POWER = List.of(1.0, 1.9, 3.0, 4.5, 6.0);
 
     // NBT
     private static final String CHARGE_LEVEL_NBT_KEY = "energy_orb_charge_level";
@@ -104,7 +104,7 @@ public class EnergyOrbEntity extends ThrownItemEntity {
         Entity target = entityHitResult.getEntity();
 
         if (!(swordLevel >= 3 && owner == target)) {
-            target.damage(this.getDamageSources().explosion(this, owner), 4.0f * this.getChargeLevel());
+            target.damage(this.getDamageSources().explosion(this, owner), 6.0f * this.getChargeLevel());
         }
 
         if (owner instanceof LivingEntity livingOwner) {
