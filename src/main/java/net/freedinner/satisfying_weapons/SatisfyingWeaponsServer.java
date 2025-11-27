@@ -5,6 +5,6 @@ import net.fabricmc.api.DedicatedServerModInitializer;
 public class SatisfyingWeaponsServer implements DedicatedServerModInitializer {
 	@Override
 	public void onInitializeServer() {
-		PlayerWishDataManager.loadChestLootTables();
+		//PlayerWishDataManager.loadChestLootTables(); For testing purposes
 	}
 }

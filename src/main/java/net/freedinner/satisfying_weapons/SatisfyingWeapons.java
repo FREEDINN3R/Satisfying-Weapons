@@ -46,6 +46,7 @@ public class SatisfyingWeapons implements ModInitializer {
 
 		ModLootConditions.registerLootConditions();
 		ModLootTablesModifier.modifyLootTables();
+		PlayerWishDataManager.loadChestLootTables();
 
 		ModEvents.registerEvents();
 		ModNetworking.registerC2SPackets();

@@ -145,7 +145,7 @@ public class PlayerWishDataManager extends PersistentState {
     }
 
     private static ItemStack rollRandomChestLoot(World world) {
-        if (chestLootTables == null) {
+        if (chestLootTables == null || chestLootTables.isEmpty()) {
             loadChestLootTables();
         }
 
