@@ -4,6 +4,7 @@ import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Hand;
@@ -20,6 +21,8 @@ public class NaviaItem extends Item {
         if (!world.isClient) {
             SoundEvent sound = user.getName().getString().equals("FREEDINNER") ? ModSounds.NAVIA_2 : ModSounds.NAVIA_1;
             world.playSound(null, user.getBlockPos(), sound, SoundCategory.MASTER, 10f, 1f);
+
+            user.getItemCooldownManager().set(this, 50);
         }
 
         return TypedActionResult.success(user.getStackInHand(hand));

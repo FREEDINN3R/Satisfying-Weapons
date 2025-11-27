@@ -78,7 +78,7 @@
   "item.satisfying_weapons.sword_of_dying_star.skill_name_4": "Attraction",
   "item.satisfying_weapons.sword_of_dying_star.skill_desc_4": "Greatly decreases the cooldown for throwing {C1BFFF}Black Holes{AAAAAA}. Entities affected by a {C1BFFF}Black Hole{AAAAAA} now have a small chance to drop their equipment while being pulled in.",
   "item.satisfying_weapons.sword_of_dying_star.skill_name_5": "Recreation",
-  "item.satisfying_weapons.sword_of_dying_star.skill_desc_5": "You can now ignore the cooldown for throwing {C1BFFF}Black Holes{AAAAAA} at the cost of 4_HP. Colliding two {C1BFFF}Black Holes{AAAAAA} creates a massive explosion, which can't damage the user nor items.",
+  "item.satisfying_weapons.sword_of_dying_star.skill_desc_5": "You can now ignore the cooldown for throwing {C1BFFF}Black Holes{AAAAAA} at the cost of 4_HP. Colliding two {C1BFFF}Black Holes{AAAAAA} creates a massive explosion, which won't damage you nor destroy blocks.",
 
   "entity.satisfying_weapons.toy_arrow": "Toy Arrow",
   "entity.satisfying_weapons.birthday_gift": "Birthday Gift",
