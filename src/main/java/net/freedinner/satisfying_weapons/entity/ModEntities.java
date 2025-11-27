@@ -28,10 +28,10 @@ public class ModEntities {
                     .build()
     );
 
-    public static final EntityType<EnergyDischargeEntity> ENERGY_DISCHARGE = Registry.register(
+    public static final EntityType<EnergyOrbEntity> ENERGY_ORB = Registry.register(
             Registries.ENTITY_TYPE,
-            SatisfyingWeapons.id("energy_discharge"),
-            FabricEntityTypeBuilder.<EnergyDischargeEntity>create(SpawnGroup.MISC, EnergyDischargeEntity::new)
+            SatisfyingWeapons.id("energy_orb"),
+            FabricEntityTypeBuilder.<EnergyOrbEntity>create(SpawnGroup.MISC, EnergyOrbEntity::new)
                     .dimensions(EntityDimensions.fixed(0.3f, 0.3f))
                     .trackRangeChunks(4).trackedUpdateRate(10)
                     .build()

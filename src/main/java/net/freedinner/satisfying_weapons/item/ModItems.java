@@ -39,7 +39,7 @@ public class ModItems {
             DyingStarSwordItem::new, ModToolMaterial.LEGENDARY, 5, new Item.Settings().fireproof());
 
     // --- TECHNICAL ITEMS --- //
-    public static final Item ENERGY_DISCHARGE = register("energy_discharge",
+    public static final Item ENERGY_ORB = register("energy_orb",
             new Item(new Item.Settings()));
     public static final Item BLACK_HOLE = register("black_hole",
             new Item(new Item.Settings()));

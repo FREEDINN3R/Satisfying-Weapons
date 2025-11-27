@@ -3,7 +3,7 @@ package net.freedinner.satisfying_weapons.item.custom;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
-import net.freedinner.satisfying_weapons.entity.custom.EnergyDischargeEntity;
+import net.freedinner.satisfying_weapons.entity.custom.EnergyOrbEntity;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.mixin.LivingEntityAccessor;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
@@ -135,7 +135,7 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
 
     public void shootEnergyDischarge(int chargeLevel, LivingEntity user) {
         // Creating projectile
-        EnergyDischargeEntity energyDischarge = new EnergyDischargeEntity(user.getWorld(), user, chargeLevel, this.getLevel());
+        EnergyOrbEntity energyDischarge = new EnergyOrbEntity(user.getWorld(), user, chargeLevel, this.getLevel());
         energyDischarge.setVelocity(user, user.getPitch(), user.getYaw(), user.getRoll(), 1.0f, 0.5f);
 
         user.getWorld().spawnEntity(energyDischarge);

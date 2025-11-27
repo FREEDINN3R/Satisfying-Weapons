@@ -1,11 +1,9 @@
 package net.freedinner.satisfying_weapons.item;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
-import net.freedinner.satisfying_weapons.entity.custom.EnergyDischargeEntity;
 import net.freedinner.satisfying_weapons.item.custom.GlassSwordItem;
 import net.freedinner.satisfying_weapons.item.custom.MechanicalSwordItem;
 import net.freedinner.satisfying_weapons.item.custom.WishingStarItem;
-import net.freedinner.satisfying_weapons.util.data.IPlayerDataSaver;
 import net.minecraft.client.item.ClampedModelPredicateProvider;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.entity.player.PlayerEntity;

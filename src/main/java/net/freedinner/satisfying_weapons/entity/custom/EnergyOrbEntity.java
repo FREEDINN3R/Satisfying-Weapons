@@ -25,8 +25,8 @@ import virtuoel.pehkui.api.ScaleTypes;
 
 import java.util.List;
 
-public class EnergyDischargeEntity extends ThrownItemEntity {
-    private static final TrackedData<Integer> CHARGE_LEVEL = DataTracker.registerData(EnergyDischargeEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class EnergyOrbEntity extends ThrownItemEntity {
+    private static final TrackedData<Integer> CHARGE_LEVEL = DataTracker.registerData(EnergyOrbEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
     // Stats
     public static final float BASE_SPEED = 2.5f;
@@ -35,18 +35,18 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
     public static final List<Double> EXPLOSION_POWER = List.of(1.0, 1.9, 2.5, 3.0, 4.0);
 
     // NBT
-    private static final String CHARGE_LEVEL_NBT_KEY = "energy_discharge_charge_level";
+    private static final String CHARGE_LEVEL_NBT_KEY = "energy_orb_charge_level";
     private static final String SWORD_LEVEL_NBT_KEY = "mechanical_sword_level";
     private int swordLevel = 1;
-    private static final String DISTANCE_TRAVELED_NBT_KEY = "energy_discharge_distance_traveled";
+    private static final String DISTANCE_TRAVELED_NBT_KEY = "energy_orb_distance_traveled";
     double distanceTraveled = 0;
 
-    public EnergyDischargeEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
+    public EnergyOrbEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public EnergyDischargeEntity(World world, LivingEntity owner, int chargeLevel, int swordLevel) {
-        super(ModEntities.ENERGY_DISCHARGE, owner, world);
+    public EnergyOrbEntity(World world, LivingEntity owner, int chargeLevel, int swordLevel) {
+        super(ModEntities.ENERGY_ORB, owner, world);
 
         this.setChargeLevel(chargeLevel);
         this.swordLevel = swordLevel;
@@ -135,7 +135,7 @@ public class EnergyDischargeEntity extends ThrownItemEntity {
 
     @Override
     protected Item getDefaultItem() {
-        return ModItems.ENERGY_DISCHARGE;
+        return ModItems.ENERGY_ORB;
     }
 
     public void setChargeLevel(int chargeLevel) {
