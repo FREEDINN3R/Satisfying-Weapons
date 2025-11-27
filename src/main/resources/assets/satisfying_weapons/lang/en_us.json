@@ -58,11 +58,11 @@
 
   "item.satisfying_weapons.mechanical_sword": "Mechanical Sword",
   "item.satisfying_weapons.mechanical_sword.skill_name_1": "Level 1",
-  "item.satisfying_weapons.mechanical_sword.skill_desc_1": "Hold right-click to charge. You gain 1 Charge per 2.5s, max 4 Charges. Stop holding to shoot an explosive Energy Orb, which power depends on the amount of Charges it consumed. Shooting costs 1-4 durability. Explosions can hurt you, but can't destroy blocks.",
+  "item.satisfying_weapons.mechanical_sword.skill_desc_1": "Hold right-click to charge. You gain 1_Charge per 2.5s, max 4_Charges. Stop holding to shoot an explosive Energy Orb, scaling with the amount of Charges it consumed. Costs 1-4_durability. Explosions can hurt you, but can't destroy blocks.",
   "item.satisfying_weapons.mechanical_sword.skill_name_2": "Level 2",
   "item.satisfying_weapons.mechanical_sword.skill_desc_2": "While charging, gain Metal Heart: all incoming damage is reduced by 70%. Metal Heart will persist shortly after shooting an Energy Orb.",
   "item.satisfying_weapons.mechanical_sword.skill_name_3": "Level 3",
-  "item.satisfying_weapons.mechanical_sword.skill_desc_3": "Explosions created by Energy Orb can no longer hurt you. Additionally, if you receive damage while charging, there is a 33% chance to immediately gain 1 Charge.",
+  "item.satisfying_weapons.mechanical_sword.skill_desc_3": "Energy Orb explosions can no longer hurt you. Additionally, if you receive damage while charging, there is a 33%_chance to immediately gain 1_Charge.",
   "item.satisfying_weapons.mechanical_sword.skill_name_4": "Level 4",
   "item.satisfying_weapons.mechanical_sword.skill_desc_4": "The charging rate is decreased to 2s. Also, the max number of Charges is now 5.",
   "item.satisfying_weapons.mechanical_sword.skill_name_5": "Level 5",
