@@ -22,7 +22,7 @@ public class NaviaItem extends Item {
             SoundEvent sound = user.getName().getString().equals("FREEDINNER") ? ModSounds.NAVIA_2 : ModSounds.NAVIA_1;
             world.playSound(null, user.getBlockPos(), sound, SoundCategory.MASTER, 10f, 1f);
 
-            user.getItemCooldownManager().set(this, 50);
+            user.getItemCooldownManager().set(this, 70);
         }
 
         return TypedActionResult.success(user.getStackInHand(hand));
