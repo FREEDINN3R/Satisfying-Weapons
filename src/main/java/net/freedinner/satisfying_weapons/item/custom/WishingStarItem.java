@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.PlayerWishDataManager;
+import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.datagen.ModTags;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
@@ -74,11 +75,14 @@ public class WishingStarItem extends Item {
         }
 
         // Roll an item / weapon
+        SatisfyingWeapons.LOGGER.info("Rolling a wish drop for " + serverPlayer.getName().toString());
         ItemStack rolledStack = PlayerWishDataManager.rollForPlayer(serverPlayer);
+        SatisfyingWeapons.LOGGER.info("Item actually rolled, returning to finishUsing function");
 
         // Prevents accidentally using the new item
         serverPlayer.getItemCooldownManager().set(rolledStack.getItem(), 15);
 
+        SatisfyingWeapons.LOGGER.info("Visuals and SFX");
         // Visuals & SFX
         this.sendParticlesPacket(world, user.getEyePos().toVector3f(), rolledStack.isIn(ModTags.ALL_MOD_WEAPONS));
         if (rolledStack.isIn(ModTags.ALL_MOD_WEAPONS) || rolledStack.isOf(ModItems.NAVIA)){

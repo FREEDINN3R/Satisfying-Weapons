@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
+import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class PlayerWishDataManager extends PersistentState {
     @Nullable
@@ -64,8 +66,10 @@ public class PlayerWishDataManager extends PersistentState {
     }
 
     public static ItemStack rollForPlayer(PlayerEntity player) {
+        SatisfyingWeapons.LOGGER.info("Retrieving player wish data");
         PlayerWishData playerData = getPlayerData(player);
 
+        SatisfyingWeapons.LOGGER.info("Increasing wish counter");
         playerData.totalWishesMade++;
 
         if (playerData.totalWishesMade == 1) {
@@ -92,25 +96,29 @@ public class PlayerWishDataManager extends PersistentState {
         SatisfyingWeapons.LOGGER.info("Roll seed: " + seed);
 
         if (seed < legendaryChance) {
+            SatisfyingWeapons.LOGGER.info("Legendary weapon");
             rolledStack = MathUtils.takeChance(0.33) ?
                     new ItemStack(ModItems.NAVIA) :
                     new ItemStack(ModItems.SWORD_OF_DYING_STAR.get(0));
             playerData.wishesSinceLegendaryDrop = 0;
         }
         else if (seed < epicChance + legendaryChance) {
+            SatisfyingWeapons.LOGGER.info("Epic weapon");
             rolledStack = MathUtils.takeChance(0.5) ?
                     new ItemStack(ModItems.TOY_BOW.get(0)) :
                     new ItemStack(ModItems.MECHANICAL_SWORD.get(0));
             playerData.wishesSinceEpicDrop = 0;
         }
         else if (seed < rareChance + epicChance + legendaryChance) {
+            SatisfyingWeapons.LOGGER.info("Rare weapon");
             rolledStack = MathUtils.takeChance(0.5) ?
                     new ItemStack(ModItems.FIREWORK_SWORD.get(0)) :
                     new ItemStack(ModItems.GLASS_SWORD.get(0));
             playerData.wishesSinceRareDrop = 0;
         }
         else {
-            rolledStack = rollRandomChestLoot(player.getWorld());
+            SatisfyingWeapons.LOGGER.info("Rolling random chest loot");
+            rolledStack = rollRandomChestLoot(player);
         }
 
         SatisfyingWeapons.LOGGER.info("Rolled item: " + Registries.ITEM.getId(rolledStack.getItem()));
@@ -144,18 +152,31 @@ public class PlayerWishDataManager extends PersistentState {
         return Math.max(0.01, 0.00000271503 * Math.pow(x, 4) - 0.000233831 * Math.pow(x, 3) + 0.00643612  * Math.pow(x, 2) - 0.0588076 * x + 0.124785);
     }
 
-    private static ItemStack rollRandomChestLoot(World world) {
+    private static ItemStack rollRandomChestLoot(PlayerEntity player) {
         if (chestLootTables == null || chestLootTables.isEmpty()) {
             loadChestLootTables();
         }
 
-        // Pick random chest loot table
+        World world = player.getWorld();
+
+        // Get a loot table from a random chest
+        SatisfyingWeapons.LOGGER.info("Picking a random loot table id");
         Identifier randomId = chestLootTables.get(world.getRandom().nextInt(chestLootTables.size()));
         SatisfyingWeapons.LOGGER.info("Picking a random item from: " + randomId);
         LootTable lootTable = world.getServer().getLootManager().getLootTable(randomId);
 
+        // Loot gen context
+        SatisfyingWeapons.LOGGER.info("Creating loot gen context parameters");
+        LootContextParameterSet parameters = new LootContextParameterSet.Builder((ServerWorld) world)
+                .luck(player.getLuck())
+                .add(LootContextParameters.ORIGIN, player.getPos())
+                .add(LootContextParameters.THIS_ENTITY, player)
+                .build(LootContextTypes.CHEST);
+
         // Generate a random item stack from that chest
-        ObjectArrayList<ItemStack> items = lootTable.generateLoot(new LootContextParameterSet.Builder((ServerWorld) world).add(LootContextParameters.ORIGIN, Vec3d.ZERO).build(LootContextTypes.CHEST));
+        SatisfyingWeapons.LOGGER.info("Generating a random item stack");
+        ObjectArrayList<ItemStack> items = lootTable.generateLoot(parameters);
+        
         return items.get(world.getRandom().nextInt(items.size()));
     }
 
