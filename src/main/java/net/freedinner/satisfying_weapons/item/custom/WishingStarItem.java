@@ -75,14 +75,12 @@ public class WishingStarItem extends Item {
         }
 
         // Roll an item / weapon
-        SatisfyingWeapons.LOGGER.info("Rolling a wish drop for " + serverPlayer.getName().toString());
+        SatisfyingWeapons.LOGGER.info("Rolling a wish drop for " + serverPlayer.getName().getContent().toString());
         ItemStack rolledStack = PlayerWishDataManager.rollForPlayer(serverPlayer);
-        SatisfyingWeapons.LOGGER.info("Item actually rolled, returning to finishUsing function");
 
         // Prevents accidentally using the new item
         serverPlayer.getItemCooldownManager().set(rolledStack.getItem(), 15);
 
-        SatisfyingWeapons.LOGGER.info("Visuals and SFX");
         // Visuals & SFX
         this.sendParticlesPacket(world, user.getEyePos().toVector3f(), rolledStack.isIn(ModTags.ALL_MOD_WEAPONS));
         if (rolledStack.isIn(ModTags.ALL_MOD_WEAPONS) || rolledStack.isOf(ModItems.NAVIA)){
