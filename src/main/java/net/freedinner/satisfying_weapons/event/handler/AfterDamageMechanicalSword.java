@@ -9,7 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.util.Hand;
 
-public class MechanicalSwordAfterDamage implements CustomLivingEntityEvents.AfterDamage {
+public class AfterDamageMechanicalSword implements CustomLivingEntityEvents.AfterDamage {
     @Override
     public void afterDamage(LivingEntity entity, DamageSource source) {
         // Only for players who were charging Mechanical Sword of Level 3-5

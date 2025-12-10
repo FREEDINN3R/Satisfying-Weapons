@@ -6,6 +6,7 @@ import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.PlayerWishData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootDataType;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.context.LootContext;
@@ -147,15 +148,17 @@ public class PlayerWishDataManager extends PersistentState {
     }
 
     private static ItemStack rollRandomChestLoot(PlayerEntity player) {
-        if (chestLootTables == null || chestLootTables.isEmpty()) {
-            loadChestLootTables();
-        }
-
         World world = player.getWorld();
+        MinecraftServer server = world.getServer();
+        assert server != null;
+
+        if (chestLootTables == null || chestLootTables.isEmpty()) {
+            loadChestLootTables(server);
+        }
 
         // Get a loot table from a random chest
         Identifier randomChestId = chestLootTables.get(world.getRandom().nextInt(chestLootTables.size()));
-        LootTable lootTable = world.getServer().getLootManager().getLootTable(randomChestId);
+        LootTable lootTable = server.getLootManager().getLootTable(randomChestId);
 
         // Loot gen context
         LootContextParameterSet parameters = new LootContextParameterSet.Builder((ServerWorld) world)
@@ -171,12 +174,13 @@ public class PlayerWishDataManager extends PersistentState {
         return MathUtils.getRandomElement(items);
     }
 
-    public static void loadChestLootTables() {
+    public static void loadChestLootTables(MinecraftServer server) {
         // Get all existing chest loot tables
-        chestLootTables = LootTables.getAll()
+        chestLootTables = server.getLootManager().getIds(LootDataType.LOOT_TABLES)
                 .stream()
                 .filter(id -> id.getPath().contains("chests/"))
                 .toList();
+
 
         SatisfyingWeapons.LOGGER.info("Loading chest loot tables. Total entries: " + chestLootTables.size());
     }
