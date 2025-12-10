@@ -34,7 +34,6 @@ public class ModLootTablesModifier {
             // Building a new pool with conditions
             LootPool.Builder poolBuilder = LootPool.builder()
                     .conditionally(KilledByPlayerLootCondition.builder())
-                    .conditionally(RandomChanceLootCondition.builder(1f))
                     .conditionally(WishCooldownDropCondition.builder())
                     .with(ItemEntry.builder(ModItems.UNFULFILLED_WISH));
 
