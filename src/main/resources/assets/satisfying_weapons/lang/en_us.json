@@ -44,6 +44,19 @@
   "item.satisfying_weapons.glass_sword.skill_name_5": "Garden of Glass",
   "item.satisfying_weapons.glass_sword.skill_desc_5": "{8CFBFF}Glass Cut{AAAAAA} can now stack up to 3_times. Entities with 2_/_3 stacks of {8CFBFF}Glass Cut{AAAAAA} will also have their regeneration reduced by 25%_/_50%, respectively.",
 
+  "item.satisfying_weapons.crimson_katana": "Crimson Katana",
+  "item.satisfying_weapons.crimson_katana.skill_name_1": "Skill 1",
+  "item.satisfying_weapons.crimson_katana.skill_desc_1": "Right-click to inflict Poison or Wither on yourself for 8s, max 3 stacks each. Transfer all DoT effects on hit.",
+  "item.satisfying_weapons.crimson_katana.skill_name_2": "Skill 2",
+  "item.satisfying_weapons.crimson_katana.skill_desc_2": "Deals 5% more damage to entity for each DoT stack it has, up to 30%. Also, when transferring DoTs, recover 2 HP.",
+  "item.satisfying_weapons.crimson_katana.skill_name_3": "Skill 3",
+  "item.satisfying_weapons.crimson_katana.skill_desc_3": "When attacking without hitting an entity, consume all DoTs to send forth a Noxious Slash. Will inflict consumed DoTs to the entity hit.",
+  "item.satisfying_weapons.crimson_katana.skill_name_4": "Skill 4",
+  "item.satisfying_weapons.crimson_katana.skill_desc_4": "Can also inflict Burn. When inflicting DoTs to yourself, inflict 1 additional random stack",
+  "item.satisfying_weapons.crimson_katana.skill_name_5": "Skill 5",
+  "item.satisfying_weapons.crimson_katana.skill_desc_5": "When transferring DoTs to entity, if any of the individual DoTs overflows 3 stacks, immediately detonate it and deal all of its damage in a single hit",
+
+
   "item.satisfying_weapons.toy_bow": "Toy Bow",
   "item.satisfying_weapons.toy_bow.skill_name_1": "Best Day of the Year",
   "item.satisfying_weapons.toy_bow.skill_desc_1": "Shoots {1E90FF}Toy Arrows{AAAAAA} that apply {F123DE}Birthday Party{AAAAAA} for 10s to the target hit. While the target has an active {F123DE}Birthday Party{AAAAAA}, it will cause all non-friendly mobs to attack it.",

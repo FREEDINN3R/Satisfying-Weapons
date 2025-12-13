@@ -51,6 +51,7 @@ public class ModTags {
             addItemsToTag(this.getOrCreateTagBuilder(ALL_MOD_WEAPONS),
                     ModItems.FIREWORK_SWORD,
                     ModItems.GLASS_SWORD,
+                    ModItems.CRIMSON_KATANA,
                     ModItems.TOY_BOW,
                     ModItems.MECHANICAL_SWORD,
                     ModItems.SWORD_OF_DYING_STAR);
@@ -60,7 +61,8 @@ public class ModTags {
 
             addItemsToTag(this.getOrCreateTagBuilder(RARE_DROPS),
                     ModItems.FIREWORK_SWORD,
-                    ModItems.GLASS_SWORD);
+                    ModItems.GLASS_SWORD,
+                    ModItems.CRIMSON_KATANA);
 
             addItemsToTag(this.getOrCreateTagBuilder(EPIC_DROPS),
                     ModItems.TOY_BOW,
