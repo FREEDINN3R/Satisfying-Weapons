@@ -34,7 +34,6 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
         ItemStack itemStack = user.getStackInHand(hand);
 
         if (hand == Hand.OFF_HAND || user.getItemUseTime() > 0) {
-            user.sendMessage(Text.literal("lol"));
             return TypedActionResult.pass(itemStack);
         }
 

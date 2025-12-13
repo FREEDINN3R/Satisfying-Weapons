@@ -46,15 +46,15 @@
 
   "item.satisfying_weapons.crimson_katana": "Crimson Katana",
   "item.satisfying_weapons.crimson_katana.skill_name_1": "Skill 1",
-  "item.satisfying_weapons.crimson_katana.skill_desc_1": "Right-click to inflict Wither on yourself. Max 3 stacks. When hitting an entity, transfer all effects inflicted with this weapon to it.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_1": "When hitting an entity, you will apply 1 stack of Nocebo Wither for 12s. ",
   "item.satisfying_weapons.crimson_katana.skill_name_2": "Skill 2",
-  "item.satisfying_weapons.crimson_katana.skill_desc_2": "Increases the base damage of this weapon by 15% for each different negative effect you have, up to 30%. Also, restores 2 HP when transferring effects inflicted with this weapon.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_2": "Increases the base damage of this weapon by 7% for each stack of Nocebo effects you have, up to 42%. Also, when transferring Nocebo effects, restore 2 HP.",
   "item.satisfying_weapons.crimson_katana.skill_name_3": "Skill 3",
-  "item.satisfying_weapons.crimson_katana.skill_desc_3": "Can now inflict Wither and Poison, max 3 stacks each. Transferring an effect to an entity which already has 3 stacks of this effect will detonate this effect instead, instantly dealing all of its damage in a single hit.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_3": "You can now also gain Nocebo Poison, which is counted separately. Transferring a Nocebo effect to an entity which already has 3 stacks of the actual effect will detonate this effect instead, instantly dealing all of its damage in a single hit.",
   "item.satisfying_weapons.crimson_katana.skill_name_4": "Skill 4",
-  "item.satisfying_weapons.crimson_katana.skill_desc_4": "When inflicting effects on yourself, there is a 100% chance to additionally inflict 1 stack of effect that you have the least stacks of.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_4": "When gaining Nocebo effects, there is a 100% chance to additionally inflict 1 stack of a different Nocebo effect.",
   "item.satisfying_weapons.crimson_katana.skill_name_5": "Skill 5",
-  "item.satisfying_weapons.crimson_katana.skill_desc_5": "Can now inflict Wither, Poison, and Burn, max 3 stacks each. When attacking without hitting a target, consume all inflicted effects and send forth a Noxious Slash that will transfer all effects consumed to entity hit.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_5": "You can now also gain Nocebo Burn, which is counted separately. When attacking without hitting a target, consume all Nocebo effects and send forth a Noxious Slash, that will inflict all consumed effects to the entity hit",
 
 
   "item.satisfying_weapons.toy_bow": "Toy Bow",
