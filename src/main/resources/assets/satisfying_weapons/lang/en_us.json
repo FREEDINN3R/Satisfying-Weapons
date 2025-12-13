@@ -20,7 +20,7 @@
 
   "item.satisfying_weapons.firework_sword": "Firework Sword",
   "item.satisfying_weapons.firework_sword.skill_name_1": "Pyrotechnic Warfare",
-  "item.satisfying_weapons.firework_sword.skill_desc_1": "Hitting an entity grants 1_stack of {ED1D6D}Festivity{AAAAAA}, up to 5_stacks. While in mid-air, press jump to consume 3_stacks and do a {F29C2A}Firework Jump{AAAAAA}; then, sneak to do a plunge attack. Switching out the weapon will clear all effects.",
+  "item.satisfying_weapons.firework_sword.skill_desc_1": "Hitting an entity grants you 1_stack of {ED1D6D}Festivity{AAAAAA}, up to 5_stacks. While in mid-air, press jump to consume 3_stacks and do a {F29C2A}Firework Jump{AAAAAA}; then, sneak to do a plunge attack. Switching out the weapon will clear all effects.",
   "item.satisfying_weapons.firework_sword.skill_name_2": "To Have a Blast",
   "item.satisfying_weapons.firework_sword.skill_desc_2": "Plunge attack damage increases by 25% and is further increased by 15% for each entity in its current radius. Max total damage increase is_100%.",
   "item.satisfying_weapons.firework_sword.skill_name_3": "Double Sulfur",
@@ -36,7 +36,7 @@
   "item.satisfying_weapons.glass_sword.skill_name_1": "Try, Try Again",
   "item.satisfying_weapons.glass_sword.skill_desc_1": "Dying with this sword in your main hand will shatter it and revive you, inflicting {8CFBFF}Glass Cut{AAAAAA} on all nearby entities for 90s. Entities with {8CFBFF}Glass Cut{AAAAAA} receive +2_additional damage when hurt. Use Anvil to repair Broken Glass Sword with Glass Panes.",
   "item.satisfying_weapons.glass_sword.skill_name_2": "Fractured Surface",
-  "item.satisfying_weapons.glass_sword.skill_desc_2": "When hitting an entity, there is a 30%_chance to inflict {8CFBFF}Glass Cut{AAAAAA} for 20s. This also applies to Broken Glass Sword.",
+  "item.satisfying_weapons.glass_sword.skill_desc_2": "When hitting an entity, there is a 30%_chance to inflict it with {8CFBFF}Glass Cut{AAAAAA} for 20s. This also applies to Broken Glass Sword.",
   "item.satisfying_weapons.glass_sword.skill_name_3": "Self-Reflection",
   "item.satisfying_weapons.glass_sword.skill_desc_3": "After being revived, you will enter {5180A1}Broken Soul{AAAAAA} state for 12s, gaining speed and invincibility. The sword will shatter after {5180A1}Broken Soul{AAAAAA} ends, or if you remove it from your hand.",
   "item.satisfying_weapons.glass_sword.skill_name_4": "Glass Ceiling",
@@ -46,15 +46,15 @@
 
   "item.satisfying_weapons.crimson_katana": "Crimson Katana",
   "item.satisfying_weapons.crimson_katana.skill_name_1": "Skill 1",
-  "item.satisfying_weapons.crimson_katana.skill_desc_1": "When hitting an entity, you will apply 1 stack of Nocebo Wither for 12s. ",
+  "item.satisfying_weapons.crimson_katana.skill_desc_1": "When hitting an entity, you will inflict it with 1 stack of Nocebo Wither for 12s, up to 3 stacks. Nocebo effects work like their vanilla counterparts, but are counted independently, and have no damage cooldown.",
   "item.satisfying_weapons.crimson_katana.skill_name_2": "Skill 2",
-  "item.satisfying_weapons.crimson_katana.skill_desc_2": "Increases the base damage of this weapon by 7% for each stack of Nocebo effects you have, up to 42%. Also, when transferring Nocebo effects, restore 2 HP.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_2": "You can now inflict Nocebo Poison, which is counted independently. Max 3 stacks. Also, you will deal 20% increased damage to entities with Nocebo effects.",
   "item.satisfying_weapons.crimson_katana.skill_name_3": "Skill 3",
-  "item.satisfying_weapons.crimson_katana.skill_desc_3": "You can now also gain Nocebo Poison, which is counted separately. Transferring a Nocebo effect to an entity which already has 3 stacks of the actual effect will detonate this effect instead, instantly dealing all of its damage in a single hit.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_3": "Hitting an entity that has 3 stacks of any particular Nocebo effect will detonate this effect, dealing all of its damage in a single hit.",
   "item.satisfying_weapons.crimson_katana.skill_name_4": "Skill 4",
-  "item.satisfying_weapons.crimson_katana.skill_desc_4": "When gaining Nocebo effects, there is a 100% chance to additionally inflict 1 stack of a different Nocebo effect.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_4": "You can now inflict Nocebo Burn, which is counted independently. Max 3 stacks. Also, when hitting an entity, you will now inflict it with 2 stacks of different Nocebo effects.",
   "item.satisfying_weapons.crimson_katana.skill_name_5": "Skill 5",
-  "item.satisfying_weapons.crimson_katana.skill_desc_5": "You can now also gain Nocebo Burn, which is counted separately. When attacking without hitting a target, consume all Nocebo effects and send forth a Noxious Slash, that will inflict all consumed effects to the entity hit",
+  "item.satisfying_weapons.crimson_katana.skill_desc_5": "When detonating any Nocebo effects, they will be blasted to surrounding entities, inflicting 1 stack of the detonated effect each. This blast can also detonate Nocebo effects on other entities.",
 
 
   "item.satisfying_weapons.toy_bow": "Toy Bow",
