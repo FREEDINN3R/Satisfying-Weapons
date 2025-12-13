@@ -46,15 +46,15 @@
 
   "item.satisfying_weapons.crimson_katana": "Crimson Katana",
   "item.satisfying_weapons.crimson_katana.skill_name_1": "Skill 1",
-  "item.satisfying_weapons.crimson_katana.skill_desc_1": "Right-click to inflict Poison on yourself. Max 3 stacks. When hitting an entity, transfer all effects inflicted with this weapon to it.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_1": "Right-click to inflict Wither on yourself. Max 3 stacks. When hitting an entity, transfer all effects inflicted with this weapon to it.",
   "item.satisfying_weapons.crimson_katana.skill_name_2": "Skill 2",
   "item.satisfying_weapons.crimson_katana.skill_desc_2": "Increases the base damage of this weapon by 15% for each different negative effect you have, up to 30%. Also, restores 2 HP when transferring effects inflicted with this weapon.",
   "item.satisfying_weapons.crimson_katana.skill_name_3": "Skill 3",
-  "item.satisfying_weapons.crimson_katana.skill_desc_3": "Can now inflict Poison and Wither, max 3 stacks each. Transferring an effect to an entity which already has 3 stacks of this effect will detonate this effect instead, instantly dealing all of its damage in a single hit.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_3": "Can now inflict Wither and Poison, max 3 stacks each. Transferring an effect to an entity which already has 3 stacks of this effect will detonate this effect instead, instantly dealing all of its damage in a single hit.",
   "item.satisfying_weapons.crimson_katana.skill_name_4": "Skill 4",
   "item.satisfying_weapons.crimson_katana.skill_desc_4": "When inflicting effects on yourself, there is a 100% chance to additionally inflict 1 stack of effect that you have the least stacks of.",
   "item.satisfying_weapons.crimson_katana.skill_name_5": "Skill 5",
-  "item.satisfying_weapons.crimson_katana.skill_desc_5": "Can now inflict Poison, Wither, and Burn, max 3 stacks each. When attacking without hitting a target, consume all inflicted effects and send forth a Noxious Slash that will transfer all effects consumed to entity hit.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_5": "Can now inflict Wither, Poison, and Burn, max 3 stacks each. When attacking without hitting a target, consume all inflicted effects and send forth a Noxious Slash that will transfer all effects consumed to entity hit.",
 
 
   "item.satisfying_weapons.toy_bow": "Toy Bow",
