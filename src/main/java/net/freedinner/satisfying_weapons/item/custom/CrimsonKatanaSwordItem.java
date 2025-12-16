@@ -42,7 +42,8 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
         }
 
         if (target.isOnFire() && this.getLevel() >= 4) {
-            int totalDamage = target.getFireTicks() / 20;
+            int dmgRate = 20;
+            int totalDamage = target.getFireTicks() / dmgRate;
 
             target.damage(target.getDamageSources().onFire(), totalDamage);
             attacker.setFireTicks(0);
