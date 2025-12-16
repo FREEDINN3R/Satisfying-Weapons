@@ -1,6 +1,8 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
+import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
+import net.freedinner.satisfying_weapons.util.CombatHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -20,6 +22,9 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        World world = target.getWorld();
+
+        // Poison goes first because it's non-lethal
         StatusEffectInstance poison = attacker.getStatusEffect(StatusEffects.POISON);
         if (poison != null && this.getLevel() >= 2) {
             int[] dmgRate = {25, 12, 6, 3, 1};
@@ -27,7 +32,7 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
             float totalDamage = poison.getDuration() / dmgRate[amplifier];
             totalDamage = Math.min(totalDamage, target.getHealth() - 1);
 
-            target.damage(target.getDamageSources().magic(), totalDamage);
+            target.damage(CombatHelper.getDamageSource(ModDamageTypes.INSTANT_POISON, world), totalDamage);
             attacker.removeStatusEffect(StatusEffects.POISON);
         }
 
@@ -37,7 +42,7 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
             int amplifier = Math.min(5, wither.getAmplifier());
             int totalDamage = wither.getDuration() / dmgRate[amplifier];
 
-            target.damage(target.getDamageSources().wither(), totalDamage);
+            target.damage(CombatHelper.getDamageSource(ModDamageTypes.INSTANT_WITHER, world), totalDamage);
             attacker.removeStatusEffect(StatusEffects.WITHER);
         }
 
@@ -45,7 +50,7 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
             int dmgRate = 20;
             int totalDamage = target.getFireTicks() / dmgRate;
 
-            target.damage(target.getDamageSources().onFire(), totalDamage);
+            target.damage(CombatHelper.getDamageSource(ModDamageTypes.INSTANT_BURN, world), totalDamage);
             attacker.setFireTicks(0);
         }
 

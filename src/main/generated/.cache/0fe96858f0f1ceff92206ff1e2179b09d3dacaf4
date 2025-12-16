@@ -1,6 +1,10 @@
-// 1.20.1	2025-12-13T01:34:03.9457305	Satisfying Weapons/Tags for minecraft:damage_type
-b7239491e0d969c8592a6876f807cfc35757acbf data\minecraft\tags\damage_type\bypasses_cooldown.json
+// 1.20.1	2025-12-17T01:33:37.6793094	Satisfying Weapons/Tags for minecraft:damage_type
+8e0152d762ea88c3a28dbe57c62b0f253da0f8f0 data\minecraft\tags\damage_type\bypasses_cooldown.json
 b7239491e0d969c8592a6876f807cfc35757acbf data\minecraft\tags\damage_type\no_impact.json
+6c30521f49673db1f394ba6d1325c99902ad26de data\minecraft\tags\damage_type\burns_armor_stands.json
+8c0a01a0b88cd9e24dfcc0564506f96a8d1a512b data\minecraft\tags\damage_type\always_triggers_silverfish.json
+6c30521f49673db1f394ba6d1325c99902ad26de data\minecraft\tags\damage_type\is_fire.json
 b7239491e0d969c8592a6876f807cfc35757acbf data\minecraft\tags\damage_type\no_anger.json
-b7239491e0d969c8592a6876f807cfc35757acbf data\minecraft\tags\damage_type\bypasses_armor.json
-b7239491e0d969c8592a6876f807cfc35757acbf data\minecraft\tags\damage_type\bypasses_shield.json
+8e0152d762ea88c3a28dbe57c62b0f253da0f8f0 data\minecraft\tags\damage_type\bypasses_armor.json
+8c0a01a0b88cd9e24dfcc0564506f96a8d1a512b data\minecraft\tags\damage_type\avoids_guardian_thorns.json
+8c0a01a0b88cd9e24dfcc0564506f96a8d1a512b data\minecraft\tags\damage_type\witch_resistant_to.json

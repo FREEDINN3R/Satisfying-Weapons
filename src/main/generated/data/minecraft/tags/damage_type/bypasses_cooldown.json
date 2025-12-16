@@ -4,6 +4,18 @@
     {
       "id": "satisfying_weapons:glass_cut",
       "required": false
+    },
+    {
+      "id": "satisfying_weapons:instant_wither",
+      "required": false
+    },
+    {
+      "id": "satisfying_weapons:instant_poison",
+      "required": false
+    },
+    {
+      "id": "satisfying_weapons:instant_burn",
+      "required": false
     }
   ]
 }

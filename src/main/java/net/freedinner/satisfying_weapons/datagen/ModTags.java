@@ -98,9 +98,28 @@ public class ModTags {
             addDamageToTags(ModDamageTypes.GLASS_CUT,
                     DamageTypeTags.BYPASSES_COOLDOWN,
                     DamageTypeTags.BYPASSES_ARMOR,
-                    DamageTypeTags.BYPASSES_SHIELD,
                     DamageTypeTags.NO_IMPACT,
                     DamageTypeTags.NO_ANGER
+            );
+
+            addDamageToTags(ModDamageTypes.INSTANT_WITHER,
+                    DamageTypeTags.BYPASSES_COOLDOWN,
+                    DamageTypeTags.BYPASSES_ARMOR
+            );
+
+            addDamageToTags(ModDamageTypes.INSTANT_POISON,
+                    DamageTypeTags.BYPASSES_COOLDOWN,
+                    DamageTypeTags.BYPASSES_ARMOR,
+                    DamageTypeTags.WITCH_RESISTANT_TO,
+                    DamageTypeTags.AVOIDS_GUARDIAN_THORNS,
+                    DamageTypeTags.ALWAYS_TRIGGERS_SILVERFISH
+            );
+
+            addDamageToTags(ModDamageTypes.INSTANT_BURN,
+                    DamageTypeTags.BYPASSES_COOLDOWN,
+                    DamageTypeTags.BYPASSES_ARMOR,
+                    DamageTypeTags.IS_FIRE,
+                    DamageTypeTags.BURNS_ARMOR_STANDS
             );
         }
 

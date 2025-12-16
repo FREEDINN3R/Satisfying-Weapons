@@ -88,4 +88,10 @@ public class CombatHelper {
                 attacker
         );
     }
+
+    public static DamageSource getDamageSource(RegistryKey<DamageType> modDamageType, World world) {
+        return new DamageSource(
+                world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(modDamageType)
+        );
+    }
 }

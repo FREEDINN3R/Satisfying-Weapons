@@ -1,2 +1,5 @@
-// 1.20.1	2025-12-13T01:34:03.9492332	Satisfying Weapons/Satisfying Weapons Damage Types
+// 1.20.1	2025-12-17T01:33:37.6852942	Satisfying Weapons/Satisfying Weapons Damage Types
 a969d6e1642a68a3a57c938ca167509a4423cf46 data\satisfying_weapons\damage_type\glass_cut.json
+7cb89c8c392857278c11a61349f4e4963900206d data\satisfying_weapons\damage_type\instant_poison.json
+dc055d5dc3399d4d405521bb26a3460b53f21140 data\satisfying_weapons\damage_type\instant_burn.json
+1276be90dbfa68244204f0d41445a2554cb5541d data\satisfying_weapons\damage_type\instant_wither.json

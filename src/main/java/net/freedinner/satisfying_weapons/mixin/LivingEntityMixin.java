@@ -132,8 +132,9 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
     }
 
     @Redirect(method = "damage", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/LivingEntity;lastDamageTaken:F", opcode = Opcodes.PUTFIELD))
-    private void preventLastDamageFromGlassCut(LivingEntity instance, float value, @Local(argsOnly = true) DamageSource source) {
-        if (!source.isOf(ModDamageTypes.GLASS_CUT)) {
+    private void preventLastDamageFromNoCooldown(LivingEntity instance, float value, @Local(argsOnly = true) DamageSource source) {
+        if (!source.isOf(ModDamageTypes.GLASS_CUT) && !source.isOf(ModDamageTypes.INSTANT_WITHER)
+        && !source.isOf(ModDamageTypes.INSTANT_POISON) && !source.isOf(ModDamageTypes.INSTANT_BURN)) {
             ((LivingEntityAccessor) instance).setLastDamageTaken(value);
         }
     }
