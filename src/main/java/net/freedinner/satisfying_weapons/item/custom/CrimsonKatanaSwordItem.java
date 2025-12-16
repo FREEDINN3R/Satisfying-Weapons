@@ -22,48 +22,14 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         StatusEffectInstance wither = attacker.getStatusEffect(StatusEffects.WITHER);
         if (wither != null) {
-            target.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, wither.getDuration(), wither.getAmplifier(), false, true), attacker);
+            int[] dmgRates = {40, 20, 10, 5, 2, 1};
+            int dmgRate = (wither.getAmplifier() > 5) ? dmgRates[5] : dmgRates[wither.getAmplifier()];
+            int totalDamage = wither.getDuration() / dmgRate;
+
+            target.damage(target.getDamageSources().wither(), totalDamage);
             attacker.removeStatusEffect(StatusEffects.WITHER);
         }
 
         return super.postHit(stack, target, attacker);
-    }
-
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
-
-        if (hand == Hand.OFF_HAND || user.getItemUseTime() > 0) {
-            return TypedActionResult.pass(itemStack);
-        }
-
-        if (world.isClient()) {
-            return TypedActionResult.consume(itemStack);
-        }
-
-        user.damage(world.getDamageSources().playerAttack(null), 0.25f);
-        user.setCurrentHand(hand);
-
-        StatusEffectInstance wither = user.getStatusEffect(StatusEffects.WITHER);
-        if (wither == null) {
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 160, 0));
-        }
-        else if (wither.getAmplifier() < 2) {
-            int newAmplifier = wither.getAmplifier() + 1;
-            user.removeStatusEffect(StatusEffects.WITHER);
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 160, newAmplifier));
-        }
-        else {
-            int amplifier = wither.getAmplifier();
-            user.removeStatusEffect(StatusEffects.WITHER);
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 160, amplifier));
-        }
-
-        return TypedActionResult.consume(itemStack);
-    }
-
-    @Override
-    public int getMaxUseTime(ItemStack stack) {
-        return 72000;
     }
 }
