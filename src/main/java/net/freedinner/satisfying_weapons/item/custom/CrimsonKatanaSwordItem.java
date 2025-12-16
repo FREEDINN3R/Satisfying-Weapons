@@ -20,14 +20,32 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        StatusEffectInstance poison = attacker.getStatusEffect(StatusEffects.POISON);
+        if (poison != null && this.getLevel() >= 2) {
+            int[] dmgRate = {25, 12, 6, 3, 1};
+            int amplifier = Math.min(4, poison.getAmplifier());
+            float totalDamage = poison.getDuration() / dmgRate[amplifier];
+            totalDamage = Math.min(totalDamage, target.getHealth() - 1);
+
+            target.damage(target.getDamageSources().magic(), totalDamage);
+            attacker.removeStatusEffect(StatusEffects.POISON);
+        }
+
         StatusEffectInstance wither = attacker.getStatusEffect(StatusEffects.WITHER);
         if (wither != null) {
-            int[] dmgRates = {40, 20, 10, 5, 2, 1};
-            int dmgRate = (wither.getAmplifier() > 5) ? dmgRates[5] : dmgRates[wither.getAmplifier()];
-            int totalDamage = wither.getDuration() / dmgRate;
+            int[] dmgRate = {40, 20, 10, 5, 2, 1};
+            int amplifier = Math.min(5, wither.getAmplifier());
+            int totalDamage = wither.getDuration() / dmgRate[amplifier];
 
             target.damage(target.getDamageSources().wither(), totalDamage);
             attacker.removeStatusEffect(StatusEffects.WITHER);
+        }
+
+        if (target.isOnFire() && this.getLevel() >= 4) {
+            int totalDamage = target.getFireTicks() / 20;
+
+            target.damage(target.getDamageSources().onFire(), totalDamage);
+            attacker.setFireTicks(0);
         }
 
         return super.postHit(stack, target, attacker);
