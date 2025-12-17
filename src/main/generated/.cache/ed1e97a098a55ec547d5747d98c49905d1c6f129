@@ -1,7 +1,7 @@
-// 1.20.1	2025-12-17T01:33:37.683299	Satisfying Weapons/Recipes
+// 1.20.1	2025-12-17T14:05:48.7692534	Satisfying Weapons/Recipes
 7889d335d80126eb4b6389679056fe3219e7ee69 data\satisfying_weapons\advancements\recipes\misc\upgrader.json
 6b0c90d2f787c3f4e6e101f8fc2af9e8a99fc1fb data\satisfying_weapons\recipes\wishing_star.json
 f3de0c1e1f8fbbe7357c066cc9846c6a5da9da08 data\satisfying_weapons\recipes\upgrader.json
 b21e518747da0d929409c208a64d78a1433bab18 data\satisfying_weapons\advancements\recipes\misc\deconstructor.json
-66e15c80db75ec7988dd57ad0d5e71b2a0eb9d1d data\satisfying_weapons\recipes\deconstructor.json
 b4916411be72eda79d88374de9f3d7512ee72afc data\satisfying_weapons\advancements\recipes\misc\wishing_star.json
+66e15c80db75ec7988dd57ad0d5e71b2a0eb9d1d data\satisfying_weapons\recipes\deconstructor.json

@@ -1,6 +1,6 @@
-// 1.20.1	2025-12-17T01:33:37.6763172	Satisfying Weapons/Tags for minecraft:item
+// 1.20.1	2025-12-17T14:05:48.7652629	Satisfying Weapons/Tags for minecraft:item
 b0824bd764a32f45e401dc258a02c6dc5a73c372 data\satisfying_weapons\tags\items\rare_drops.json
-721bb7a495893a92828c70c6bd47dc2de443d414 data\satisfying_weapons\tags\items\epic_drops.json
 0e995f3b93d1ced6a802c65b119d07d63cd42a79 data\satisfying_weapons\tags\items\all_mod_weapons.json
+721bb7a495893a92828c70c6bd47dc2de443d414 data\satisfying_weapons\tags\items\epic_drops.json
 97c20a1030efc40930714b3bda046740d3ec84af data\satisfying_weapons\tags\items\legendary_drops.json
 33a21b5b69cdaaed741c45a5723ad8349073e8b5 data\satisfying_weapons\tags\items\mod_bows.json
