@@ -108,6 +108,9 @@
 
   "death.attack.satisfying_weapons.glass_cut": "%1$s died from a thousand cuts",
   "death.attack.satisfying_weapons.glass_cut.player": "%1$s died from a thousand cuts",
+  "death.attack.satisfying_weapons.instant_wither": "%1$s withered away whilst fighting %2$s",
+  "death.attack.satisfying_weapons.instant_poison": "%1$s died from poison whilst fighting %2$s",
+  "death.attack.satisfying_weapons.instant_burn": "%1$s was burnt to a crisp whilst fighting %2$s",
 
   "advancement.satisfying_weapons.root.title": "Satisfying Weapons",
   "advancement.satisfying_weapons.root.description": "Kill monsters, craft wishes, collect weapons",
