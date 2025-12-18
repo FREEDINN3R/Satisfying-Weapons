@@ -32,7 +32,7 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
         if (poison != null && this.getLevel() >= 2) {
             int[] dmgRate = {25, 12, 6, 3, 1};
             int amplifier = Math.min(4, poison.getAmplifier());
-            poisonDamage = poison.getDuration() / dmgRate[amplifier];
+            poisonDamage = (poison.isInfinite() ? 9999 : poison.getDuration()) / dmgRate[amplifier];
             poisonDamage = Math.max(0, (Math.min(poisonDamage, target.getHealth() - 1)));
 
             target.removeStatusEffect(StatusEffects.POISON);
@@ -43,7 +43,7 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
         if (wither != null) {
             int[] dmgRate = {40, 20, 10, 5, 2, 1};
             int amplifier = Math.min(5, wither.getAmplifier());
-            witherDamage = wither.getDuration() / dmgRate[amplifier];
+            witherDamage = (wither.isInfinite() ? 9999 : wither.getDuration()) / dmgRate[amplifier];
 
             target.removeStatusEffect(StatusEffects.WITHER);
             effectCount++;
