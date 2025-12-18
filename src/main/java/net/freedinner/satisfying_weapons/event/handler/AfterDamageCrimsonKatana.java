@@ -36,30 +36,38 @@ public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterD
         if (katanaItem.getLevel() >= 2) possibleEffects.add("poison");
         if (katanaItem.getLevel() >= 4) possibleEffects.add("burn");
 
-        String chosenEffect = MathUtils.getRandomElement(possibleEffects);
-        switch (chosenEffect) {
-            case "wither" -> {
-                StatusEffectInstance existingWither = entity.getStatusEffect(StatusEffects.WITHER);
-                int oldDuration = (existingWither == null) ? 0 : existingWither.getDuration();
-                int newDuration = Math.min(360, 120 + oldDuration);
+        ArrayList<String> chosenEffects = new ArrayList<>();
+        chosenEffects.add(MathUtils.getRandomElement(possibleEffects, true));
 
-                attacker.sendMessage(Text.literal("Applying wither for " + newDuration + " ticks"));
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, newDuration, 0));
-            }
-            case "poison" -> {
-                StatusEffectInstance existingPoison = entity.getStatusEffect(StatusEffects.POISON);
-                int oldDuration = (existingPoison == null) ? 0 : existingPoison.getDuration();
-                int newDuration = Math.min(360, 120 + oldDuration);
+        if (katanaItem.getLevel() >= 4) {
+            chosenEffects.add(MathUtils.getRandomElement(possibleEffects, true));
+        }
 
-                attacker.sendMessage(Text.literal("Applying poison for " + newDuration + " ticks"));
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, newDuration, 0));
-            }
-            case "burn" -> {
-                int oldDuration = entity.getFireTicks();
-                int newDuration = Math.min(360, 120 + oldDuration);
+        for (String chosenEffect : chosenEffects) {
+            switch (chosenEffect) {
+                case "wither" -> {
+                    StatusEffectInstance existingWither = entity.getStatusEffect(StatusEffects.WITHER);
+                    int oldDuration = (existingWither == null) ? 0 : existingWither.getDuration();
+                    int newDuration = Math.min(360, 120 + oldDuration);
 
-                attacker.sendMessage(Text.literal("Applying burn for " + newDuration + " ticks"));
-                entity.setOnFireFor(newDuration / 20);
+                    attacker.sendMessage(Text.literal("Applying wither for " + newDuration + " ticks"));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, newDuration, 0));
+                }
+                case "poison" -> {
+                    StatusEffectInstance existingPoison = entity.getStatusEffect(StatusEffects.POISON);
+                    int oldDuration = (existingPoison == null) ? 0 : existingPoison.getDuration();
+                    int newDuration = Math.min(360, 120 + oldDuration);
+
+                    attacker.sendMessage(Text.literal("Applying poison for " + newDuration + " ticks"));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, newDuration, 0));
+                }
+                case "burn" -> {
+                    int oldDuration = entity.getFireTicks();
+                    int newDuration = Math.min(360, 121 + oldDuration);
+
+                    attacker.sendMessage(Text.literal("Applying burn for " + newDuration + " ticks"));
+                    entity.setOnFireFor(newDuration / 20);
+                }
             }
         }
     }
@@ -84,4 +92,6 @@ public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterD
 
         return katanaItem;
     }
+
+
 }

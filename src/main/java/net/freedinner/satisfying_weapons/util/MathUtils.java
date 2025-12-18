@@ -97,7 +97,18 @@ public class MathUtils {
     }
 
     public static <T> T getRandomElement(List<T> list) {
-        return list.get(randomNumber(list.size()));
+        return getRandomElement(list, false);
+    }
+
+    public static <T> T getRandomElement(List<T> list, boolean removeElement) {
+        int i = randomNumber(list.size());
+        T element = list.get(i);
+
+        if (removeElement) {
+            list.remove(i);
+        }
+
+        return element;
     }
 }
 
