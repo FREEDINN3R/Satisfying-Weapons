@@ -4,12 +4,17 @@ import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageType;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
     public CrimsonKatanaSwordItem(ModToolMaterial toolMaterial, Settings settings, int level, @Nullable CrimsonKatanaSwordItem nextLevelWeapon) {
@@ -22,53 +27,83 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
             return super.postHit(stack, target, attacker);
         }
 
-        World world = target.getWorld();
+        List<DoT> existingDots = DoT.getDotsOn(target, this.getLevel());
+        float dotMultiplier = (this.getLevel() >= 2 && existingDots.size() >= 2) ? 1.2f : 1.0f;
 
-        float poisonDamage = 0, witherDamage = 0, burnDamage = 0;
-        int effectCount = 0;
-
-        // Poison goes first because it's non-lethal
-        StatusEffectInstance poison = target.getStatusEffect(StatusEffects.POISON);
-        if (poison != null && this.getLevel() >= 2) {
-            int[] dmgRate = {25, 12, 6, 3, 1};
-            int amplifier = Math.min(4, poison.getAmplifier());
-            poisonDamage = (poison.isInfinite() ? 9999 : poison.getDuration()) / dmgRate[amplifier];
-            poisonDamage = Math.max(0, (Math.min(poisonDamage, target.getHealth() - 1)));
-
-            target.removeStatusEffect(StatusEffects.POISON);
-            effectCount++;
+        for (DoT dotEffect : existingDots) {
+            attacker.sendMessage(Text.literal("detonating " + dotEffect.name() + " for " + (dotEffect.calculateDamageFor(target) * dotMultiplier) + " damage"));
+            dotEffect.detonateFor(target, dotMultiplier);
         }
-
-        StatusEffectInstance wither = target.getStatusEffect(StatusEffects.WITHER);
-        if (wither != null) {
-            int[] dmgRate = {40, 20, 10, 5, 2, 1};
-            int amplifier = Math.min(5, wither.getAmplifier());
-            witherDamage = (wither.isInfinite() ? 9999 : wither.getDuration()) / dmgRate[amplifier];
-
-            target.removeStatusEffect(StatusEffects.WITHER);
-            effectCount++;
-        }
-
-        if (target.isOnFire() && this.getLevel() >= 4) {
-            int dmgRate = 20;
-            burnDamage = target.getFireTicks() / dmgRate;
-
-            target.setFireTicks(0);
-            effectCount++;
-        }
-
-        if (effectCount >= 2 && this.getLevel() >= 2) {
-            poisonDamage *= 1.2f;
-            witherDamage *= 1.2f;
-            burnDamage *= 1.2f;
-        }
-
-        attacker.sendMessage(Text.literal("poison = " + poisonDamage + "; wither = " + witherDamage + "; burn = " + burnDamage));
-
-        target.damage(CombatHelper.getDamageSource(ModDamageTypes.INSTANT_POISON, world), poisonDamage);
-        target.damage(CombatHelper.getDamageSource(ModDamageTypes.INSTANT_WITHER, world), witherDamage);
-        target.damage(CombatHelper.getDamageSource(ModDamageTypes.INSTANT_BURN, world), burnDamage);
 
         return super.postHit(stack, target, attacker);
+    }
+
+    public enum DoT {
+        // Poison has to go first since it's non-lethal
+        POISON(2, StatusEffects.POISON, ModDamageTypes.INSTANT_POISON, new int[] {25, 12, 6, 3, 1}),
+        WITHER(1, StatusEffects.WITHER, ModDamageTypes.INSTANT_WITHER, new int[] {40, 20, 10, 5, 2, 1}),
+        BURN(4, null, ModDamageTypes.INSTANT_BURN, new int[] {20});
+
+        private final int levelRequired;
+        private final StatusEffect baseEffect;
+        private final RegistryKey<DamageType> damageType;
+        private final int[] dmgRate;
+
+        DoT(int levelRequired, StatusEffect baseEffect, RegistryKey<DamageType> damageType, int[] dmgRate) {
+            this.levelRequired = levelRequired;
+            this.baseEffect = baseEffect;
+            this.damageType = damageType;
+            this.dmgRate = dmgRate;
+        }
+
+        public boolean presentOn(LivingEntity entity) {
+            return this == BURN ? entity.isOnFire() : entity.hasStatusEffect(baseEffect);
+        }
+
+        public float calculateDamageFor(LivingEntity entity) {
+            if (!this.presentOn(entity)) {
+                return 0f;
+            }
+
+            int duration, amplifier;
+            if (this == BURN) {
+                duration = entity.getFireTicks();
+                amplifier = 0;
+            }
+            else {
+                StatusEffectInstance statusEffect = entity.getStatusEffect(baseEffect);
+                duration = statusEffect.isInfinite() ? 99999 : statusEffect.getDuration();
+                amplifier = statusEffect.getAmplifier();
+            }
+
+            amplifier = Math.min(dmgRate.length - 1, amplifier);
+            float totalDamage = duration / dmgRate[amplifier];
+
+            if (this == POISON) {
+                totalDamage = Math.max(0, (Math.min(totalDamage, entity.getHealth() - 1)));
+            }
+
+            return totalDamage;
+        }
+
+        public void detonateFor(LivingEntity entity, float multiplier) {
+            float totalDamage = calculateDamageFor(entity) * multiplier;
+            entity.damage(CombatHelper.getDamageSource(damageType, entity.getWorld()), totalDamage);
+
+            if (this == BURN) {
+                entity.setFireTicks(0);
+            }
+            else {
+                entity.removeStatusEffect(baseEffect);
+            }
+        }
+
+        public static List<DoT> getDotsForLevel(int weaponLevel) {
+            return Arrays.stream(DoT.values()).filter(dot -> weaponLevel >= dot.levelRequired).toList();
+        }
+
+        public static List<DoT> getDotsOn(LivingEntity entity, int weaponLevel) {
+            return getDotsForLevel(weaponLevel).stream().filter(dot -> dot.presentOn(entity)).toList();
+        }
     }
 }
