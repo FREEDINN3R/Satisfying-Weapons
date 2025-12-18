@@ -48,7 +48,7 @@
   "item.satisfying_weapons.crimson_katana.skill_name_1": "Decaying Mind",
   "item.satisfying_weapons.crimson_katana.skill_desc_1": "Hitting an entity while having this weapon in your hotbar will inflict it with Wither for 6s, stacking up to 18s. Hitting an entity inflicted with Wither with this weapon will detonate the effect, setting its duration to 0 and dealing all of its damage in a single hit.",
   "item.satisfying_weapons.crimson_katana.skill_name_2": "Toxic Ally",
-  "item.satisfying_weapons.crimson_katana.skill_desc_2": "Can now inflict and detonate Poison. Increases base damage of this weapon by 20% against entities inflicted with any negative effects.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_2": "Can now inflict and detonate Poison. When detonating more than one DoT effect at a time, increase the total detonation damage by 20%.",
   "item.satisfying_weapons.crimson_katana.skill_name_3": "Erasure of Self",
   "item.satisfying_weapons.crimson_katana.skill_desc_3": "Right-click this weapon to consume 2 HP and send forth a Noxious Slash, which deals no damage, but can detonate effects.",
   "item.satisfying_weapons.crimson_katana.skill_name_4": "Burnout",
