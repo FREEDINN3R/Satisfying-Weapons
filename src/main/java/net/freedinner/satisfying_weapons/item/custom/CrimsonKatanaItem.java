@@ -1,5 +1,6 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
+import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
@@ -10,14 +11,14 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
-    public CrimsonKatanaSwordItem(ModToolMaterial toolMaterial, Settings settings, int level, @Nullable CrimsonKatanaSwordItem nextLevelWeapon) {
+public class CrimsonKatanaItem extends UpgradeableSwordItem {
+    public CrimsonKatanaItem(ModToolMaterial toolMaterial, Settings settings, int level, @Nullable CrimsonKatanaItem nextLevelWeapon) {
         super(toolMaterial, settings, level, nextLevelWeapon);
     }
 
@@ -31,7 +32,6 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
         float dotMultiplier = (this.getLevel() >= 2 && existingDots.size() >= 2) ? 1.2f : 1.0f;
 
         for (DoT dotEffect : existingDots) {
-            attacker.sendMessage(Text.literal("detonating " + dotEffect.name() + " for " + (dotEffect.calculateDamageFor(target) * dotMultiplier) + " damage"));
             dotEffect.detonateFor(target, dotMultiplier);
         }
 
@@ -60,21 +60,45 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
             return this == BURN ? entity.isOnFire() : entity.hasStatusEffect(baseEffect);
         }
 
-        public float calculateDamageFor(LivingEntity entity) {
+        public int getDurationFor(LivingEntity entity) {
             if (!this.presentOn(entity)) {
-                return 0f;
+                return 0;
             }
 
-            int duration, amplifier;
             if (this == BURN) {
-                duration = entity.getFireTicks();
-                amplifier = 0;
+                return entity.getFireTicks();
             }
             else {
                 StatusEffectInstance statusEffect = entity.getStatusEffect(baseEffect);
-                duration = statusEffect.isInfinite() ? 99999 : statusEffect.getDuration();
-                amplifier = statusEffect.getAmplifier();
+                return statusEffect.isInfinite() ? 99999 : statusEffect.getDuration();
             }
+        }
+
+        public int getAmplifierFor(LivingEntity entity) {
+            if (!this.presentOn(entity)) {
+                return -1;
+            }
+
+            return this == BURN ? 0 : entity.getStatusEffect(baseEffect).getAmplifier();
+        }
+
+        public void inflictOn(LivingEntity entity) {
+            int oldDuration = this.getDurationFor(entity);
+            int newDuration = Math.min(360, 120 + oldDuration);
+
+            if (this == BURN) {
+                entity.setOnFireFor(newDuration / 20);
+            }
+            else {
+                entity.addStatusEffect(new StatusEffectInstance(baseEffect, newDuration, 0));
+            }
+
+            SatisfyingWeapons.LOGGER.info("Inflicting " + this.name() + " for " + newDuration + " ticks");
+        }
+
+        public float calculateDamageFor(LivingEntity entity) {
+            int duration = this.getDurationFor(entity);
+            int amplifier = this.getAmplifierFor(entity);
 
             amplifier = Math.min(dmgRate.length - 1, amplifier);
             float totalDamage = duration / dmgRate[amplifier];
@@ -96,14 +120,20 @@ public class CrimsonKatanaSwordItem extends UpgradeableSwordItem {
             else {
                 entity.removeStatusEffect(baseEffect);
             }
+
+            SatisfyingWeapons.LOGGER.info("Detonating " + this.name() + " for " + totalDamage + " damage");
         }
 
-        public static List<DoT> getDotsForLevel(int weaponLevel) {
-            return Arrays.stream(DoT.values()).filter(dot -> weaponLevel >= dot.levelRequired).toList();
+        public static ArrayList<DoT> getDotsForLevel(int weaponLevel) {
+            return new ArrayList<>(Arrays.stream(DoT.values())
+                    .filter(dot -> weaponLevel >= dot.levelRequired)
+                    .toList());
         }
 
         public static List<DoT> getDotsOn(LivingEntity entity, int weaponLevel) {
-            return getDotsForLevel(weaponLevel).stream().filter(dot -> dot.presentOn(entity)).toList();
+            return new ArrayList<>(getDotsForLevel(weaponLevel).stream()
+                    .filter(dot -> dot.presentOn(entity))
+                    .toList());
         }
     }
 }

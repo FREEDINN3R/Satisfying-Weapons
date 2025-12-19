@@ -1,20 +1,18 @@
 package net.freedinner.satisfying_weapons.event.handler;
 
 import net.freedinner.satisfying_weapons.event.custom.CustomLivingEntityEvents;
-import net.freedinner.satisfying_weapons.item.custom.CrimsonKatanaSwordItem;
+import net.freedinner.satisfying_weapons.item.custom.CrimsonKatanaItem;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterDamage {
     @Override
@@ -25,66 +23,38 @@ public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterD
             return;
         }
 
-        CrimsonKatanaSwordItem katanaItem = searchHotbarForKatana(playerAttacker);
+        CrimsonKatanaItem katanaItem = searchHotbarForKatana(playerAttacker);
 
         if (katanaItem == null) {
             return;
         }
 
-        ArrayList<String> possibleEffects = new ArrayList<>();
-        possibleEffects.add("wither");
-        if (katanaItem.getLevel() >= 2) possibleEffects.add("poison");
-        if (katanaItem.getLevel() >= 4) possibleEffects.add("burn");
+        ArrayList<CrimsonKatanaItem.DoT> possibleDots = CrimsonKatanaItem.DoT.getDotsForLevel(katanaItem.getLevel());
+        ArrayList<CrimsonKatanaItem.DoT> chosenDots = new ArrayList<>();
 
-        ArrayList<String> chosenEffects = new ArrayList<>();
-        chosenEffects.add(MathUtils.getRandomElement(possibleEffects, true));
-
-        if (katanaItem.getLevel() >= 4) {
-            chosenEffects.add(MathUtils.getRandomElement(possibleEffects, true));
+        int count = (katanaItem.getLevel() >= 4) ? 2 : 1;
+        for (int i = 0; i < count; i++) {
+            chosenDots.add(MathUtils.getRandomElement(possibleDots, true));
         }
 
-        for (String chosenEffect : chosenEffects) {
-            switch (chosenEffect) {
-                case "wither" -> {
-                    StatusEffectInstance existingWither = entity.getStatusEffect(StatusEffects.WITHER);
-                    int oldDuration = (existingWither == null) ? 0 : existingWither.getDuration();
-                    int newDuration = Math.min(360, 120 + oldDuration);
-
-                    attacker.sendMessage(Text.literal("Applying wither for " + newDuration + " ticks"));
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, newDuration, 0));
-                }
-                case "poison" -> {
-                    StatusEffectInstance existingPoison = entity.getStatusEffect(StatusEffects.POISON);
-                    int oldDuration = (existingPoison == null) ? 0 : existingPoison.getDuration();
-                    int newDuration = Math.min(360, 120 + oldDuration);
-
-                    attacker.sendMessage(Text.literal("Applying poison for " + newDuration + " ticks"));
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, newDuration, 0));
-                }
-                case "burn" -> {
-                    int oldDuration = entity.getFireTicks();
-                    int newDuration = Math.min(360, 121 + oldDuration);
-
-                    attacker.sendMessage(Text.literal("Applying burn for " + newDuration + " ticks"));
-                    entity.setOnFireFor(newDuration / 20);
-                }
-            }
+        for (CrimsonKatanaItem.DoT dotEffect : chosenDots) {
+            dotEffect.inflictOn(entity);
         }
     }
 
     @Nullable
-    private static CrimsonKatanaSwordItem searchHotbarForKatana(PlayerEntity playerAttacker) {
+    private static CrimsonKatanaItem searchHotbarForKatana(PlayerEntity playerAttacker) {
         PlayerInventory inventory = playerAttacker.getInventory();
-        CrimsonKatanaSwordItem katanaItem = null;
+        CrimsonKatanaItem katanaItem = null;
 
         ItemStack offhandStack = inventory.getStack(PlayerInventory.OFF_HAND_SLOT);
-        if (offhandStack.getItem() instanceof CrimsonKatanaSwordItem foundKatanaItem) {
+        if (offhandStack.getItem() instanceof CrimsonKatanaItem foundKatanaItem) {
             katanaItem = foundKatanaItem;
         }
 
         for (int i = 0; PlayerInventory.isValidHotbarIndex(i); i++) {
             ItemStack stack = inventory.getStack(i);
-            if (stack.getItem() instanceof CrimsonKatanaSwordItem foundKatanaItem
+            if (stack.getItem() instanceof CrimsonKatanaItem foundKatanaItem
             && (katanaItem == null || katanaItem.getLevel() < foundKatanaItem.getLevel())) {
                 katanaItem = foundKatanaItem;
             }
@@ -92,6 +62,4 @@ public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterD
 
         return katanaItem;
     }
-
-
 }

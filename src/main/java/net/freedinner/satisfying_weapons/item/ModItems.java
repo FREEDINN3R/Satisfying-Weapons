@@ -28,7 +28,7 @@ public class ModItems {
     public static final List<Item> GLASS_SWORD = registerUpgradeableWeapon("glass_sword",
             GlassSwordItem::new, ModToolMaterial.RARE, 5, new Item.Settings().fireproof());
     public static final List<Item> CRIMSON_KATANA = registerUpgradeableWeapon("crimson_katana",
-            CrimsonKatanaSwordItem::new, ModToolMaterial.RARE, 5, new Item.Settings().fireproof());
+            CrimsonKatanaItem::new, ModToolMaterial.RARE, 5, new Item.Settings().fireproof());
 
     // Epic
     public static final List<Item> TOY_BOW = registerUpgradeableWeapon("toy_bow",
