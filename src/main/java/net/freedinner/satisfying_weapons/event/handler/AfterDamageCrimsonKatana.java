@@ -1,17 +1,27 @@
 package net.freedinner.satisfying_weapons.event.handler;
 
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.event.custom.CustomLivingEntityEvents;
 import net.freedinner.satisfying_weapons.item.custom.CrimsonKatanaItem;
+import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.util.MathUtils;
+import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 
 public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterDamage {
@@ -37,9 +47,15 @@ public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterD
             chosenDots.add(MathUtils.getRandomElement(possibleDots, true));
         }
 
-        for (CrimsonKatanaItem.DoT dotEffect : chosenDots) {
+        ((ILivingEntityDataSaver) entity).sw$scheduleDots(chosenDots);
+    }
+
+    public static void inflictScheduledDots(LivingEntity entity, List<CrimsonKatanaItem.DoT> scheduledDots) {
+        for (CrimsonKatanaItem.DoT dotEffect : scheduledDots) {
             dotEffect.inflictOn(entity);
         }
+
+        sendParticlesPacket(entity, scheduledDots);
     }
 
     @Nullable
@@ -61,5 +77,15 @@ public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterD
         }
 
         return katanaItem;
+    }
+
+    private static void sendParticlesPacket(LivingEntity entity, List<CrimsonKatanaItem.DoT> inflictedDots) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVector3f(entity.getPos().add(0, entity.getHeight() / 2, 0).toVector3f());
+        buf.writeEnumSet(EnumSet.copyOf(inflictedDots), CrimsonKatanaItem.DoT.class);
+
+        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
+            ServerPlayNetworking.send(player, ModNetworking.DOT_INFLICT_PARTICLES_ID, buf);
+        }
     }
 }

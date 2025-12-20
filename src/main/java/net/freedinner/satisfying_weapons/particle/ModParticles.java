@@ -12,10 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModParticles {
+    // Firework Sword
     public static final List<DefaultParticleType> FESTIVITY_COUNT = registerMany("festivity_count", 10);
+
+    // Glass Sword
     public static final DefaultParticleType BLOOD = register("blood");
     public static final List<DefaultParticleType> GLASS_CUT_SLASH = registerMany("glass_cut_slash", 2);
+
+    // Crimson Katana
+    public static final DefaultParticleType CRIMSON_SPARK = register("crimson_spark");
+
+    // Toy Bow
     public static final DefaultParticleType CONFETTI = register("confetti");
+
+    // Sword of Dying Star
     public static final DefaultParticleType WHITE_LINE = register("white_line");
     public static final DefaultParticleType DARK_LINE = register("dark_line");
     public static final DefaultParticleType ENTROPY = register("entropy");
@@ -47,6 +57,8 @@ public class ModParticles {
 
         ParticleFactoryRegistry.getInstance().register(BLOOD, BloodParticle.Factory::new);
         registerManyClient(GLASS_CUT_SLASH, GlassCutSlashParticle.Factory::new);
+
+        ParticleFactoryRegistry.getInstance().register(CRIMSON_SPARK, CrimsonSparkParticle.Factory::new);
 
         ParticleFactoryRegistry.getInstance().register(CONFETTI, ConfettiParticle.Factory::new);
 

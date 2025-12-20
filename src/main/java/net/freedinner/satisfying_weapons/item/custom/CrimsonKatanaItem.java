@@ -4,6 +4,7 @@ import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
+import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.effect.StatusEffect;
@@ -30,6 +31,10 @@ public class CrimsonKatanaItem extends UpgradeableSwordItem {
 
         List<DoT> existingDots = DoT.getDotsOn(target, this.getLevel());
         float dotMultiplier = (this.getLevel() >= 2 && existingDots.size() >= 2) ? 1.2f : 1.0f;
+
+        if (!existingDots.isEmpty()) {
+            ((ILivingEntityDataSaver) target).sw$cancelNextDots();
+        }
 
         for (DoT dotEffect : existingDots) {
             dotEffect.detonateFor(target, dotMultiplier);

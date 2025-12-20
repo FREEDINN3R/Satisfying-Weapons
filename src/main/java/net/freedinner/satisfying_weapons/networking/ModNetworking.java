@@ -10,21 +10,29 @@ import net.minecraft.util.Identifier;
 public class ModNetworking {
     public static final Identifier WISHING_STAR_PARTICLES_ID = SatisfyingWeapons.id("wishing_star_particles");
 
+    // Firework Sword
     public static final Identifier FESTIVITY_GAINED_PARTICLES_ID = SatisfyingWeapons.id("festivity_gained_particles");
     public static final Identifier FIREWORK_JUMP_PARTICLES_ID = SatisfyingWeapons.id("firework_jump_particles");
     public static final Identifier FIREWORK_TRAIL_PARTICLES_ID = SatisfyingWeapons.id("firework_trail_particles");
     public static final Identifier PLUNGE_ATTACK_PARTICLES_ID = SatisfyingWeapons.id("plunge_attack_particles");
 
+    // Glass Sword
     public static final Identifier GLASS_SHATTER_PARTICLES_ID = SatisfyingWeapons.id("glass_sword_shatter_particles");
     public static final Identifier BLOOD_DRIP_PARTICLES_ID = SatisfyingWeapons.id("blood_drip_particles");
     public static final Identifier GLASS_CUT_DAMAGE_PARTICLES_ID = SatisfyingWeapons.id("glass_cut_damage_particles");
 
+    // Crimson Katana
+    public static final Identifier DOT_INFLICT_PARTICLES_ID = SatisfyingWeapons.id("dot_inflict_particles");
+
+    // Toy Bow
     public static final Identifier CONFETTI_PARTICLES_ID = SatisfyingWeapons.id("confetti_particles");
     public static final Identifier GIFT_SMOKE_PARTICLES_ID = SatisfyingWeapons.id("gift_smoke_particles");
     public static final Identifier GIFT_EXPLOSION_PARTICLES_ID = SatisfyingWeapons.id("gift_explosion_particles");
 
+    // Mechanical Sword
     public static final Identifier SYNC_USE_TIME_LEFT_ID = SatisfyingWeapons.id("sync_use_time_left");
 
+    // Sword of Dying Star
     public static final Identifier BLACK_HOLE_PULL_PARTICLES_ID = SatisfyingWeapons.id("black_hole_pull_particles");
     public static final Identifier ENTROPY_PARTICLES_ID = SatisfyingWeapons.id("entropy_particles");
     public static final Identifier BLACK_HOLE_EXPLOSION_PARTICLES_ID = SatisfyingWeapons.id("black_hole_explosion_particles");
@@ -34,21 +42,29 @@ public class ModNetworking {
 
         ClientPlayNetworking.registerGlobalReceiver(WISHING_STAR_PARTICLES_ID, WishingStarParticlesPacket::receive);
 
+        // Firework Sword
         ClientPlayNetworking.registerGlobalReceiver(FESTIVITY_GAINED_PARTICLES_ID, FestivityGainedParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(FIREWORK_JUMP_PARTICLES_ID, FireworkJumpParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(FIREWORK_TRAIL_PARTICLES_ID, FireworkTrailParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(PLUNGE_ATTACK_PARTICLES_ID, PlungeAttackParticlesPacket::receive);
 
+        // Glass Sword
         ClientPlayNetworking.registerGlobalReceiver(GLASS_SHATTER_PARTICLES_ID, GlassShatterParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(BLOOD_DRIP_PARTICLES_ID, BloodDripParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(GLASS_CUT_DAMAGE_PARTICLES_ID, GlassCutDamageParticlesPacket::receive);
 
+        // Crimson Katana
+        ClientPlayNetworking.registerGlobalReceiver(DOT_INFLICT_PARTICLES_ID, DotInflictParticlesPacket::receive);
+
+        // Toy Bow
         ClientPlayNetworking.registerGlobalReceiver(CONFETTI_PARTICLES_ID, ConfettiParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(GIFT_SMOKE_PARTICLES_ID, GiftSmokeParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(GIFT_EXPLOSION_PARTICLES_ID, GiftExplosionParticlesPacket::receive);
 
+        // Mechanical Sword
         ClientPlayNetworking.registerGlobalReceiver(SYNC_USE_TIME_LEFT_ID, SyncUseTimeLeftPacket::receive);
 
+        // Sword of Dying Star
         ClientPlayNetworking.registerGlobalReceiver(BLACK_HOLE_PULL_PARTICLES_ID, BlackHolePullParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(ENTROPY_PARTICLES_ID, EntropyParticlesPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(BLACK_HOLE_EXPLOSION_PARTICLES_ID, BlackHoleExplosionParticlesPacket::receive);

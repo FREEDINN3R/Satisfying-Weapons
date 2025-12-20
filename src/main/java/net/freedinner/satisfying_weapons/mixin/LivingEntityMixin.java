@@ -7,6 +7,8 @@ import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.effect.custom.GlassCutEffect;
 import net.freedinner.satisfying_weapons.event.custom.CustomLivingEntityEvents;
+import net.freedinner.satisfying_weapons.event.handler.AfterDamageCrimsonKatana;
+import net.freedinner.satisfying_weapons.item.custom.CrimsonKatanaItem;
 import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.NbtUtils;
@@ -27,12 +29,18 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements ILivingEntityDataSaver {
     @Unique
     private int glassCutCountdown;
     @Unique
     private int brokenSoulSwordLevel;
+    @Unique
+    private List<CrimsonKatanaItem.DoT> scheduledDots;
+    @Unique
+    private boolean shouldCancelNextDots;
     @Unique
     private int dropAttemptsBH;
 
@@ -51,6 +59,7 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
     private void onConstructor(EntityType<? extends LivingEntity> entityType, World world, CallbackInfo ci) {
         this.glassCutCountdown = 0;
         this.brokenSoulSwordLevel = 0;
+        this.shouldCancelNextDots = false;
         this.dropAttemptsBH = 0;
     }
 
@@ -69,6 +78,18 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
             if (gcCountdown == 0) {
                 GlassCutEffect.applyDamageTo(entity);
             }
+        }
+
+        // Inflicts DoTs that are scheduled one tick after receiving damage
+        if (scheduledDots != null) {
+            if (!shouldCancelNextDots) {
+                AfterDamageCrimsonKatana.inflictScheduledDots(entity, scheduledDots);
+            }
+            else {
+                shouldCancelNextDots = false;
+            }
+
+            scheduledDots = null;
         }
 
         // Equipment drop attempts for BH; takes approx. 60 seconds to reset to 0 (players only)
@@ -157,6 +178,16 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
     @Override
     public void sw$setBrokenSoulSwordLevel(int level) {
         brokenSoulSwordLevel = level;
+    }
+
+    @Override
+    public void sw$scheduleDots(List<CrimsonKatanaItem.DoT> scheduledDots) {
+        this.scheduledDots = scheduledDots;
+    }
+
+    @Override
+    public void sw$cancelNextDots() {
+        shouldCancelNextDots = true;
     }
 
     @Override
