@@ -81,11 +81,14 @@ public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterD
 
     private static void sendParticlesPacket(LivingEntity entity, List<CrimsonKatanaItem.DoT> inflictedDots) {
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(entity.getPos().add(0, entity.getHeight() / 2, 0).toVector3f());
         buf.writeEnumSet(EnumSet.copyOf(inflictedDots), CrimsonKatanaItem.DoT.class);
+        buf.writeVector3f(entity.getPos().add(0, entity.getHeight() / 2, 0).toVector3f());
 
         for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
-            ServerPlayNetworking.send(player, ModNetworking.DOT_INFLICT_PARTICLES_ID, buf);
+            PacketByteBuf bufCopy = PacketByteBufs.copy(buf);
+            bufCopy.writeVector3f(player.getEyePos().toVector3f());
+
+            ServerPlayNetworking.send(player, ModNetworking.DOT_INFLICT_PARTICLES_ID, bufCopy);
         }
     }
 }

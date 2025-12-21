@@ -5,7 +5,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 
 public class CrimsonSparkParticle extends SpriteBillboardParticle {
-    public static final int MAX_AGE = 5;
+    public static final int MAX_AGE = 6;
 
     protected CrimsonSparkParticle(ClientWorld clientWorld, double x, double y, double z, SpriteProvider spriteSet, double dx, double dy, double dz) {
         super(clientWorld, x, y, z, dx, dy, dz);
@@ -17,13 +17,13 @@ public class CrimsonSparkParticle extends SpriteBillboardParticle {
         this.velocityX = dx;
         this.velocityY = dy;
         this.velocityZ = dz;
-        this.scale = 0.02f;
+        this.scale = 0.006f;
         this.maxAge = MAX_AGE;
         this.setSpriteForAge(spriteSet);
 
         this.red = 1f;
-        this.green = 0f;
-        this.blue = 0.33f;
+        this.green = 0.9f;
+        this.blue = 0.93f;
     }
 
     @Override

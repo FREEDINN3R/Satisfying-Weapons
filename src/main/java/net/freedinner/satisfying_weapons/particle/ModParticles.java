@@ -21,6 +21,7 @@ public class ModParticles {
 
     // Crimson Katana
     public static final DefaultParticleType CRIMSON_SPARK = register("crimson_spark");
+    public static final DefaultParticleType CRIMSON_SPARK_GLOW = register("crimson_spark_glow");
 
     // Toy Bow
     public static final DefaultParticleType CONFETTI = register("confetti");
@@ -53,15 +54,21 @@ public class ModParticles {
     public static void registerParticlesClient() {
         SatisfyingWeapons.LOGGER.info("Registering client-side particles");
 
+        // Firework Sword
         registerManyClient(FESTIVITY_COUNT, FestivityCountParticle.Factory::new);
 
+        // Glass Sword
         ParticleFactoryRegistry.getInstance().register(BLOOD, BloodParticle.Factory::new);
         registerManyClient(GLASS_CUT_SLASH, GlassCutSlashParticle.Factory::new);
 
+        // Crimson Katana
         ParticleFactoryRegistry.getInstance().register(CRIMSON_SPARK, CrimsonSparkParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(CRIMSON_SPARK_GLOW, CrimsonSparkGlowParticle.Factory::new);
 
+        // Toy Bow
         ParticleFactoryRegistry.getInstance().register(CONFETTI, ConfettiParticle.Factory::new);
 
+        // Sword of Dying Star
         ParticleFactoryRegistry.getInstance().register(WHITE_LINE, LineParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(DARK_LINE, LineParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ENTROPY, EntropyParticle.Factory::new);
