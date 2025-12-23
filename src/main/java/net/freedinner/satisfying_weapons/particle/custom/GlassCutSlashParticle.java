@@ -1,8 +1,5 @@
 package net.freedinner.satisfying_weapons.particle.custom;
 
-import net.freedinner.satisfying_weapons.util.MathUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
@@ -43,23 +40,6 @@ public class GlassCutSlashParticle extends SpriteBillboardParticle {
         super.tick();
 
         this.setSpriteForAge(this.spriteProvider);
-
-        if (this.isInvisible()) {
-            this.setAlpha(0f);
-        } else {
-            this.setAlpha(1f);
-        }
-    }
-
-    private boolean isInvisible() {
-        // Copied from vanilla SpellParticle class
-        // Hide particles if looking through a spyglass
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
-        return clientPlayerEntity != null
-                && clientPlayerEntity.getEyePos().squaredDistanceTo(this.x, this.y, this.z) <= 9.0
-                && minecraftClient.options.getPerspective().isFirstPerson()
-                && clientPlayerEntity.isUsingSpyglass();
     }
 
     public static class Factory implements ParticleFactory<DefaultParticleType> {
