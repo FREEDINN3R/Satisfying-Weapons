@@ -20,7 +20,7 @@ public class GlassCutSlashParticle extends SpriteBillboardParticle {
         this.velocityX = 0;
         this.velocityY = 0;
         this.velocityZ = 0;
-        this.scale = 0.3f;
+        this.scale = 0.6f;
 
         this.spriteProvider = spriteProvider;
         this.setSpriteForAge(spriteProvider);
