@@ -1,6 +1,13 @@
 package net.freedinner.satisfying_weapons.particle.custom;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.freedinner.satisfying_weapons.particle.ParticleSheetRenderOnTop;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 
@@ -27,7 +34,7 @@ public class GlassCutSlashParticle extends SpriteBillboardParticle {
 
     @Override
     public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+        return ParticleSheetRenderOnTop.INSTANCE;
     }
 
     @Override
