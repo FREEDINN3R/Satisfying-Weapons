@@ -36,11 +36,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class BlackHoleEntity extends ThrownItemEntity {
     private static final TrackedData<Integer> ACTIVE_AGE = DataTracker.registerData(BlackHoleEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -48,8 +45,8 @@ public class BlackHoleEntity extends ThrownItemEntity {
     // Stats
     public static final float BASE_SPEED = 2.5f;
     public static final double THROW_RANGE = 14;
-    public static final double EFFECT_RANGE = 16;
-    public static final double EFFECT_RANGE_SQR = (int) Math.pow(EFFECT_RANGE, 2);
+    public static final double PULL_RANGE = 16;
+    public static final double PULL_RANGE_SQR = (int) Math.pow(PULL_RANGE, 2);
 
     // Timings
     public static final int MAX_ACTIVE_AGE = 26; // effectively 1.5 s, not sure why it's not 30
@@ -196,12 +193,12 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
     private void attractEntities() {
         Vec3d pos = this.getPos();
-        Box box = new Box(pos, pos).expand(EFFECT_RANGE);
+        Box box = new Box(pos, pos).expand(PULL_RANGE);
 
         List<Entity> affectedEntities = this.getWorld().getOtherEntities(this, box)
                 .stream()
                 .filter(e -> e != this.getOwner())
-                .filter(e -> e.squaredDistanceTo(pos) <= EFFECT_RANGE_SQR) // Cuz it's a sphere, not a cube
+                .filter(e -> e.squaredDistanceTo(pos) <= PULL_RANGE_SQR) // Cuz it's a sphere, not a cube
                 .filter(e -> !ModConfigs.BLACK_HOLE_IGNORED_ENTITIES.contains(Registries.ENTITY_TYPE.getId(e.getType()).toString()))
                 .filter(e -> !this.shouldIgnorePet(e)) // As dictated by config
                 .filter(e -> !(e instanceof BlackHoleEntity otherBlackHole) || this.shouldCollapseWith(otherBlackHole)) // Ignore BHs not legible for collapse
@@ -221,7 +218,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
             // Increase pull force for BHs from the same user
             if (entity instanceof BlackHoleEntity otherBlackHole && this.shouldCollapseWith(otherBlackHole)) {
-                pullForce *= Math.sqrt(EFFECT_RANGE) / distance;
+                pullForce *= Math.sqrt(PULL_RANGE) / distance;
 
                 // Collapse two BHs if they are too close
                 // Extra checks so that only one explosion is produced
@@ -344,7 +341,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
     private boolean shouldCollapseWith(BlackHoleEntity otherBlackHole) {
         return otherBlackHole.getOwner() == this.getOwner()
                 && this.getOwner() != null
-                && otherBlackHole.squaredDistanceTo(this.getPos()) < EFFECT_RANGE; // Not square, because BHs collapse only if very close
+                && otherBlackHole.squaredDistanceTo(this.getPos()) < PULL_RANGE; // Not square, because BHs collapse only if very close
     }
 
     private void produceExplosion(BlackHoleEntity otherBlackHole) {
@@ -367,36 +364,33 @@ public class BlackHoleEntity extends ThrownItemEntity {
     }
 
     private void sendPullParticlesPacket() {
-        Vector3f center = this.getPos().toVector3f();
+        World world = this.getWorld();
+        Vec3d centerPos = this.getPos();
+        int range = (int) PULL_RANGE;
 
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(center);
-        buf.writeDouble(EFFECT_RANGE);
+        buf.writeVector3f(centerPos.toVector3f());
+        buf.writeDouble(PULL_RANGE);
 
-        // List of center pos, and edge pos in each cardinal direction
-        List<BlockPos> blockPosList = new ArrayList<>();
-        blockPosList.add(PosUtils.toBlockPos(center));
-        blockPosList.add(blockPosList.get(0).north((int) EFFECT_RANGE));
-        blockPosList.add(blockPosList.get(0).south((int) EFFECT_RANGE));
-        blockPosList.add(blockPosList.get(0).west((int) EFFECT_RANGE));
-        blockPosList.add(blockPosList.get(0).east((int) EFFECT_RANGE));
-        blockPosList.add(blockPosList.get(0).down((int) EFFECT_RANGE));
-        blockPosList.add(blockPosList.get(0).up((int) EFFECT_RANGE));
-
-        ServerWorld world = (ServerWorld) this.getWorld();
-        Collection<ServerPlayerEntity> trackingPlayers = new ArrayList<>();
+        // List of center and edge positions to be used for tracking
+        BlockPos origin = PosUtils.toBlockPos(centerPos);
+        List<BlockPos> trackingPosList = List.of(
+                origin,
+                origin.north(range),
+                origin.south(range),
+                origin.west(range),
+                origin.east(range),
+                origin.down(range),
+                origin.up(range)
+        );
 
         // All players who are tracking at least one pos
-        for (BlockPos blockPos : blockPosList) {
-            trackingPlayers.addAll(PlayerLookup.tracking(world, blockPos));
+        Set<ServerPlayerEntity> trackingPlayers = new HashSet<>();
+        for (BlockPos blockPos : trackingPosList) {
+            trackingPlayers.addAll(PosUtils.getPlayersTracking(blockPos, world));
         }
 
-        // Remove duplicates
-        trackingPlayers = trackingPlayers.stream()
-                .distinct()
-                .toList();
-
-        // Send particle packet
+        // Sending the packet here
         for (ServerPlayerEntity player : trackingPlayers) {
             ServerPlayNetworking.send(player, ModNetworking.BLACK_HOLE_PULL_PARTICLES_ID, buf);
         }

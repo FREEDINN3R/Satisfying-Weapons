@@ -53,4 +53,12 @@ public class PosUtils {
 
         return PlayerLookup.tracking(serverWorld, PosUtils.toBlockPos(pos));
     }
+
+    public static Collection<ServerPlayerEntity> getPlayersTracking(BlockPos blockPos, World world) {
+        if (!(world instanceof ServerWorld serverWorld)) {
+            return List.of();
+        }
+
+        return PlayerLookup.tracking(serverWorld, blockPos);
+    }
 }
