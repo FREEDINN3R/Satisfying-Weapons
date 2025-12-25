@@ -20,7 +20,7 @@ public class GlassCutDamageParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
         Vec3d targetPos = new Vec3d(buf.readVector3f());
         float targetHeight = buf.readFloat();
-        Vec3d particlePos = targetPos.add(0, targetHeight * MathUtils.randomNumber(0.4, 0.9), 0);
+        Vec3d particlePos = targetPos.add(0, targetHeight * MathUtils.randomNumber(0.3, 0.8), 0);
         boolean shouldSlash = buf.readBoolean();
 
         client.execute(() -> {
