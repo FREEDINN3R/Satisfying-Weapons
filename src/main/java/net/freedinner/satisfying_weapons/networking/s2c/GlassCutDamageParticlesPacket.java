@@ -19,7 +19,8 @@ import org.joml.Vector3f;
 public class GlassCutDamageParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
         Vec3d targetPos = new Vec3d(buf.readVector3f());
-        Vec3d slashPos = new Vec3d(buf.readVector3f());
+        float targetHeight = buf.readFloat();
+        Vec3d particlePos = targetPos.add(0, targetHeight * MathUtils.randomNumber(0.4, 0.9), 0);
         boolean shouldSlash = buf.readBoolean();
 
         client.execute(() -> {
@@ -31,18 +32,18 @@ public class GlassCutDamageParticlesPacket {
 
             // Blood splatter
 
-            for (int i = 0; i < 10; i++) {
-                Vec3d v = MathUtils.randomPointInSphere().multiply(1, 0.3, 1);
-                v = v.normalize().multiply(MathUtils.randomNumber(0.1, 0.25));
+            for (int i = 0; i < 15; i++) {
+                Vec3d dir = MathUtils.randomPointInSphere().multiply(1, 0.3, 1).normalize();
+                Vec3d v = dir.multiply(MathUtils.randomNumber(0.1, 0.35));
 
-                world.addParticle(ModParticles.BLOOD, targetPos.x, targetPos.y, targetPos.z, v.x, v.y, v.z);
+                world.addParticle(ModParticles.BLOOD, particlePos.x, particlePos.y, particlePos.z, v.x, v.y, v.z);
             }
 
             // Slash particle
 
             if (shouldSlash) {
                 DefaultParticleType slashParticle = MathUtils.getRandomElement(ModParticles.GLASS_CUT_SLASH);
-                world.addParticle(slashParticle, slashPos.x, slashPos.y, slashPos.z, 0, 0, 0);
+                world.addParticle(slashParticle, particlePos.x, particlePos.y, particlePos.z, 0, 0, 0);
             }
         });
     }

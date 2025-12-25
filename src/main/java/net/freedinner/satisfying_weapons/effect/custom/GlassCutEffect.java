@@ -93,24 +93,15 @@ public class GlassCutEffect extends StatusEffect {
     }
 
     private static void sendDamageParticlesPacket(LivingEntity target) {
-        Vec3d bloodPos = target.getPos().add(0, 0.5 * target.getHeight(), 0);
-
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(bloodPos.toVector3f());
+        buf.writeVector3f(target.getPos().toVector3f());
+        buf.writeFloat(target.getHeight());
 
         for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)target.getWorld(), target.getBlockPos())) {
             PacketByteBuf bufCopy = PacketByteBufs.copy(buf);
 
             // Produce slash particle only if the player isn't the target of the slash
-            if (!player.equals(target)) {
-                Vec3d slashPos = MathUtils.getViewHitboxIntersection(target, player);
-                bufCopy.writeVector3f(slashPos.toVector3f());
-                bufCopy.writeBoolean(true);
-            }
-            else {
-                bufCopy.writeVector3f(new Vector3f());
-                bufCopy.writeBoolean(false);
-            }
+            bufCopy.writeBoolean(!player.equals(target));
 
             ServerPlayNetworking.send(player, ModNetworking.GLASS_CUT_DAMAGE_PARTICLES_ID, bufCopy);
         }
