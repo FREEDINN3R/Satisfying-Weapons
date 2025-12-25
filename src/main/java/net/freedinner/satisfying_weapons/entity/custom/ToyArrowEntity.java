@@ -4,7 +4,7 @@ import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.NbtUtils;
-import net.freedinner.satisfying_weapons.util.PitchUtils;
+import net.freedinner.satisfying_weapons.util.SoundUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -147,7 +147,7 @@ public class ToyArrowEntity extends PersistentProjectileEntity {
         }
 
         // Visuals & SFX
-        target.getWorld().playSound(null, target.getBlockPos(), ModSounds.PARTY_HORN, SoundCategory.PLAYERS, 2.0f, PitchUtils.get());
+        target.getWorld().playSound(null, target.getBlockPos(), ModSounds.PARTY_HORN, SoundCategory.PLAYERS, 2.0f, SoundUtils.getPitch());
         target.getWorld().playSound(null, target.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.5f, 1.0f);
     }
 

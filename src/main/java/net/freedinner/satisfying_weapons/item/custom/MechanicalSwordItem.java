@@ -8,7 +8,7 @@ import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.mixin.LivingEntityAccessor;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
-import net.freedinner.satisfying_weapons.util.PitchUtils;
+import net.freedinner.satisfying_weapons.util.SoundUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +35,7 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        target.getWorld().playSound(null, target.getBlockPos(), ModSounds.METALLIC_THUD, SoundCategory.PLAYERS, 0.8f, PitchUtils.get());
+        target.getWorld().playSound(null, target.getBlockPos(), ModSounds.METALLIC_THUD, SoundCategory.PLAYERS, 0.8f, SoundUtils.getPitch());
         return super.postHit(stack, target, attacker);
     }
 
@@ -93,7 +93,7 @@ public class MechanicalSwordItem extends UpgradeableSwordItem {
         // Durability cost
         stack.damage(chargeLevel, player, p -> p.sendToolBreakStatus(user.getActiveHand()));
 
-        world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.PLAYERS, 0.6f, PitchUtils.get());
+        world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.PLAYERS, 0.6f, SoundUtils.getPitch());
     }
 
     public void updateChargeLevel(PlayerEntity player, boolean bonusCharge) {

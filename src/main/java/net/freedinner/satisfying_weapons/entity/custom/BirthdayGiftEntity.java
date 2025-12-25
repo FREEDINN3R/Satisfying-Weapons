@@ -11,7 +11,7 @@ import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.entity.misc.NonDestructiveExplosionBehavior;
 import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.freedinner.satisfying_weapons.util.NbtUtils;
-import net.freedinner.satisfying_weapons.util.PitchUtils;
+import net.freedinner.satisfying_weapons.util.SoundUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -215,7 +215,7 @@ public class BirthdayGiftEntity extends Entity {
                     }
 
                     // Visuals & SFX
-                    this.getWorld().playSound(null, this.getBlockPos(), ModSounds.BIRTHDAY_GIFT_EXPLOSION, SoundCategory.BLOCKS, 3.0f, PitchUtils.get());
+                    this.getWorld().playSound(null, this.getBlockPos(), ModSounds.BIRTHDAY_GIFT_EXPLOSION, SoundCategory.BLOCKS, 3.0f, SoundUtils.getPitch());
                     sendExplosionParticlesPacket();
 
                     this.remove(RemovalReason.DISCARDED);

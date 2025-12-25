@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.List;
 
 public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterDamage {
@@ -44,7 +43,7 @@ public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterD
 
         int count = (katanaItem.getLevel() >= 4) ? 2 : 1;
         for (int i = 0; i < count; i++) {
-            chosenDots.add(MathUtils.getRandomElement(possibleDots, true));
+            chosenDots.add(MathUtils.randomElementFrom(possibleDots, true));
         }
 
         ((ILivingEntityDataSaver) entity).sw$scheduleDots(chosenDots);

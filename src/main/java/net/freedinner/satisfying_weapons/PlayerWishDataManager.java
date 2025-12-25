@@ -8,8 +8,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootDataType;
 import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
@@ -19,7 +17,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
@@ -28,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class PlayerWishDataManager extends PersistentState {
     @Nullable
@@ -171,7 +167,7 @@ public class PlayerWishDataManager extends PersistentState {
         SatisfyingWeapons.LOGGER.info("Generating loot from: " + randomChestId);
         ObjectArrayList<ItemStack> items = lootTable.generateLoot(parameters);
 
-        return MathUtils.getRandomElement(items);
+        return MathUtils.randomElementFrom(items);
     }
 
     public static void loadChestLootTables(MinecraftServer server) {

@@ -10,10 +10,9 @@ import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
-import net.freedinner.satisfying_weapons.util.NbtUtils;
 import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
-import net.freedinner.satisfying_weapons.util.PitchUtils;
+import net.freedinner.satisfying_weapons.util.SoundUtils;
 import net.freedinner.satisfying_weapons.util.PosUtils;
 import net.minecraft.block.StainedGlassPaneBlock;
 import net.minecraft.entity.Entity;
@@ -33,7 +32,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -176,7 +174,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
             swordHolder.addStatusEffect(new StatusEffectInstance(ModEffects.BROKEN_SOUL, 240, 0, false, false, true));
             ((ILivingEntityDataSaver) swordHolder).sw$setBrokenSoulSwordLevel(swordLevel); // Saving lvl to apply GC properly
 
-            swordHolder.getWorld().playSound(null, swordHolder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get() + 0.3f);
+            swordHolder.getWorld().playSound(null, swordHolder.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, SoundUtils.getPitch() + 0.3f);
         }
 
         return true;
@@ -198,7 +196,7 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
             addGlassCutStack(affectedEntity, 1800, swordLevel);
         }
 
-        entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, PitchUtils.get());
+        entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1.0f, SoundUtils.getPitch());
         sendShatterParticlesPacket(entity);
     }
 

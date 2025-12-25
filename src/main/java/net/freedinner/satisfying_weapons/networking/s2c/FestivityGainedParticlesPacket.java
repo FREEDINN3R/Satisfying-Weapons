@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons.networking.s2c;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.freedinner.satisfying_weapons.particle.ModParticles;
 import net.freedinner.satisfying_weapons.util.MathUtils;
+import net.freedinner.satisfying_weapons.util.ParticleUtils;
 import net.freedinner.satisfying_weapons.util.PosUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -39,7 +40,7 @@ public class FestivityGainedParticlesPacket {
                 double dy = 0.3 + 0.6 * MathUtils.randomNumber(height);
                 double dz = 0.5 * (width / 2 - MathUtils.randomNumber(width));
 
-                Vec3d v = MathUtils.randomPointInSphere().multiply(1, 0, 1).normalize().multiply(MathUtils.randomNumber(0.06, 0.1));
+                Vec3d v = ParticleUtils.randomPointInSphere().multiply(1, 0, 1).normalize().multiply(MathUtils.randomNumber(0.06, 0.1));
 
                 // If 3/6/9 Festivity stacks, add flame particles
                 ParticleEffect particle = (festivityStacks % 3 == 0 && i < flameCount) ? ParticleTypes.FLAME : ParticleTypes.SMOKE;

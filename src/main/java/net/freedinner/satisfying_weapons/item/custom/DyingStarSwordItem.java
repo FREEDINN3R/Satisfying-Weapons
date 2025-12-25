@@ -4,7 +4,7 @@ import net.freedinner.satisfying_weapons.entity.custom.BlackHoleEntity;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
-import net.freedinner.satisfying_weapons.util.PitchUtils;
+import net.freedinner.satisfying_weapons.util.SoundUtils;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -25,7 +25,7 @@ public class DyingStarSwordItem extends UpgradeableSwordItem {
         ItemStack itemStack = user.getStackInHand(hand);
 
         user.getWorld().playSound(null, user.getBlockPos(), ModSounds.BLACK_HOLE_THROWN, SoundCategory.MASTER,
-                0.8f, PitchUtils.get());
+                0.8f, SoundUtils.getPitch());
 
         if (!world.isClient) {
             boolean shouldCollectLoot = this.getLevel() >= 2 && user.isSneaking();

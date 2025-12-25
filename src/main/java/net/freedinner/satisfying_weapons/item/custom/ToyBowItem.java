@@ -3,9 +3,7 @@ package net.freedinner.satisfying_weapons.item.custom;
 import net.freedinner.satisfying_weapons.entity.custom.ToyArrowEntity;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.util.MathUtils;
-import net.freedinner.satisfying_weapons.util.PitchUtils;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
+import net.freedinner.satisfying_weapons.util.SoundUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
@@ -15,12 +13,8 @@ import net.minecraft.item.*;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class ToyBowItem extends UpgradeableBowItem {
     public ToyBowItem(ModToolMaterial toolMaterial, Settings settings, int level, @Nullable UpgradeableBowItem nextLevelWeapon) {
@@ -107,7 +101,7 @@ public class ToyBowItem extends UpgradeableBowItem {
         }
 
         // Arrow shoot sound
-        float pitch = PitchUtils.get() - 0.3f + pullProgress * 0.5f;
+        float pitch = SoundUtils.getPitch() - 0.3f + pullProgress * 0.5f;
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0f, pitch);
 
         // Arrow used stat

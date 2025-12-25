@@ -118,7 +118,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
                 // Visuals & SFX
                 sendPullParticlesPacket();
-                this.getWorld().playSound(null, this.getBlockPos(), ModSounds.BLACK_HOLE_ACTIVE, SoundCategory.MASTER, 1.6f, PitchUtils.get());
+                this.getWorld().playSound(null, this.getBlockPos(), ModSounds.BLACK_HOLE_ACTIVE, SoundCategory.MASTER, 1.6f, SoundUtils.getPitch());
             }
 
             // If finished shrinking
@@ -359,7 +359,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
 
         this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new NonDestructiveExplosionBehavior(), this.getPos(), 6, false, World.ExplosionSourceType.MOB);
 
-        this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_HURT, SoundCategory.MASTER, 1.8f, PitchUtils.get() - 0.2f);
+        this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_HURT, SoundCategory.MASTER, 1.8f, SoundUtils.getPitch() - 0.2f);
         this.sendExplosionParticlesPacket();
 
         otherBlackHole.remove(RemovalReason.DISCARDED);
@@ -403,12 +403,10 @@ public class BlackHoleEntity extends ThrownItemEntity {
     }
 
     private void sendExplosionParticlesPacket() {
-        Vec3d pos = this.getPos();
-
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(pos.toVector3f());
+        buf.writeVector3f(this.getPos().toVector3f());
 
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) this.getWorld(), PosUtils.toBlockPos(pos))) {
+        for (ServerPlayerEntity player : PosUtils.getPlayersTracking(this.getPos(), this.getWorld())) {
             ServerPlayNetworking.send(player, ModNetworking.BLACK_HOLE_EXPLOSION_PARTICLES_ID, buf);
         }
     }

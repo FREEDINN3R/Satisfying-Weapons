@@ -8,7 +8,8 @@ import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.datagen.ModTags;
 import net.freedinner.satisfying_weapons.item.ModItems;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
-import net.freedinner.satisfying_weapons.util.PitchUtils;
+import net.freedinner.satisfying_weapons.util.SoundUtils;
+import net.freedinner.satisfying_weapons.util.PosUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -21,9 +22,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.joml.Vector3f;
 
 public class WishingStarItem extends Item {
     public WishingStarItem(Settings settings) {
@@ -64,7 +63,7 @@ public class WishingStarItem extends Item {
             case 10:
             case 20:
             case 30:
-                world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 0.6f, PitchUtils.get(0.05f));
+                world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 0.6f, SoundUtils.getPitch(0.05f));
         }
     }
 
@@ -75,14 +74,14 @@ public class WishingStarItem extends Item {
         }
 
         // Roll an item / weapon
-        SatisfyingWeapons.LOGGER.info("Rolling a wish drop for " + serverPlayer.getName().getContent().toString());
+        SatisfyingWeapons.LOGGER.info("Rolling a wish drop for " + serverPlayer.getName().getString());
         ItemStack rolledStack = PlayerWishDataManager.rollForPlayer(serverPlayer);
 
         // Prevents accidentally using the new item
         serverPlayer.getItemCooldownManager().set(rolledStack.getItem(), 15);
 
         // Visuals & SFX
-        this.sendParticlesPacket(world, user.getEyePos().toVector3f(), rolledStack.isIn(ModTags.ALL_MOD_WEAPONS));
+        this.sendParticlesPacket(user, rolledStack.isIn(ModTags.ALL_MOD_WEAPONS));
         if (rolledStack.isIn(ModTags.ALL_MOD_WEAPONS) || rolledStack.isOf(ModItems.NAVIA)){
             world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 1f, 1f);
         }
@@ -93,14 +92,13 @@ public class WishingStarItem extends Item {
         return rolledStack;
     }
 
-    private void sendParticlesPacket(World world, Vector3f pos, boolean hasRolledWeapon) {
+    private void sendParticlesPacket(LivingEntity entity, boolean hasRolledWeapon) {
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(pos);
+
+        buf.writeVector3f(PosUtils.getEntityCenter(entity).toVector3f());
         buf.writeBoolean(hasRolledWeapon);
 
-        BlockPos blockPos = new BlockPos(Math.round(pos.x), Math.round(pos.y), Math.round(pos.z));
-
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) world, blockPos)) {
+        for (ServerPlayerEntity player : PosUtils.getPlayersTracking(entity)) {
             ServerPlayNetworking.send(player, ModNetworking.WISHING_STAR_PARTICLES_ID, buf);
         }
     }

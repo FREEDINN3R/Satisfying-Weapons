@@ -3,18 +3,12 @@ package net.freedinner.satisfying_weapons.networking.s2c;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.freedinner.satisfying_weapons.particle.ModParticles;
 import net.freedinner.satisfying_weapons.util.MathUtils;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.particle.ItemStackParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.joml.Vector3f;
 
 public class GlassCutDamageParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
@@ -42,7 +36,7 @@ public class GlassCutDamageParticlesPacket {
             // Slash particle
 
             if (shouldSlash) {
-                DefaultParticleType slashParticle = MathUtils.getRandomElement(ModParticles.GLASS_CUT_SLASH);
+                DefaultParticleType slashParticle = MathUtils.randomElementFrom(ModParticles.GLASS_CUT_SLASH);
                 world.addParticle(slashParticle, particlePos.x, particlePos.y, particlePos.z, 0, 0, 0);
             }
         });
