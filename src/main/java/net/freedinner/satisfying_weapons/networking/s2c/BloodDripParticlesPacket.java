@@ -6,8 +6,6 @@ import net.freedinner.satisfying_weapons.util.MathUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -23,9 +21,10 @@ public class BloodDripParticlesPacket {
                 return;
             }
 
-            Vec3d v = particlePos.subtract(entityPos);
-            v = v.multiply(1, 0, 1).normalize();
-            v = v.multiply(MathUtils.randomNumber(0.05, 0.08));
+            Vec3d v = particlePos.subtract(entityPos)
+                    .multiply(1, 0, 1)
+                    .normalize()
+                    .multiply(MathUtils.randomNumber(0.06, 0.1));
 
             world.addParticle(ModParticles.BLOOD, particlePos.x, particlePos.y, particlePos.z, v.x, v.y, v.z);
         });

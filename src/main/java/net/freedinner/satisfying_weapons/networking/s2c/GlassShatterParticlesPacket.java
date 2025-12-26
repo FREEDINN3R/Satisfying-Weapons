@@ -2,6 +2,7 @@ package net.freedinner.satisfying_weapons.networking.s2c;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.freedinner.satisfying_weapons.util.MathUtils;
+import net.freedinner.satisfying_weapons.util.ParticleUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -16,7 +17,7 @@ import org.joml.Vector3f;
 
 public class GlassShatterParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
-        Vector3f particlesPos = buf.readVector3f();
+        Vector3f particlePos = buf.readVector3f();
         ParticleEffect particle = new ItemStackParticleEffect(ParticleTypes.ITEM, new ItemStack(Blocks.GLASS));
 
         client.execute(() -> {
@@ -27,14 +28,12 @@ public class GlassShatterParticlesPacket {
             }
 
             for (int i = 0; i < 60; i++) {
-                double x = particlesPos.x + MathUtils.randomNumber(0.5) - 0.25;
-                double y = particlesPos.y;
-                double z = particlesPos.z + MathUtils.randomNumber(0.5) - 0.25;
+                double dx = MathUtils.randomNumber(-0.25, 0.25);
+                double dz = MathUtils.randomNumber(-0.25, 0.25);
 
-                Vec3d v = MathUtils.randomPointInSphere();
-                v = v.normalize().multiply(MathUtils.randomNumber(0.3, 0.5));
+                Vec3d v = ParticleUtils.randomDirVelocity(0.3, 0.5);
 
-                world.addParticle(particle, x, y, z, v.x, Math.abs(v.y) * 0.5, v.z);
+                world.addParticle(particle, particlePos.x + dx, particlePos.y, particlePos.z + dz, v.x, v.y * 0.5, v.z);
             }
         });
     }

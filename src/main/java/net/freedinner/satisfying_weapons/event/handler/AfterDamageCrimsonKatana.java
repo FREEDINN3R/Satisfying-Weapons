@@ -7,6 +7,7 @@ import net.freedinner.satisfying_weapons.event.custom.CustomLivingEntityEvents;
 import net.freedinner.satisfying_weapons.item.custom.CrimsonKatanaItem;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.util.MathUtils;
+import net.freedinner.satisfying_weapons.util.PosUtils;
 import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -81,9 +82,9 @@ public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterD
     private static void sendParticlesPacket(LivingEntity entity, List<CrimsonKatanaItem.DoT> inflictedDots) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeEnumSet(EnumSet.copyOf(inflictedDots), CrimsonKatanaItem.DoT.class);
-        buf.writeVector3f(entity.getPos().add(0, entity.getHeight() / 2, 0).toVector3f());
+        buf.writeVector3f(PosUtils.getEntityCenter(entity).toVector3f());
 
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
+        for (ServerPlayerEntity player : PosUtils.getPlayersTracking(entity)) {
             PacketByteBuf bufCopy = PacketByteBufs.copy(buf);
             bufCopy.writeVector3f(player.getEyePos().toVector3f());
 

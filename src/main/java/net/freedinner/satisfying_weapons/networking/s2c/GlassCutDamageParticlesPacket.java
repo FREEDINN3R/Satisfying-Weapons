@@ -3,6 +3,7 @@ package net.freedinner.satisfying_weapons.networking.s2c;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.freedinner.satisfying_weapons.particle.ModParticles;
 import net.freedinner.satisfying_weapons.util.MathUtils;
+import net.freedinner.satisfying_weapons.util.ParticleUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
@@ -12,9 +13,7 @@ import net.minecraft.world.World;
 
 public class GlassCutDamageParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
-        Vec3d targetPos = new Vec3d(buf.readVector3f());
-        float targetHeight = buf.readFloat();
-        Vec3d particlePos = targetPos.add(0, targetHeight * MathUtils.randomNumber(0.3, 0.8), 0);
+        Vec3d particlePos = new Vec3d(buf.readVector3f());
         boolean shouldSlash = buf.readBoolean();
 
         client.execute(() -> {
@@ -27,7 +26,7 @@ public class GlassCutDamageParticlesPacket {
             // Blood splatter
 
             for (int i = 0; i < 15; i++) {
-                Vec3d dir = MathUtils.randomPointInSphere().multiply(1, 0.3, 1).normalize();
+                Vec3d dir = ParticleUtils.randomPointInSphere().multiply(1, 0.3, 1).normalize();
                 Vec3d v = dir.multiply(MathUtils.randomNumber(0.1, 0.35));
 
                 world.addParticle(ModParticles.BLOOD, particlePos.x, particlePos.y, particlePos.z, v.x, v.y, v.z);

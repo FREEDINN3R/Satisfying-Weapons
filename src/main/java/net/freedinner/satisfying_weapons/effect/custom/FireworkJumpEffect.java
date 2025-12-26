@@ -1,18 +1,21 @@
 package net.freedinner.satisfying_weapons.effect.custom;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
-import net.freedinner.satisfying_weapons.util.data.IPlayerDataSaver;
+import net.freedinner.satisfying_weapons.util.PosUtils;
 import net.freedinner.satisfying_weapons.util.SoundUtils;
+import net.freedinner.satisfying_weapons.util.data.IPlayerDataSaver;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.*;
+import net.minecraft.entity.attribute.AttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffects;
@@ -21,11 +24,9 @@ import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import virtuoel.pehkui.api.ScaleData;
@@ -229,29 +230,27 @@ public class FireworkJumpEffect extends StatusEffect {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVector3f(entity.getPos().toVector3f());
 
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
+        for (ServerPlayerEntity player : PosUtils.getPlayersTracking(entity)) {
             ServerPlayNetworking.send(player, ModNetworking.FIREWORK_JUMP_PARTICLES_ID, buf);
         }
     }
 
-    private void sendTrailParticlesPacket(LivingEntity entity, double yv) {
+    private void sendTrailParticlesPacket(LivingEntity entity, double yVelocity) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVector3f(entity.getPos().toVector3f());
-        buf.writeDouble(yv);
+        buf.writeDouble(yVelocity);
 
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
+        for (ServerPlayerEntity player : PosUtils.getPlayersTracking(entity)) {
             ServerPlayNetworking.send(player, ModNetworking.FIREWORK_TRAIL_PARTICLES_ID, buf);
         }
     }
 
     private void sendPlungeParticlesPacket(LivingEntity entity) {
-        BlockPos particlesPos = entity.getBlockPos();
-
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVector3f(entity.getPos().toVector3f());
-        buf.writeBlockPos(particlesPos.down());
+        buf.writeBlockPos(entity.getBlockPos().down());
 
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), particlesPos)) {
+        for (ServerPlayerEntity player : PosUtils.getPlayersTracking(entity)) {
             ServerPlayNetworking.send(player, ModNetworking.PLUNGE_ATTACK_PARTICLES_ID, buf);
         }
     }

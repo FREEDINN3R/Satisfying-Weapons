@@ -1,7 +1,6 @@
 package net.freedinner.satisfying_weapons.networking.s2c;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.mixin.LivingEntityAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;

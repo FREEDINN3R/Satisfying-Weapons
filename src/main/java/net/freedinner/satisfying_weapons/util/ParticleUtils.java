@@ -23,6 +23,10 @@ public class ParticleUtils {
         return randomPointInSphere().normalize();
     }
 
+    public static Vec3d randomFlatDirection() {
+        return randomPointInSphere().multiply(1, 0, 1).normalize();
+    }
+
     public static Vec3d randomDirVelocity(double min, double max) {
         return randomDirection().multiply(MathUtils.randomNumber(min, max));
     }

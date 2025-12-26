@@ -1,5 +1,6 @@
 package net.freedinner.satisfying_weapons.particle.custom;
 
+import net.freedinner.satisfying_weapons.particle.ParticleSheetRenderOnTop;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
@@ -27,7 +28,7 @@ public class FestivityCountParticle extends SpriteBillboardParticle {
 
     @Override
     public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+        return ParticleSheetRenderOnTop.INSTANCE;
     }
 
     @Override

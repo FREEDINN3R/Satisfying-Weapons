@@ -5,13 +5,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 public class FireworkJumpParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
-        Vector3f pos = buf.readVector3f();
+        Vector3f playerPos = buf.readVector3f();
 
         client.execute(() -> {
             World world = client.world;
@@ -26,8 +26,8 @@ public class FireworkJumpParticlesPacket {
             for (int i = 0; i < count; i++) {
                 double angle = Math.toRadians(360.0 / count * i);
 
-                Vector3d v = new Vector3d(Math.cos(angle), 0, Math.sin(angle)).normalize().mul(0.4);
-                world.addParticle(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, v.x, v.y, v.z);
+                Vec3d v = new Vec3d(Math.cos(angle), 0, Math.sin(angle)).normalize().multiply(0.4);
+                world.addParticle(ParticleTypes.END_ROD, playerPos.x, playerPos.y, playerPos.z, v.x, v.y, v.z);
             }
         });
     }

@@ -1,16 +1,16 @@
 package net.freedinner.satisfying_weapons.effect.custom;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
-import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
+import net.freedinner.satisfying_weapons.util.PosUtils;
 import net.freedinner.satisfying_weapons.util.SoundUtils;
+import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
@@ -18,7 +18,6 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 
@@ -78,7 +77,7 @@ public class GlassCutEffect extends StatusEffect {
 
     private static void sendBloodDripParticlesPacket(LivingEntity entity) {
         double posX = entity.getParticleX(0.1);
-        double posY = entity.getBodyY(0.4 + MathUtils.randomNumber(0.4));
+        double posY = entity.getBodyY(MathUtils.randomNumber(0.4, 0.8));
         double posZ = entity.getParticleZ(0.1);
         Vec3d particlePos = new Vec3d(posX, posY, posZ);
 
@@ -86,21 +85,18 @@ public class GlassCutEffect extends StatusEffect {
         buf.writeVector3f(particlePos.toVector3f());
         buf.writeVector3f(entity.getPos().toVector3f());
 
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {
+        for (ServerPlayerEntity player : PosUtils.getPlayersTracking(entity)) {
             ServerPlayNetworking.send(player, ModNetworking.BLOOD_DRIP_PARTICLES_ID, buf);
         }
     }
 
     private static void sendDamageParticlesPacket(LivingEntity target) {
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(target.getPos().toVector3f());
-        buf.writeFloat(target.getHeight());
+        buf.writeVector3f(target.getPos().add(0, target.getHeight() * MathUtils.randomNumber(0.3, 0.8), 0).toVector3f());
 
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)target.getWorld(), target.getBlockPos())) {
+        for (ServerPlayerEntity player : PosUtils.getPlayersTracking(target)) {
             PacketByteBuf bufCopy = PacketByteBufs.copy(buf);
-
-            // Produce slash particle only if the player isn't the target of the slash
-            bufCopy.writeBoolean(!player.equals(target));
+            bufCopy.writeBoolean(!player.equals(target)); // Don't produce slash for the viewer
 
             ServerPlayNetworking.send(player, ModNetworking.GLASS_CUT_DAMAGE_PARTICLES_ID, bufCopy);
         }

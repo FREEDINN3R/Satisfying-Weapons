@@ -4,16 +4,15 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.item.v1.FabricItem;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
-import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.freedinner.satisfying_weapons.util.MathUtils;
-import net.freedinner.satisfying_weapons.util.SoundUtils;
 import net.freedinner.satisfying_weapons.util.PosUtils;
+import net.freedinner.satisfying_weapons.util.SoundUtils;
+import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.minecraft.block.StainedGlassPaneBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -29,16 +28,13 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -274,16 +270,11 @@ public class GlassSwordItem extends UpgradeableSwordItem implements FabricItem {
         return stack.isOf(Items.GLASS_PANE) ||(stack.getItem() instanceof BlockItem blockMaterial && blockMaterial.getBlock() instanceof StainedGlassPaneBlock);
     }
 
-    private static void sendShatterParticlesPacket(LivingEntity attacker) {
-        Vector3f particlePos = attacker.getPos().toVector3f();
-        particlePos.add(0, attacker.getHeight() * 0.3f, 0);
-
+    private static void sendShatterParticlesPacket(LivingEntity entity) {
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(particlePos);
+        buf.writeVector3f(PosUtils.getEntityCenter(entity).toVector3f());
 
-        BlockPos blockPos = PosUtils.toBlockPos(attacker.getPos());
-
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)attacker.getWorld(), blockPos)) {
+        for (ServerPlayerEntity player : PosUtils.getPlayersTracking(entity)) {
             ServerPlayNetworking.send(player, ModNetworking.GLASS_SHATTER_PARTICLES_ID, buf);
         }
     }

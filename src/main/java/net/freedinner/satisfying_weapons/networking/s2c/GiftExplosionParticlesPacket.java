@@ -2,7 +2,7 @@ package net.freedinner.satisfying_weapons.networking.s2c;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.freedinner.satisfying_weapons.particle.ModParticles;
-import net.freedinner.satisfying_weapons.util.MathUtils;
+import net.freedinner.satisfying_weapons.util.ParticleUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class GiftExplosionParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
-        Vec3d pos = new Vec3d(buf.readVector3f());
+        Vec3d giftPos = new Vec3d(buf.readVector3f());
 
         ParticleEffect whiteWoolParticle = new ItemStackParticleEffect(ParticleTypes.ITEM, new ItemStack(Blocks.WHITE_WOOL));
         ParticleEffect redWoolParticle = new ItemStackParticleEffect(ParticleTypes.ITEM, new ItemStack(Blocks.RED_WOOL));
@@ -30,21 +30,20 @@ public class GiftExplosionParticlesPacket {
 
             // Flash
 
-            world.addParticle(ParticleTypes.FLASH, pos.x, pos.y, pos.z, 0, 0, 0);
+            world.addParticle(ParticleTypes.FLASH, giftPos.x, giftPos.y, giftPos.z, 0, 0, 0);
 
             // Confetti
 
             for (int i = 0; i < 250; i++) {
-                Vec3d v = MathUtils.randomPointInSphere().normalize().multiply(MathUtils.randomNumber(0.4, 1.2));
-                world.addParticle(ModParticles.CONFETTI, pos.x, pos.y, pos.z, v.x, v.y, v.z);
+                Vec3d v = ParticleUtils.randomDirVelocity(0.4, 1.2);
+                world.addParticle(ModParticles.CONFETTI, giftPos.x, giftPos.y, giftPos.z, v.x, v.y, v.z);
             }
 
             // Wool particles
 
             for (int i = 0; i < 120; i++) {
-                Vec3d v = MathUtils.randomPointInSphere().normalize().multiply(MathUtils.randomNumber(0.3, 0.5));
-                boolean b = MathUtils.takeChance(0.8);
-                world.addParticle(b ? whiteWoolParticle : redWoolParticle, pos.x, pos.y, pos.z, v.x, v.y, v.z);
+                Vec3d v = ParticleUtils.randomDirVelocity(0.3, 0.5);
+                world.addParticle(i % 5 == 0 ? whiteWoolParticle : redWoolParticle, giftPos.x, giftPos.y, giftPos.z, v.x, v.y, v.z);
             }
         });
     }

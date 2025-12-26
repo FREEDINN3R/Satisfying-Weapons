@@ -37,13 +37,13 @@ public class BlackHoleEntityRenderer<T extends Entity & FlyingItemEntity> extend
             // Goes from 1.0 to 1.5
             scale = 1.0f + 0.5f * activeAge / BlackHoleEntity.GROWING_DURATION;
         }
-        else if (activeAge <= BlackHoleEntity.MAX_ACTIVE_AGE - BlackHoleEntity.SHRINKING_DURATION) {
+        else if (activeAge <= BlackHoleEntity.MAX_TOTAL_AGE - BlackHoleEntity.SHRINKING_DURATION) {
             // Alternates between 1.4 and 1.55
             scale = 1.0f + ((activeAge % 2 == 1) ? 0.4f : 0.55f);
         }
         else {
             // Goes from 1.5 to 0
-            scale = 1.5f * (BlackHoleEntity.MAX_ACTIVE_AGE - activeAge) / BlackHoleEntity.SHRINKING_DURATION;
+            scale = 1.5f * (BlackHoleEntity.MAX_TOTAL_AGE - activeAge) / BlackHoleEntity.SHRINKING_DURATION;
         }
         return scale;
     }

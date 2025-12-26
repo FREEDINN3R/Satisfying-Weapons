@@ -1,17 +1,14 @@
 package net.freedinner.satisfying_weapons.entity.custom;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
 import net.freedinner.satisfying_weapons.entity.ModEntities;
+import net.freedinner.satisfying_weapons.entity.misc.NonDestructiveExplosionBehavior;
 import net.freedinner.satisfying_weapons.entity.misc.ToyArrowEntityData;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
-import net.freedinner.satisfying_weapons.entity.misc.NonDestructiveExplosionBehavior;
-import net.freedinner.satisfying_weapons.util.MathUtils;
-import net.freedinner.satisfying_weapons.util.NbtUtils;
-import net.freedinner.satisfying_weapons.util.SoundUtils;
+import net.freedinner.satisfying_weapons.util.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -199,7 +196,7 @@ public class BirthdayGiftEntity extends Entity {
                         }
                         else {
                             // If not, pick a random direction
-                            v = MathUtils.randomPointInSphere(1.0).normalize().multiply(1.2);
+                            v = ParticleUtils.randomDirection().multiply(1.2);
                             if (v.y < 0) {
                                 v = v.multiply(-1);
                             }
@@ -371,18 +368,18 @@ public class BirthdayGiftEntity extends Entity {
 
     private void sendSmokeParticlesPacket() {
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(this.getPos().add(0, this.getHeight() / 2, 0).toVector3f());
+        buf.writeVector3f(PosUtils.getEntityCenter(this).toVector3f());
 
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) this.getWorld(), this.getBlockPos())) {
+        for (ServerPlayerEntity player : PosUtils.getPlayersTracking(this)) {
             ServerPlayNetworking.send(player, ModNetworking.GIFT_SMOKE_PARTICLES_ID, buf);
         }
     }
 
     private void sendExplosionParticlesPacket() {
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(this.getPos().add(0, this.getHeight() / 2, 0).toVector3f());
+        buf.writeVector3f(PosUtils.getEntityCenter(this).toVector3f());
 
-        for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) this.getWorld(), this.getBlockPos())) {
+        for (ServerPlayerEntity player : PosUtils.getPlayersTracking(this)) {
             ServerPlayNetworking.send(player, ModNetworking.GIFT_EXPLOSION_PARTICLES_ID, buf);
         }
     }

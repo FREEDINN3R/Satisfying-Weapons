@@ -1,7 +1,6 @@
 package net.freedinner.satisfying_weapons.networking.s2c;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.item.custom.CrimsonKatanaItem;
 import net.freedinner.satisfying_weapons.particle.ModParticles;
 import net.freedinner.satisfying_weapons.particle.custom.CrimsonSparkParticle;
@@ -18,7 +17,7 @@ public class DotInflictParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
         Set<CrimsonKatanaItem.DoT> inflictedDots = buf.readEnumSet(CrimsonKatanaItem.DoT.class);
         Vec3d centerPos = new Vec3d(buf.readVector3f());
-        Vec3d viewerPos = new Vec3d(buf.readVector3f());
+        Vec3d viewerEyePos = new Vec3d(buf.readVector3f());
 
         client.execute(() -> {
             World world = client.world;
@@ -30,13 +29,13 @@ public class DotInflictParticlesPacket {
             // Crimson sparks
 
             for (int i = 0; i < 6; i++) {
-                Vec3d direction = getRandomPerpendicularDirection(centerPos, viewerPos);
+                Vec3d direction = getRandomPerpendicularDirection(centerPos, viewerEyePos);
                 Vec3d finalPos = centerPos.add(direction.multiply(MathUtils.randomNumber(0.8, 1.5)));
 
                 double stepSize = 0.025;
                 int length = MathUtils.randomNumber(10, 16);
                 Vec3d step = direction.multiply(stepSize);
-                Vec3d glowOffset = centerPos.subtract(viewerPos).normalize().multiply(0.01);
+                Vec3d glowOffset = centerPos.subtract(viewerEyePos).normalize().multiply(0.01);
 
                 for (int j = 0; j < length; j++) {
                     Vec3d segmentPos = centerPos.add(step.multiply(j));

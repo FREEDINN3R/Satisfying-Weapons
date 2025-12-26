@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
+import net.freedinner.satisfying_weapons.util.PosUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
@@ -134,7 +135,7 @@ public class BirthdayPartyEffect extends StatusEffect {
         };
 
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(entity.getPos().add(0, entity.getHeight() / 2, 0).toVector3f());
+        buf.writeVector3f(PosUtils.getEntityCenter(entity).toVector3f());
         buf.writeInt(count);
 
         for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)entity.getWorld(), entity.getBlockPos())) {

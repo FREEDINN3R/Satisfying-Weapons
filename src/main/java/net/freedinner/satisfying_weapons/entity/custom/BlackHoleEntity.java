@@ -1,7 +1,6 @@
 package net.freedinner.satisfying_weapons.entity.custom;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.freedinner.satisfying_weapons.config.ModConfigs;
 import net.freedinner.satisfying_weapons.effect.ModEffects;
@@ -12,7 +11,10 @@ import net.freedinner.satisfying_weapons.mixin.LivingEntityAccessor;
 import net.freedinner.satisfying_weapons.mixin.ProjectileEntityAccessor;
 import net.freedinner.satisfying_weapons.networking.ModNetworking;
 import net.freedinner.satisfying_weapons.sound.ModSounds;
-import net.freedinner.satisfying_weapons.util.*;
+import net.freedinner.satisfying_weapons.util.MathUtils;
+import net.freedinner.satisfying_weapons.util.NbtUtils;
+import net.freedinner.satisfying_weapons.util.PosUtils;
+import net.freedinner.satisfying_weapons.util.SoundUtils;
 import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
@@ -28,7 +30,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.HitResult;
@@ -37,7 +38,10 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class BlackHoleEntity extends ThrownItemEntity {
     private static final TrackedData<Integer> ACTIVE_AGE = DataTracker.registerData(BlackHoleEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -49,7 +53,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
     public static final double PULL_RANGE_SQR = (int) Math.pow(PULL_RANGE, 2);
 
     // Timings
-    public static final int MAX_ACTIVE_AGE = 26; // effectively 1.5 s, not sure why it's not 30
+    public static final int MAX_TOTAL_AGE = 26; // effectively 1.5 s, not sure why it's not 30
     public static final int GROWING_DURATION = 4;
     public static final int SHRINKING_DURATION = 3;
 
@@ -110,7 +114,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
             this.setVelocity(0, 0, 0);
 
             // If active and not shrinking yet
-            if (this.getActiveAge() <= MAX_ACTIVE_AGE - SHRINKING_DURATION) {
+            if (this.getActiveAge() <= MAX_TOTAL_AGE - SHRINKING_DURATION) {
                 attractEntities();
 
                 // Visuals & SFX
@@ -119,7 +123,7 @@ public class BlackHoleEntity extends ThrownItemEntity {
             }
 
             // If finished shrinking
-            if (this.getActiveAge() > MAX_ACTIVE_AGE) {
+            if (this.getActiveAge() > MAX_TOTAL_AGE) {
                 this.discard();
             }
         }
