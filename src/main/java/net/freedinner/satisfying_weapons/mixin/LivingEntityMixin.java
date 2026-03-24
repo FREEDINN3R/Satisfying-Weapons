@@ -80,7 +80,7 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityD
             }
         }
 
-        // Inflicts DoTs that are scheduled one tick after receiving damage
+        // Inflicts DoTs one tick after receiving damage
         if (scheduledDots != null) {
             if (!shouldCancelNextDots) {
                 AfterDamageCrimsonKatana.inflictScheduledDots(entity, scheduledDots);

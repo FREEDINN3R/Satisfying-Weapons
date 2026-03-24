@@ -92,7 +92,7 @@ public class CrimsonKatanaItem extends UpgradeableSwordItem {
             int newDuration = Math.min(360, 120 + oldDuration);
 
             if (this == BURN) {
-                entity.setOnFireFor(newDuration / 20);
+                entity.setOnFireFor(newDuration / 20); // requires seconds
             }
             else {
                 entity.addStatusEffect(new StatusEffectInstance(baseEffect, newDuration, 0));

@@ -28,27 +28,27 @@ public class DotInflictParticlesPacket {
 
             // Crimson sparks
 
-            for (int i = 0; i < 6; i++) {
-                Vec3d direction = getRandomPerpendicularDirection(centerPos, viewerEyePos);
-                Vec3d finalPos = centerPos.add(direction.multiply(MathUtils.randomNumber(0.8, 1.5)));
-
-                double stepSize = 0.025;
-                int length = MathUtils.randomNumber(10, 16);
-                Vec3d step = direction.multiply(stepSize);
-                Vec3d glowOffset = centerPos.subtract(viewerEyePos).normalize().multiply(0.01);
-
-                for (int j = 0; j < length; j++) {
-                    Vec3d segmentPos = centerPos.add(step.multiply(j));
-                    Vec3d segmentFinalPos = finalPos.subtract(step.multiply(length / 2.0));
-                    Vec3d v = segmentFinalPos.subtract(segmentPos).multiply(1.0 / CrimsonSparkParticle.MAX_AGE);
-
-                    world.addParticle(ModParticles.CRIMSON_SPARK, segmentPos.x, segmentPos.y, segmentPos.z, v.x, v.y, v.z);
-                    if (j % 2 == 0) {
-                        Vec3d glowPos = segmentPos.add(glowOffset);
-                        world.addParticle(ModParticles.CRIMSON_SPARK_GLOW, glowPos.x, glowPos.y, glowPos.z, v.x, v.y, v.z);
-                    }
-                }
-            }
+//            for (int i = 0; i < 6; i++) {
+//                Vec3d direction = getRandomPerpendicularDirection(centerPos, viewerEyePos);
+//                Vec3d finalPos = centerPos.add(direction.multiply(MathUtils.randomNumber(0.8, 1.5)));
+//
+//                double stepSize = 0.025;
+//                int length = MathUtils.randomNumber(10, 16);
+//                Vec3d step = direction.multiply(stepSize);
+//                Vec3d glowOffset = centerPos.subtract(viewerEyePos).normalize().multiply(0.01);
+//
+//                for (int j = 0; j < length; j++) {
+//                    Vec3d segmentPos = centerPos.add(step.multiply(j));
+//                    Vec3d segmentFinalPos = finalPos.subtract(step.multiply(length / 2.0));
+//                    Vec3d v = segmentFinalPos.subtract(segmentPos).multiply(1.0 / CrimsonSparkParticle.MAX_AGE);
+//
+//                    world.addParticle(ModParticles.CRIMSON_SPARK, segmentPos.x, segmentPos.y, segmentPos.z, v.x, v.y, v.z);
+//                    if (j % 2 == 0) {
+//                        Vec3d glowPos = segmentPos.add(glowOffset);
+//                        world.addParticle(ModParticles.CRIMSON_SPARK_GLOW, glowPos.x, glowPos.y, glowPos.z, v.x, v.y, v.z);
+//                    }
+//                }
+//            }
         });
     }
 

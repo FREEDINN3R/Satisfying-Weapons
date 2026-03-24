@@ -71,13 +71,13 @@
 
   "item.satisfying_weapons.mechanical_sword": "Mechanical Sword",
   "item.satisfying_weapons.mechanical_sword.skill_name_1": "Energy Overload",
-  "item.satisfying_weapons.mechanical_sword.skill_desc_1": "Hold right-click to charge. You gain 1_{FF4714}Charge{AAAAAA} per 2.5s, max 4_{FF4714}Charges{AAAAAA}. Stop holding to shoot an explosive {FAF883}Energy Orb{AAAAAA}, scaling with the amount of {FF4714}Charges{AAAAAA} you had. Costs 1-4_durability. Explosions can hurt you, but can't destroy blocks.",
+  "item.satisfying_weapons.mechanical_sword.skill_desc_1": "Hold right-click to charge. You gain 1_{FF4714}Charge{AAAAAA} per 2.5s, max 4_{FF4714}Charges{AAAAAA}. On release, shoot an explosive {FAF883}Energy Orb{AAAAAA} scaling with the amount of {FF4714}Charges{AAAAAA} you had. Costs 1-4_durability. Explosions can hurt you, but can't destroy blocks.",
   "item.satisfying_weapons.mechanical_sword.skill_name_2": "Shock Absorber",
   "item.satisfying_weapons.mechanical_sword.skill_desc_2": "While charging, gain {DE8F34}Metal Heart{AAAAAA}: all incoming damage is reduced by 70%. {DE8F34}Metal Heart{AAAAAA} will persist shortly after shooting an {FAF883}Energy Orb{AAAAAA}.",
   "item.satisfying_weapons.mechanical_sword.skill_name_3": "Action Equals Reaction",
   "item.satisfying_weapons.mechanical_sword.skill_desc_3": "{FAF883}Energy Orb{AAAAAA} explosions can no longer hurt you. Additionally, if you receive damage while charging, there is a 33%_chance to immediately gain 1_{FF4714}Charge{AAAAAA}.",
   "item.satisfying_weapons.mechanical_sword.skill_name_4": "Threshold Override",
-  "item.satisfying_weapons.mechanical_sword.skill_desc_4": "The charging rate is decreased to 2s. Also, the max number of {FF4714}Charges{AAAAAA} is now 5.",
+  "item.satisfying_weapons.mechanical_sword.skill_desc_4": "The charging rate is decreased to 2s. Also, the max number of {FF4714}Charges{AAAAAA} is increased to 5.",
   "item.satisfying_weapons.mechanical_sword.skill_name_5": "Perpetual Motion Machine",
   "item.satisfying_weapons.mechanical_sword.skill_desc_5": "You can now continue to charge indefinitely. All {FF4714}Charges{AAAAAA} gained beyond 5 will immediately be consumed to shoot a 3-charge {FAF883}Energy Orb{AAAAAA} at no durability cost. This effect will not happen while sneaking.",
 
