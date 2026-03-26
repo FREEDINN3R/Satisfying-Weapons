@@ -1,17 +1,23 @@
 package net.freedinner.satisfying_weapons.item.custom;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
+import net.freedinner.satisfying_weapons.config.ModConfigs;
 import net.freedinner.satisfying_weapons.datagen.ModDamageTypes;
+import net.freedinner.satisfying_weapons.entity.custom.BlackHoleEntity;
 import net.freedinner.satisfying_weapons.item.ModToolMaterial;
 import net.freedinner.satisfying_weapons.util.CombatHelper;
 import net.freedinner.satisfying_weapons.util.data.ILivingEntityDataSaver;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -30,13 +36,17 @@ public class CrimsonKatanaItem extends UpgradeableSwordItem {
         }
 
         List<DoT> existingDots = DoT.getDotsOn(target, this.getLevel());
-        float dotMultiplier = (this.getLevel() >= 2 && existingDots.size() >= 2) ? 1.2f : 1.0f;
+        float dotMultiplier = (this.getLevel() >= 2 && existingDots.size() >= 2) ? 1.3f : 1.0f;
 
         if (!existingDots.isEmpty()) {
             ((ILivingEntityDataSaver) target).sw$cancelNextDots();
         }
 
         for (DoT dotEffect : existingDots) {
+            if (this.getLevel() >= 5) {
+                dotEffect.spreadFrom(target, attacker);
+            }
+
             dotEffect.detonateFor(target, dotMultiplier);
         }
 
@@ -48,6 +58,9 @@ public class CrimsonKatanaItem extends UpgradeableSwordItem {
         POISON(2, StatusEffects.POISON, ModDamageTypes.INSTANT_POISON, new int[] {25, 12, 6, 3, 1}),
         WITHER(1, StatusEffects.WITHER, ModDamageTypes.INSTANT_WITHER, new int[] {40, 20, 10, 5, 2, 1}),
         BURN(4, null, ModDamageTypes.INSTANT_BURN, new int[] {20});
+
+        public static final double SPREAD_RANGE = 2.5;
+        public static final double SPREAD_RANGE_SQR = Math.pow(SPREAD_RANGE, 2);
 
         private final int levelRequired;
         private final StatusEffect baseEffect;
@@ -87,9 +100,9 @@ public class CrimsonKatanaItem extends UpgradeableSwordItem {
             return this == BURN ? 0 : entity.getStatusEffect(baseEffect).getAmplifier();
         }
 
-        public void inflictOn(LivingEntity entity) {
+        public void inflictOn(LivingEntity entity, int duration, boolean limitDuration) {
             int oldDuration = this.getDurationFor(entity);
-            int newDuration = Math.min(360, 120 + oldDuration);
+            int newDuration = limitDuration ? Math.min(360, duration + oldDuration) : duration + oldDuration;
 
             if (this == BURN) {
                 entity.setOnFireFor(newDuration / 20); // requires seconds
@@ -99,6 +112,15 @@ public class CrimsonKatanaItem extends UpgradeableSwordItem {
             }
 
             SatisfyingWeapons.LOGGER.info("Inflicting " + this.name() + " for " + newDuration + " ticks");
+        }
+
+        public void removeFrom(LivingEntity entity) {
+            if (this == BURN) {
+                entity.setFireTicks(0);
+            }
+            else {
+                entity.removeStatusEffect(baseEffect);
+            }
         }
 
         public float calculateDamageFor(LivingEntity entity) {
@@ -119,14 +141,26 @@ public class CrimsonKatanaItem extends UpgradeableSwordItem {
             float totalDamage = calculateDamageFor(entity) * multiplier;
             entity.damage(CombatHelper.getDamageSource(damageType, entity.getWorld()), totalDamage);
 
-            if (this == BURN) {
-                entity.setFireTicks(0);
-            }
-            else {
-                entity.removeStatusEffect(baseEffect);
-            }
+            this.removeFrom(entity);
 
             SatisfyingWeapons.LOGGER.info("Detonating " + this.name() + " for " + totalDamage + " damage");
+        }
+
+        public void spreadFrom(LivingEntity target, LivingEntity triggeringEntity) {
+            Vec3d pos = target.getPos();
+            Box box = new Box(pos, pos).expand(SPREAD_RANGE);
+
+            List<LivingEntity> affectedEntities = target.getWorld().getOtherEntities(target, box)
+                    .stream()
+                    .filter(e -> e != triggeringEntity)
+                    .filter(e -> e instanceof LivingEntity)
+                    .map(e -> (LivingEntity) e)
+                    .filter(e -> e.squaredDistanceTo(pos) <= SPREAD_RANGE_SQR) // Cuz it's a sphere, not a cube
+                    .toList();
+
+            for (LivingEntity entity : affectedEntities) {
+                this.inflictOn(entity, this.getDurationFor(target) / 2, false);
+            }
         }
 
         public static ArrayList<DoT> getDotsForLevel(int weaponLevel) {

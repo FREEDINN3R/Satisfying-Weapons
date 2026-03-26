@@ -1,11 +1,15 @@
 package net.freedinner.satisfying_weapons.util;
 
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.freedinner.satisfying_weapons.config.ModConfigs;
+import net.freedinner.satisfying_weapons.entity.custom.BlackHoleEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;

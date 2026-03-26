@@ -48,13 +48,13 @@
   "item.satisfying_weapons.crimson_katana.skill_name_1": "Decadence",
   "item.satisfying_weapons.crimson_katana.skill_desc_1": "While this weapon is in your hotbar, hitting an entity will inflict it with Wither for 6s, stacking up to 18s. Hitting a Withered entity with this weapon will detonate the effect, dealing all of its damage in a single hit.",
   "item.satisfying_weapons.crimson_katana.skill_name_2": "Intoxication",
-  "item.satisfying_weapons.crimson_katana.skill_desc_2": "You can now inflict and detonate Poison. When detonating more than one type of DoT effect at a time, increase the total detonation damage by 20%.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_2": "You can now inflict and detonate Poison. When detonating more than one type of DoT effect at a time, increase the total detonation damage by 30%.",
   "item.satisfying_weapons.crimson_katana.skill_name_3": "Erasure of Self",
-  "item.satisfying_weapons.crimson_katana.skill_desc_3": "Right-click to consume 2_HP and send forth a Noxious Slash, which deals no damage, but can detonate DoT effects.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_3": "Right-click to consume 2_HP and send forth a Noxious Slash, which deals no damage, but can detonate DoT effects on hit.",
   "item.satisfying_weapons.crimson_katana.skill_name_4": "Burnout",
   "item.satisfying_weapons.crimson_katana.skill_desc_4": "You can now inflict and detonate Burn. When inflicting a DoT effect, additionally inflict 1_instance of a different DoT effect.",
   "item.satisfying_weapons.crimson_katana.skill_name_5": "Shared Misery",
-  "item.satisfying_weapons.crimson_katana.skill_desc_5": "Detonation damage is further increased by 30%. When detonating DoT effects, inflict the same effects on all surrounding entities for 50% of the original duration.",
+  "item.satisfying_weapons.crimson_katana.skill_desc_5": "When detonating DoT effects, inflict the same effects on all surrounding entities for 50% of the original duration. Also, Noxious Slash can now penetrate up to 5 entities before disappearing.",
 
 
   "item.satisfying_weapons.toy_bow": "Toy Bow",

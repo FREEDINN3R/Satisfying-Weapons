@@ -52,7 +52,7 @@ public class AfterDamageCrimsonKatana implements CustomLivingEntityEvents.AfterD
 
     public static void inflictScheduledDots(LivingEntity entity, List<CrimsonKatanaItem.DoT> scheduledDots) {
         for (CrimsonKatanaItem.DoT dotEffect : scheduledDots) {
-            dotEffect.inflictOn(entity);
+            dotEffect.inflictOn(entity, 120, true);
         }
 
         sendParticlesPacket(entity, scheduledDots);
