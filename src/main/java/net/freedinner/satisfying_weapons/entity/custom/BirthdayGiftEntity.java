@@ -67,7 +67,6 @@ public class BirthdayGiftEntity extends Entity {
         this.dataTracker.startTracking(STATE_AGE, 0);
     }
 
-
     @Override
     public void tick() {
         super.tick();
@@ -76,13 +75,11 @@ public class BirthdayGiftEntity extends Entity {
             return;
         }
 
-        // Increment state age by 1
-        this.updateStateAge();
+        this.incrementStateAge();
 
-        // Get target, after world reload works only on server
-        LivingEntity currTarget = this.getTarget();
+        LivingEntity currTarget = this.getTarget(); // May not be stable client-side
 
-        // If missing target or it's dead, and not falling / detonating already, fall down
+        // If missing or dead target, and not falling / detonating already, fall down
         if ((currTarget == null || !currTarget.isAlive()) && !(this.getState() == GiftState.FALLING || this.getState() == GiftState.DETONATED)) {
             this.setState(GiftState.FALLING);
         }
@@ -90,7 +87,7 @@ public class BirthdayGiftEntity extends Entity {
         // Custom logic for every state
         switch (this.getState()) {
             case EMERGING:
-                assert currTarget != null; // If it were, the gift would already fall
+                assert currTarget != null; // If it was, the gift would already fall
 
                 if (this.getStateAge() <= 10) {
                     double halfHeight = 0.5 * currTarget.getHeight();
@@ -177,19 +174,19 @@ public class BirthdayGiftEntity extends Entity {
                     for (int i = 0; i < 5; i++) {
                         ToyArrowEntity toyArrow = new ToyArrowEntity(this.getPos(), this.getWorld());
 
-                        // If detonator arrow is known, copy its data to this arrow
+                        // If detonator arrow is known, copy its data
                         if (detonatorArrowData != null) {
                             detonatorArrowData.pasteDataTo(toyArrow);
                         }
                         else {
-                            // If not, set level to 5, leave everything else unchanged
+                            // If not, only change level
                             toyArrow.setToyBowLevel(5);
                         }
 
                         // Calculate velocity
                         Vec3d v;
                         if (i < surroundingEntities.size()) {
-                            // If there are other entities around, aim at them
+                            // If there are other entities around, target them
                             Entity otherEntity = surroundingEntities.get(i);
                             v = otherEntity.getPos().add(0, otherEntity.getHeight(), 0).subtract(this.getPos()).normalize();
                             v = v.multiply(otherEntity instanceof BirthdayGiftEntity ? 2.0 : 1.5);
@@ -358,7 +355,7 @@ public class BirthdayGiftEntity extends Entity {
         this.dataTracker.set(STATE_AGE, stateAge);
     }
 
-    protected void updateStateAge() {
+    protected void incrementStateAge() {
         this.dataTracker.set(STATE_AGE, this.dataTracker.get(STATE_AGE) + 1);
     }
 

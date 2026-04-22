@@ -56,7 +56,6 @@
   "item.satisfying_weapons.crimson_katana.skill_name_5": "Shared Misery",
   "item.satisfying_weapons.crimson_katana.skill_desc_5": "When detonating DoT effects, inflict the same effects on all surrounding entities for 50% of the original duration. Also, Noxious Slash can now penetrate up to 5 entities before disappearing.",
 
-
   "item.satisfying_weapons.toy_bow": "Toy Bow",
   "item.satisfying_weapons.toy_bow.skill_name_1": "Best Day of the Year",
   "item.satisfying_weapons.toy_bow.skill_desc_1": "Shoots {1E90FF}Toy Arrows{AAAAAA} that apply {F123DE}Birthday Party{AAAAAA} for 10s to the target hit. While the target has an active {F123DE}Birthday Party{AAAAAA}, it will cause all non-friendly mobs to attack it.",
@@ -93,6 +92,7 @@
   "item.satisfying_weapons.sword_of_dying_star.skill_name_5": "Recreation",
   "item.satisfying_weapons.sword_of_dying_star.skill_desc_5": "You can now ignore the cooldown for throwing {C1BFFF}Black Holes{AAAAAA} at the cost of 4_HP. Colliding two {C1BFFF}Black Holes{AAAAAA} creates a massive explosion, which won't damage you nor destroy blocks.",
 
+  "entity.satisfying_weapons.noxious_slash": "Noxious Slash",
   "entity.satisfying_weapons.toy_arrow": "Toy Arrow",
   "entity.satisfying_weapons.birthday_gift": "Birthday Gift",
   "entity.satisfying_weapons.energy_orb": "Energy Orb",

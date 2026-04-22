@@ -10,6 +10,15 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
 public class ModEntities {
+    public static final EntityType<NoxiousSlashEntity> NOXIOUS_SLASH = Registry.register(
+            Registries.ENTITY_TYPE,
+            SatisfyingWeapons.id("noxious_slash"),
+            FabricEntityTypeBuilder.<NoxiousSlashEntity>create(SpawnGroup.MISC, NoxiousSlashEntity::new)
+                    .dimensions(EntityDimensions.fixed(1f, 1f))
+                    .trackRangeChunks(4).trackedUpdateRate(1)
+                    .build()
+    );
+
     public static final EntityType<ToyArrowEntity> TOY_ARROW = Registry.register(
             Registries.ENTITY_TYPE,
             SatisfyingWeapons.id("toy_arrow"),

@@ -6,14 +6,17 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
 import net.freedinner.satisfying_weapons.entity.model.BirthdayGiftEntityModel;
-import net.freedinner.satisfying_weapons.entity.renderer.BirthdayGiftEntityRenderer;
-import net.freedinner.satisfying_weapons.entity.renderer.BlackHoleEntityRenderer;
-import net.freedinner.satisfying_weapons.entity.renderer.EnergyOrbEntityRenderer;
-import net.freedinner.satisfying_weapons.entity.renderer.ToyArrowEntityRenderer;
+import net.freedinner.satisfying_weapons.entity.model.NoxiousSlashEntityModel;
+import net.freedinner.satisfying_weapons.entity.renderer.*;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 
 @Environment(EnvType.CLIENT)
 public class ModEntitiesClient {
+    public static final EntityModelLayer NOXIOUS_SLASH_MODEL_LAYER = new EntityModelLayer(
+            SatisfyingWeapons.id("noxious_slash"),
+            "noxious_slash_model_layer"
+    );
+
     public static final EntityModelLayer BIRTHDAY_GIFT_MODEL_LAYER = new EntityModelLayer(
             SatisfyingWeapons.id("birthday_gift"),
             "birthday_gift_model_layer"
@@ -22,11 +25,13 @@ public class ModEntitiesClient {
     public static void registerEntitiesClient() {
         SatisfyingWeapons.LOGGER.info("Registering client-side entities");
 
+        EntityRendererRegistry.register(ModEntities.NOXIOUS_SLASH, NoxiousSlashEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.TOY_ARROW, ToyArrowEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.BIRTHDAY_GIFT, BirthdayGiftEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.ENERGY_ORB, EnergyOrbEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.BLACK_HOLE, BlackHoleEntityRenderer::new);
 
+        EntityModelLayerRegistry.registerModelLayer(NOXIOUS_SLASH_MODEL_LAYER, NoxiousSlashEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(BIRTHDAY_GIFT_MODEL_LAYER, BirthdayGiftEntityModel::getTexturedModelData);
     }
 }
