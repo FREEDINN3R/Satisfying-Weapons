@@ -53,17 +53,5 @@
     "sounds": [
       "satisfying_weapons:black_hole_active"
     ]
-  },
-
-  "navia1": {
-    "sounds": [
-      "satisfying_weapons:navia1"
-    ]
-  },
-
-  "navia2": {
-    "sounds": [
-      "satisfying_weapons:navia2"
-    ]
   }
 }

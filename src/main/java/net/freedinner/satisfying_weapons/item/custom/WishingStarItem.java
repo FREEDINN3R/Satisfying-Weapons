@@ -82,7 +82,7 @@ public class WishingStarItem extends Item {
 
         // Visuals & SFX
         this.sendParticlesPacket(user, rolledStack.isIn(ModTags.ALL_MOD_WEAPONS));
-        if (rolledStack.isIn(ModTags.ALL_MOD_WEAPONS) || rolledStack.isOf(ModItems.NAVIA)){
+        if (rolledStack.isIn(ModTags.ALL_MOD_WEAPONS)){
             world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 1f, 1f);
         }
         else {

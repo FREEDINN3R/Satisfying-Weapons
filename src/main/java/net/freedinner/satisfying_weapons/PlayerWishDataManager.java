@@ -91,9 +91,7 @@ public class PlayerWishDataManager extends PersistentState {
         SatisfyingWeapons.LOGGER.info("Roll seed: " + seed);
 
         if (seed < legendaryChance) {
-            rolledStack = MathUtils.takeChance(0.33) ?
-                    new ItemStack(ModItems.NAVIA) :
-                    new ItemStack(ModItems.SWORD_OF_DYING_STAR.get(0));
+            rolledStack = new ItemStack(ModItems.SWORD_OF_DYING_STAR.get(0));
             playerData.wishesSinceLegendaryDrop = 0;
         }
         else if (seed < epicChance + legendaryChance) {

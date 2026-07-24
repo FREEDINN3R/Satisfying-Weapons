@@ -19,9 +19,9 @@ public class NoxiousSlashEntityModel extends EntityModel<NoxiousSlashEntity> {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
 
-		modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(-16, 0).cuboid(-16.0F, 0.0F, -8.0F, 32.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+		modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(0, 0).cuboid(-16.0F, 0.0F, -8.0F, 32.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 
-		return TexturedModelData.of(modelData, 32, 16);
+		return TexturedModelData.of(modelData, 128, 128);
 	}
 
 	@Override

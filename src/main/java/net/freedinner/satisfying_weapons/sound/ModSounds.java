@@ -26,8 +26,6 @@ public class ModSounds {
     public static SoundEvent BLACK_HOLE_ACTIVE = register("black_hole_active");
 
 
-    public static SoundEvent NAVIA_1 = register("navia1");
-    public static SoundEvent NAVIA_2 = register("navia2");
     private static SoundEvent register(String name) {
         Identifier id = SatisfyingWeapons.id(name);
         return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));

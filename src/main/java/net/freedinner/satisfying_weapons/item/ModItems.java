@@ -18,8 +18,6 @@ public class ModItems {
             new Item(new Item.Settings().rarity(Rarity.RARE).fireproof()));
     public static final Item WISHING_STAR = register("wishing_star",
             new WishingStarItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC).fireproof()));
-    public static final Item NAVIA = register("navia",
-            new NaviaItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC).fireproof()));
 
     // --- WEAPONS --- //
     // Rare

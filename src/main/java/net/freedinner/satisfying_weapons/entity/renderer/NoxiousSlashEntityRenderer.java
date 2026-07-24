@@ -25,7 +25,7 @@ public class NoxiousSlashEntityRenderer extends EntityRenderer<NoxiousSlashEntit
 
     @Override
     public Identifier getTexture(NoxiousSlashEntity entity) {
-        return SatisfyingWeapons.id( "textures/entity/noxious_slash.png");
+        return SatisfyingWeapons.id( "textures/entity/texture.png");
     }
 
     @Override
