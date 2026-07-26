@@ -1,6 +1,29 @@
 {
-  "parent": "item/handheld",
-  "textures": {
-    "layer0": "satisfying_weapons:item/firework_sword"
-  }
+	"parent": "item/handheld",
+	"overrides": [
+		{
+			"predicate": {
+				"satisfying_weapons:firework_primed_status": 0.0
+			},
+			"model": "satisfying_weapons:item/firework_sword_non_primed"
+		},
+		{
+			"predicate": {
+				"satisfying_weapons:firework_primed_status": 0.1
+			},
+			"model": "satisfying_weapons:item/firework_sword_primed_1"
+		},
+		{
+			"predicate": {
+				"satisfying_weapons:firework_primed_status": 0.2
+			},
+			"model": "satisfying_weapons:item/firework_sword_primed_2"
+		},
+		{
+			"predicate": {
+				"satisfying_weapons:firework_primed_status": 0.3
+			},
+			"model": "satisfying_weapons:item/firework_sword_primed_3"
+		}
+	]
 }

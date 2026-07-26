@@ -1,6 +1,8 @@
 package net.freedinner.satisfying_weapons.item;
 
 import net.freedinner.satisfying_weapons.SatisfyingWeapons;
+import net.freedinner.satisfying_weapons.effect.custom.FestivityEffect;
+import net.freedinner.satisfying_weapons.item.custom.FireworkSwordItem;
 import net.freedinner.satisfying_weapons.item.custom.GlassSwordItem;
 import net.freedinner.satisfying_weapons.item.custom.MechanicalSwordItem;
 import net.freedinner.satisfying_weapons.item.custom.WishingStarItem;
@@ -11,10 +13,31 @@ import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.Hand;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ModItemPredicates {
     static {
+        // Predicates reused multiple times
+
+        ClampedModelPredicateProvider pulling = (itemStack, clientWorld, entity, seed) -> {
+            if (entity != null && entity.isUsingItem() && entity.getActiveItem() == itemStack) {
+                return 1;
+            }
+
+            return 0;
+        };
+
+        ClampedModelPredicateProvider pull = (itemsStack, clientWorld, entity, seed) -> {
+            if (entity != null && entity.getActiveItem() == itemsStack) {
+                return BowItem.getPullProgress(entity.getItemUseTime());
+            }
+
+            return 0;
+        };
+
+        // Wishing star
+
         registerItemPredicate(ModItems.WISHING_STAR, "wishing", (itemStack, clientWorld, entity, seed) -> {
             if (entity != null && entity.isUsingItem() && entity.getActiveItem() == itemStack) {
                 return 1;
@@ -31,9 +54,24 @@ public class ModItemPredicates {
             return 0;
         });
 
+        // Firework sword
+
+        registerItemPredicate(ModItems.FIREWORK_SWORD, "firework_primed_status", (itemStack, clientWorld, entity, seed) -> {
+            if (entity != null && FestivityEffect.getStacks(entity) >= 3 && entity.getStackInHand(Hand.MAIN_HAND) == itemStack) {
+                List<Integer> spriteOrder = Arrays.asList(1, 2, 1, 3, 1, 3, 2, 3, 1, 3, 2, 1, 2, 3, 2);
+                return 0.1f * spriteOrder.get(entity.age / 3 % spriteOrder.size());
+            }
+
+            return 0;
+        });
+
+        // Glass sword
+
         registerItemPredicate(ModItems.GLASS_SWORD, "glass_state", (itemStack, clientWorld, entity, seed) -> {
             return GlassSwordItem.getGlassState(itemStack).ordinal() / 2f; // returns 0, 0.5, or 1
         });
+
+        // Mechanical sword
 
         registerItemPredicate(ModItems.MECHANICAL_SWORD, "charging", (itemStack, clientWorld, entity, seed) -> {
             if (entity != null && entity.isUsingItem() && entity.getActiveItem() == itemStack && entity.getActiveHand() == Hand.MAIN_HAND) {
@@ -51,21 +89,7 @@ public class ModItemPredicates {
             return 0;
         });
 
-        ClampedModelPredicateProvider pulling = (itemStack, clientWorld, entity, seed) -> {
-            if (entity != null && entity.isUsingItem() && entity.getActiveItem() == itemStack) {
-                return 1;
-            }
-
-            return 0;
-        };
-
-        ClampedModelPredicateProvider pull = (itemsStack, clientWorld, entity, seed) -> {
-            if (entity != null && entity.getActiveItem() == itemsStack) {
-                return BowItem.getPullProgress(entity.getItemUseTime());
-            }
-
-            return 0;
-        };
+        // Toy bow
 
         registerItemPredicate(ModItems.TOY_BOW, "pulling", pulling);
         registerItemPredicate(ModItems.TOY_BOW,"pull", pull);
