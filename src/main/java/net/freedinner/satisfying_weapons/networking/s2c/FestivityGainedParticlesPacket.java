@@ -29,7 +29,7 @@ public class FestivityGainedParticlesPacket {
 
             // Smoke and flames
 
-            int totalCount = 10 + (int) (height * width / 0.12);
+            int totalCount = 10 + (int) (height * width * 10);
             int flameCount = totalCount / 4;
 
             for (int i = 0; i < totalCount; i++) {
@@ -37,7 +37,7 @@ public class FestivityGainedParticlesPacket {
                 double dy = 0.3 + 0.6 * MathUtils.randomNumber(height);
                 double dz = 0.5 * (width / 2 - MathUtils.randomNumber(width));
 
-                Vec3d v = ParticleUtils.randomFlatDirection().multiply(MathUtils.randomNumber(0.06, 0.1));
+                Vec3d v = ParticleUtils.randomFlatDirection().multiply(MathUtils.randomNumber(0.07, 0.12));
 
                 // If 3/6/9 Festivity stacks, add flame particles
                 ParticleEffect particle = (festivityStacks % 3 == 0 && i < flameCount) ? ParticleTypes.FLAME : ParticleTypes.SMOKE;

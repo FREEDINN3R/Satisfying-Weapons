@@ -237,7 +237,7 @@ public class FireworkJumpEffect extends StatusEffect {
 
     private void sendTrailParticlesPacket(LivingEntity entity, double yVelocity) {
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVector3f(entity.getPos().toVector3f());
+        buf.writeVector3f(PosUtils.getEntityCenter(entity).toVector3f());
         buf.writeDouble(yVelocity);
 
         for (ServerPlayerEntity player : PosUtils.getPlayersTracking(entity)) {

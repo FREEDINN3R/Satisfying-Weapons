@@ -8,6 +8,8 @@ import net.minecraft.util.Identifier;
 
 public class ModSounds {
     // Firework Sword
+    public static SoundEvent MATCH_STRIKE = register("match_strike");
+    public static SoundEvent MATCH_STRIKE_FLAME = register("match_strike_flame");
     public static SoundEvent PLUNGE_ATTACK = register("plunge_attack");
 
     // Glass Sword

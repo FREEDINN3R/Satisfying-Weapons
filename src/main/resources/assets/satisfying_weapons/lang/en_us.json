@@ -117,12 +117,14 @@
   "advancement.satisfying_weapons.gotta_collect_em_all.title": "Gotta Collect 'Em All!",
   "advancement.satisfying_weapons.gotta_collect_em_all.description": "Start collecting Satisfying Weapons",
 
+  "sound.satisfying_weapons.match_strike": "Match struck",
+  "sound.satisfying_weapons.match_strike_flame": "Sword ignited",
   "sound.satisfying_weapons.plunge_attack": "Plunge attack",
   "sound.satisfying_weapons.glass_cut_damage": "Entity bleeds",
-  "sound.satisfying_weapons.party_horn": "Party horn blown",
-  "sound.satisfying_weapons.birthday_gift_primed": "Birthday gift primed",
-  "sound.satisfying_weapons.birthday_gift_explosion": "Birthday gift explodes",
+  "sound.satisfying_weapons.party_horn": "Party horn",
+  "sound.satisfying_weapons.birthday_gift_primed": "Gift primed",
+  "sound.satisfying_weapons.birthday_gift_explosion": "Gift explodes",
   "satisfying_weapons.metallic_thud": "Metallic thud",
   "sound.satisfying_weapons.black_hole_thrown": "Black hole thrown",
-  "sound.satisfying_weapons.black_hole_active": "Black hole active"
+  "sound.satisfying_weapons.black_hole_active": "Black hole noise"
 }

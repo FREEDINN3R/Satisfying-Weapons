@@ -11,8 +11,8 @@ import net.minecraft.world.World;
 
 public class FireworkTrailParticlesPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
-        Vec3d entityPos = new Vec3d(buf.readVector3f());
-        double yVelocity = buf.readDouble();
+        Vec3d entityCenter = new Vec3d(buf.readVector3f());
+        double entityVelY = buf.readDouble();
 
         client.execute(() -> {
             World world = client.world;
@@ -21,20 +21,26 @@ public class FireworkTrailParticlesPacket {
                 return;
             }
 
+
             // Firework trail
 
-            int count = (yVelocity > 0) ? 1 : 3;
-            double particleVelocity = -0.5 * Math.signum(yVelocity);
+            int trailCount = (entityVelY > 0) ? 1 : 3;
+            double trailVelY = -0.5 * Math.signum(entityVelY);
 
-            for (int i = 0; i < count; i++) {
-                Vec3d pos = entityPos.add(ParticleUtils.randomPointInSphere(0.4)).add(0, 0.5, 0);
-                world.addParticle(ParticleTypes.FIREWORK, pos.x, pos.y, pos.z, 0, particleVelocity, 0);
+            for (int i = 0; i < trailCount; i++) {
+                Vec3d pos = entityCenter.add(ParticleUtils.randomPointInSphere(0.4));
+                world.addParticle(ParticleTypes.FIREWORK, pos.x, pos.y, pos.z, 0, trailVelY, 0);
             }
+
 
             // Smoke
 
-            Vec3d pos = entityPos.add(ParticleUtils.randomPointInSphere(0.4)).add(0, 0.5, 0);
-            world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 0, particleVelocity, 0);
+            Vec3d smokeVel = ParticleUtils.randomDirection().multiply(0.3, 1, 0.3).normalize();
+            if (smokeVel.y * entityVelY > 0) {
+                smokeVel = smokeVel.multiply(-1);
+            }
+
+            world.addParticle(ParticleTypes.SMOKE, entityCenter.x, entityCenter.y, entityCenter.z, smokeVel.x, smokeVel.y, smokeVel.z);
         });
     }
 }

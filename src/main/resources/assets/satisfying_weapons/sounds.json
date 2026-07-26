@@ -1,10 +1,25 @@
 {
+  "match_strike": {
+    "subtitle": "sound.satisfying_weapons.match_strike",
+    "sounds": [
+      "satisfying_weapons:match_strike"
+    ]
+  },
+
+  "match_strike_flame": {
+    "subtitle": "sound.satisfying_weapons.match_strike_flame",
+    "sounds": [
+      "satisfying_weapons:match_strike_flame"
+    ]
+  },
+
   "plunge_attack": {
     "subtitle": "sound.satisfying_weapons.plunge_attack",
     "sounds": [
       "satisfying_weapons:plunge_attack"
     ]
   },
+
 
   "glass_cut_damage": {
     "subtitle": "sound.satisfying_weapons.glass_cut_damage",
