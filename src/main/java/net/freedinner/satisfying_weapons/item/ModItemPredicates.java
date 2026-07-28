@@ -59,7 +59,7 @@ public class ModItemPredicates {
         registerItemPredicate(ModItems.FIREWORK_SWORD, "firework_primed_status", (itemStack, clientWorld, entity, seed) -> {
             if (entity != null && FestivityEffect.getStacks(entity) >= 3 && entity.getStackInHand(Hand.MAIN_HAND) == itemStack) {
                 List<Integer> spriteOrder = Arrays.asList(1, 2, 1, 3, 1, 3, 2, 3, 1, 3, 2, 1, 2, 3, 2);
-                return 0.1f * spriteOrder.get(entity.age / 3 % spriteOrder.size());
+                return 0.1f * spriteOrder.get(entity.age / 2 % spriteOrder.size());
             }
 
             return 0;

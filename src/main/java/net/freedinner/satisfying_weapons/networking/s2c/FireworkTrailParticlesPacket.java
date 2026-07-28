@@ -21,13 +21,12 @@ public class FireworkTrailParticlesPacket {
                 return;
             }
 
-
             // Firework trail
 
-            int trailCount = (entityVelY > 0) ? 1 : 3;
+            int particleCount = (entityVelY > 0) ? 1 : 3;
             double trailVelY = -0.5 * Math.signum(entityVelY);
 
-            for (int i = 0; i < trailCount; i++) {
+            for (int i = 0; i < particleCount; i++) {
                 Vec3d pos = entityCenter.add(ParticleUtils.randomPointInSphere(0.4));
                 world.addParticle(ParticleTypes.FIREWORK, pos.x, pos.y, pos.z, 0, trailVelY, 0);
             }
@@ -35,12 +34,18 @@ public class FireworkTrailParticlesPacket {
 
             // Smoke
 
-            Vec3d smokeVel = ParticleUtils.randomDirection().multiply(0.3, 1, 0.3).normalize();
-            if (smokeVel.y * entityVelY > 0) {
-                smokeVel = smokeVel.multiply(-1);
+            for (int i = 0; i < 3 * particleCount; i++) {
+                Vec3d smokeVel = ParticleUtils.randomDirection();
+                smokeVel = smokeVel.add(0, 2 * Math.signum(smokeVel.y), 0).normalize();
+
+                if (smokeVel.y * entityVelY > 0) {
+                    smokeVel = smokeVel.multiply(-1);
+                }
+
+                world.addParticle(ParticleTypes.SMOKE, entityCenter.x, entityCenter.y, entityCenter.z, smokeVel.x, smokeVel.y, smokeVel.z);
             }
 
-            world.addParticle(ParticleTypes.SMOKE, entityCenter.x, entityCenter.y, entityCenter.z, smokeVel.x, smokeVel.y, smokeVel.z);
+
         });
     }
 }
