@@ -19,6 +19,7 @@
     "AbstractClientPlayerEntityMixin",
     "ClientPlayerEntityMixin",
     "ClientPlayerInteractionManagerMixin",
+    "ClientWorldMixin",
     "InGameHudMixin",
     "ParticleManagerMixin"
   ]
