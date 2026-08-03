@@ -20,6 +20,7 @@
     "ClientPlayerEntityMixin",
     "ClientPlayerInteractionManagerMixin",
     "ClientWorldMixin",
+    "FireworkParticleMixin",
     "InGameHudMixin",
     "ParticleManagerMixin"
   ]

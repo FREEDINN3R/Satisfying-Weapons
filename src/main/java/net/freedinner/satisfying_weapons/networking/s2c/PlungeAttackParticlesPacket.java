@@ -71,11 +71,8 @@ public class PlungeAttackParticlesPacket {
             // Firework explosion
 
             List<String> fireworkList = Arrays.asList(
-                    "{Explosions:[{Colors:[I;15790320,14602026,14602026,8073150,8073150],Flicker:1b,Trail:1b,Type:1b}],Flight:2b}",
-                    "{Explosions:[{Colors:[I;15790320,11743532,4312372,11743532,4312372],Flicker:1b,Trail:1b,Type:1b}],Flight:2b}",
-                    "{Explosions:[{Colors:[I;2437522,14602026,2437522,15435844],Flicker:1b,Trail:1b,Type:1b}],Flight:1b}",
-                    "{Explosions:[{Colors:[I;8073150,2437522],FadeColors:[I;15790320],Flicker:1b,Type:1b},{Colors:[I;8073150,2437522],FadeColors:[I;15790320],Flicker:1b,Type:1b}],Flight:2b}",
-                    "{Explosions:[{Colors:[I;4312372,14602026],FadeColors:[I;15790320],Flicker:1b,Type:1b},{Colors:[I;4312372,14602026],FadeColors:[I;15790320],Flicker:1b,Type:1b}],Flight:2b}"
+                    "{Explosions:[{Colors:[I;8073150,2437522],FadeColors:[I;15790320],Flicker:1b,Type:1b},{Colors:[I;8073150,2437522],FadeColors:[I;15790320],Flicker:1b,Type:1b}],Flight:2b,Grounded:1b}",
+                    "{Explosions:[{Colors:[I;4312372,14602026],FadeColors:[I;15790320],Flicker:1b,Type:1b},{Colors:[I;4312372,14602026],FadeColors:[I;15790320],Flicker:1b,Type:1b}],Flight:2b,Grounded:1b}"
             );
 
             String fireworkNbtString = MathUtils.randomElementFrom(fireworkList);
