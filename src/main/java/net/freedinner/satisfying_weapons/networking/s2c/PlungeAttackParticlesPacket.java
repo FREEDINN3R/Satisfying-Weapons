@@ -38,10 +38,6 @@ public class PlungeAttackParticlesPacket {
                 return;
             }
 
-            // Flash
-
-            world.addParticle(ParticleTypes.FLASH, playerPos.x, playerPos.y, playerPos.z, 0, 0, 0);
-
             // Plunge ring
 
             int count = 90;
